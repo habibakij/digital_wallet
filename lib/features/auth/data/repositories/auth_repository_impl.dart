@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_wallet/core/error_handler/failures.dart';
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
-import 'package:digital_wallet/core/utils/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/token_storage.dart';
 import 'package:digital_wallet/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
 import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
@@ -13,7 +13,8 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._remoteDataSource, this._tokenStorage);
 
   @override
-  Future<Either<Failure, AuthEntity>> login({required String email, required String password}) async {
+  Future<Either<Failure, AuthEntity>> login(
+      {required String email, required String password}) async {
     try {
       final auth = await _remoteDataSource.login(
         email: email,

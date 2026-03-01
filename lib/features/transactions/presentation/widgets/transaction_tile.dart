@@ -1,7 +1,7 @@
 // lib/features/transactions/presentation/widgets/transaction_tile.dart
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/helper/formatters.dart';
 import '../../domain/entities/transaction_entity.dart';
 
 class TransactionTile extends StatelessWidget {

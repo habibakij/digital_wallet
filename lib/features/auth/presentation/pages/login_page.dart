@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/helper/formatters.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -171,10 +171,13 @@ class _LoginPageState extends State<LoginPage> {
               prefixIcon: Icons.lock_outline_rounded,
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   color: AppTheme.textSecondary,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
               validator: InputFormatters.validatePassword,
               textInputAction: TextInputAction.done,
@@ -189,7 +192,8 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Checkbox(
                       value: _rememberMe,
-                      onChanged: (v) => setState(() => _rememberMe = v ?? false),
+                      onChanged: (v) =>
+                          setState(() => _rememberMe = v ?? false),
                       activeColor: AppTheme.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -197,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const Text(
                       'Remember me',
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+                      style: TextStyle(
+                          color: AppTheme.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),

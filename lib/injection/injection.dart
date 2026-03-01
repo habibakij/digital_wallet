@@ -2,7 +2,7 @@ import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
-import '../core/utils/token_storage.dart';
+import '../core/utils/helper/token_storage.dart';
 import '../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../features/auth/data/repositories/auth_repository_impl.dart';
 import '../features/auth/domain/repositories/auth_repository.dart';
@@ -24,9 +24,11 @@ final sl = GetIt.instance;
 
 Future<void> configureDependencies() async {
   // ─── Core ──────────────────────────────────────────────────────────────────
-  sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
+  sl.registerLazySingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage());
 
-  sl.registerLazySingleton<TokenStorage>(() => TokenStorage(sl<FlutterSecureStorage>()));
+  sl.registerLazySingleton<TokenStorage>(
+      () => TokenStorage(sl<FlutterSecureStorage>()));
 
   sl.registerLazySingleton<ApiClient>(() => ApiClient());
 
@@ -43,7 +45,8 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
 
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()),
+    () => AuthBloc(
+        loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()),
   );
 
   // ─── Dashboard ─────────────────────────────────────────────────────────────
@@ -73,5 +76,6 @@ Future<void> configureDependencies() async {
 
   sl.registerLazySingleton(() => SendMoneyUseCase(sl<SendMoneyRepository>()));
 
-  sl.registerFactory<SendMoneyBloc>(() => SendMoneyBloc(sl<SendMoneyUseCase>()));
+  sl.registerFactory<SendMoneyBloc>(
+      () => SendMoneyBloc(sl<SendMoneyUseCase>()));
 }

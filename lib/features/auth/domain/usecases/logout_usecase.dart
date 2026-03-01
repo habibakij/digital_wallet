@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error_handler/failures.dart';
-import '../../../../core/utils/usecase.dart';
+import '../../../../core/use_case/usecase.dart';
 import '../repositories/auth_repository.dart';
 
 class LogoutUseCase extends UseCase<void, NoParams> {

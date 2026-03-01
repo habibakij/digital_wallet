@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'https://api.digitalwallet.com/v1';
+  static const String baseUrl = "https://api.escuelajs.co/api/v1";
   // Auth
   static const String login = '/auth/login';
   static const String logout = '/auth/logout';

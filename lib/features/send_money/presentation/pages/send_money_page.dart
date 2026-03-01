@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/helper/formatters.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../dashboard/presentation/bloc/dashboard_bloc.dart';
 import '../../../dashboard/presentation/bloc/dashboard_event.dart';
@@ -127,7 +127,8 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Available Balance', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              const Text('Available Balance',
+                  style: TextStyle(color: Colors.white70, fontSize: 13)),
               const SizedBox(height: 6),
               Text(
                 CurrencyFormatter.format(widget.currentUser.balance),
@@ -139,7 +140,8 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
               ),
             ],
           ),
-          const Icon(Icons.account_balance_wallet_outlined, color: Colors.white54, size: 36),
+          const Icon(Icons.account_balance_wallet_outlined,
+              color: Colors.white54, size: 36),
         ],
       ),
     );
@@ -201,7 +203,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
           padding: const EdgeInsets.only(right: 12),
           child: Text(
             'Max ৳50,000',
-            style: TextStyle(fontSize: 11, color: AppTheme.textSecondary.withValues(alpha: 0.7)),
+            style: TextStyle(
+                fontSize: 11,
+                color: AppTheme.textSecondary.withValues(alpha: 0.7)),
           ),
         ),
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
@@ -209,7 +213,8 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       onChanged: (v) {
         setState(() => _enteredAmount = double.tryParse(v) ?? 0);
       },
-      validator: (v) => InputFormatters.validateAmount(v, widget.currentUser.balance),
+      validator: (v) =>
+          InputFormatters.validateAmount(v, widget.currentUser.balance),
     );
   }
 
@@ -220,7 +225,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 6, left: 4),
       child: Text(
-        isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
+        isInsufficient
+            ? 'Insufficient balance'
+            : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
         style: TextStyle(
           fontSize: 12,
           color: isInsufficient ? AppTheme.errorColor : AppTheme.textSecondary,
@@ -251,7 +258,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       children: [
         const Text(
           'Quick Select',
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
+          style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary),
         ),
         const SizedBox(height: 10),
         Row(
@@ -274,7 +284,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       color: selected ? AppTheme.primaryColor : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: selected ? AppTheme.primaryColor : AppTheme.dividerColor,
+                        color: selected
+                            ? AppTheme.primaryColor
+                            : AppTheme.dividerColor,
                       ),
                     ),
                     alignment: Alignment.center,
@@ -307,14 +319,19 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
           ? const SizedBox(
               height: 24,
               width: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+              child: CircularProgressIndicator(
+                  color: Colors.white, strokeWidth: 2.5),
             )
           : const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.send_rounded, size: 18),
                 SizedBox(width: 10),
-                Text('Send Money', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                Text('Send Money',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5)),
               ],
             ),
     );

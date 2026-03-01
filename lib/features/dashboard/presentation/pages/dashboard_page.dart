@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/helper/formatters.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
@@ -131,19 +131,23 @@ class _DashboardPageState extends State<DashboardPage> {
                   const Spacer(),
                   if (user.isKycVerified)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppTheme.accentColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppTheme.accentColor, width: 0.5),
+                        border:
+                            Border.all(color: AppTheme.accentColor, width: 0.5),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.verified, size: 12, color: AppTheme.accentColor),
+                          Icon(Icons.verified,
+                              size: 12, color: AppTheme.accentColor),
                           SizedBox(width: 4),
                           Text(
                             'KYC Verified',
-                            style: TextStyle(color: AppTheme.accentColor, fontSize: 11),
+                            style: TextStyle(
+                                color: AppTheme.accentColor, fontSize: 11),
                           ),
                         ],
                       ),
@@ -157,7 +161,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 0.5),
+                  border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2), width: 0.5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,9 +175,12 @@ class _DashboardPageState extends State<DashboardPage> {
                           style: TextStyle(color: Colors.white70, fontSize: 13),
                         ),
                         GestureDetector(
-                          onTap: () => setState(() => _balanceVisible = !_balanceVisible),
+                          onTap: () => setState(
+                              () => _balanceVisible = !_balanceVisible),
                           child: Icon(
-                            _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            _balanceVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: Colors.white70,
                             size: 20,
                           ),
@@ -206,7 +214,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     const SizedBox(height: 8),
                     Text(
                       'Account: ${user.accountNumber}',
-                      style: const TextStyle(color: Colors.white60, fontSize: 12),
+                      style:
+                          const TextStyle(color: Colors.white60, fontSize: 12),
                     ),
                   ],
                 ),
@@ -317,7 +326,8 @@ class _DashboardPageState extends State<DashboardPage> {
         if (state is TransactionError) {
           return SliverToBoxAdapter(
             child: Center(
-              child: Text(state.message, style: const TextStyle(color: AppTheme.errorColor)),
+              child: Text(state.message,
+                  style: const TextStyle(color: AppTheme.errorColor)),
             ),
           );
         }
@@ -336,7 +346,9 @@ class _DashboardPageState extends State<DashboardPage> {
           Text(message, textAlign: TextAlign.center),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => context.read<DashboardBloc>().add(const DashboardLoadRequested()),
+            onPressed: () => context
+                .read<DashboardBloc>()
+                .add(const DashboardLoadRequested()),
             child: const Text('Retry'),
           ),
         ],
@@ -355,11 +367,13 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            const Text('Profile',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 20),
             ListTile(
               leading: const Icon(Icons.logout, color: AppTheme.errorColor),
-              title: const Text('Logout', style: TextStyle(color: AppTheme.errorColor)),
+              title: const Text('Logout',
+                  style: TextStyle(color: AppTheme.errorColor)),
               onTap: () {
                 Navigator.pop(context);
                 context.read<AuthBloc>().add(const LogoutRequested());
@@ -473,7 +487,8 @@ class _EmptyTransactions extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey.shade300),
+        Icon(Icons.receipt_long_outlined,
+            size: 64, color: Colors.grey.shade300),
         const SizedBox(height: 16),
         const Text(
           'No transactions yet',

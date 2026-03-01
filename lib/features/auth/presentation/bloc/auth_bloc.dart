@@ -1,7 +1,7 @@
 // lib/features/auth/presentation/bloc/auth_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/usecase.dart';
+import '../../../../core/use_case/usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import 'auth_event.dart';
@@ -11,7 +11,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
   final LogoutUseCase _logoutUseCase;
 
-  AuthBloc({required LoginUseCase loginUseCase, required LogoutUseCase logoutUseCase})
+  AuthBloc(
+      {required LoginUseCase loginUseCase,
+      required LogoutUseCase logoutUseCase})
       : _loginUseCase = loginUseCase,
         _logoutUseCase = logoutUseCase,
         super(const AuthInitial()) {
@@ -19,7 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
   }
 
-  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLoginRequested(
+      LoginRequested event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
     final result = await _loginUseCase(
       LoginParams(email: event.email, password: event.password),
@@ -30,7 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLogoutRequested(
+      LogoutRequested event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
     await _logoutUseCase(const NoParams());
     emit(const AuthUnauthenticated());

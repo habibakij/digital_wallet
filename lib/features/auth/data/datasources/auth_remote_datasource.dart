@@ -1,7 +1,7 @@
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
-import 'package:digital_wallet/core/utils/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/token_storage.dart';
 import 'package:digital_wallet/features/auth/data/models/auth_model.dart';
 import 'package:digital_wallet/features/auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -18,7 +18,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._apiClient, this._tokenStorage);
 
   @override
-  Future<AuthModel> login({required String email, required String password}) async {
+  Future<AuthModel> login(
+      {required String email, required String password}) async {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.login,
