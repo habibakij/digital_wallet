@@ -1,0 +1,61 @@
+import 'package:dartz/dartz.dart';
+import 'package:digital_wallet/core/error/failures.dart';
+import 'package:digital_wallet/core/utils/token_storage.dart';
+import 'package:digital_wallet/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
+import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/domain/repositories/auth_repository.dart';
+
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource _remoteDataSource;
+  final TokenStorage _tokenStorage;
+  AuthRepositoryImpl(this._remoteDataSource, this._tokenStorage);
+
+  @override
+  Future<Either<Failure, AuthEntity>> login({required String email, required String password}) async {
+    try {
+      final auth = await _remoteDataSource.login(
+        email: email,
+        password: password,
+      );
+      return Right(auth);
+    } on AuthException catch (e) {
+      return Left(AuthFailure(message: e.message, statusCode: e.statusCode));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await _remoteDataSource.logout();
+      return const Right(null);
+    } catch (_) {
+      // Even if remote logout fails, clear local tokens
+      await _tokenStorage.clearAll();
+      return const Right(null);
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> getCurrentUser() async {
+    try {
+      final user = await _remoteDataSource.getCurrentUser();
+      return Right(user);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<bool> isAuthenticated() async {
+    return await _tokenStorage.hasValidSession();
+  }
+}
