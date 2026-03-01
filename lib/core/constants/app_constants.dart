@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+
 class AppConstants {
   AppConstants._();
 
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
   // API
-  static const String baseUrl = 'https://api.digitalwallet.com/v1';
   static const int connectTimeout = 30000; // 30 seconds
   static const int receiveTimeout = 30000;
   static const int sendTimeout = 30000;

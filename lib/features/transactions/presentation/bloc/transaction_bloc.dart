@@ -72,7 +72,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         if (replace) {
           emit(TransactionError(message: failure.message));
         } else {
-          // Keep existing data on pagination error
+          // Keep existing data on pagination error_handler
           emit(TransactionLoaded(
             transactions: existingItems,
             hasNextPage: false,

@@ -1,8 +1,7 @@
-// lib/injection/injection.dart
+import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
-import '../core/api/api_client.dart';
 import '../core/utils/token_storage.dart';
 import '../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../features/auth/data/repositories/auth_repository_impl.dart';
@@ -25,17 +24,11 @@ final sl = GetIt.instance;
 
 Future<void> configureDependencies() async {
   // ─── Core ──────────────────────────────────────────────────────────────────
-  sl.registerLazySingleton<FlutterSecureStorage>(
-    () => const FlutterSecureStorage(),
-  );
+  sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
 
-  sl.registerLazySingleton<TokenStorage>(
-    () => TokenStorage(sl<FlutterSecureStorage>()),
-  );
+  sl.registerLazySingleton<TokenStorage>(() => TokenStorage(sl<FlutterSecureStorage>()));
 
-  sl.registerLazySingleton<ApiClient>(
-    () => ApiClient(sl<TokenStorage>()),
-  );
+  sl.registerLazySingleton<ApiClient>(() => ApiClient());
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -50,16 +43,11 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
 
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(
-      loginUseCase: sl<LoginUseCase>(),
-      logoutUseCase: sl<LogoutUseCase>(),
-    ),
+    () => AuthBloc(loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()),
   );
 
   // ─── Dashboard ─────────────────────────────────────────────────────────────
-  sl.registerFactory<DashboardBloc>(
-    () => DashboardBloc(sl<AuthRepository>()),
-  );
+  sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<AuthRepository>()));
 
   // ─── Transactions ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<TransactionRemoteDataSource>(
@@ -85,7 +73,5 @@ Future<void> configureDependencies() async {
 
   sl.registerLazySingleton(() => SendMoneyUseCase(sl<SendMoneyRepository>()));
 
-  sl.registerFactory<SendMoneyBloc>(
-    () => SendMoneyBloc(sl<SendMoneyUseCase>()),
-  );
+  sl.registerFactory<SendMoneyBloc>(() => SendMoneyBloc(sl<SendMoneyUseCase>()));
 }

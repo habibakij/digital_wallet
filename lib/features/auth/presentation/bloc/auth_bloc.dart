@@ -21,7 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-
     final result = await _loginUseCase(
       LoginParams(email: event.email, password: event.password),
     );

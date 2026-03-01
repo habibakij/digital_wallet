@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:digital_wallet/core/error_handler/server_exception.dart';
 
-import '../../../../core/error/failures.dart';
+import '../../../../core/error_handler/failures.dart';
 import '../../domain/entities/paginated_transactions.dart';
 import '../../domain/repositories/transaction_repository.dart';
 import '../datasources/transaction_remote_datasource.dart';

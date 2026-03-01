@@ -47,7 +47,7 @@ class DigitalWalletApp extends StatelessWidget {
         BlocProvider<TransactionBloc>(create: (_) => sl<TransactionBloc>()),
       ],
       child: MaterialApp(
-        title: 'DigitalWallet',
+        title: 'Digital Wallet',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         initialRoute: '/',
@@ -112,10 +112,8 @@ class _SplashRouterState extends State<_SplashRouter> {
   Future<void> _checkAuth() async {
     await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
-
     final isAuthenticated = await sl.get<TokenStorage>().hasValidSession();
     if (!mounted) return;
-
     if (isAuthenticated) {
       Navigator.of(context).pushReplacementNamed('/dashboard');
     } else {
@@ -139,7 +137,7 @@ class _SplashRouterState extends State<_SplashRouter> {
               ),
               SizedBox(height: 20),
               Text(
-                'DigitalWallet',
+                'Digital Wallet',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 32,
@@ -153,10 +151,7 @@ class _SplashRouterState extends State<_SplashRouter> {
                 style: TextStyle(color: Colors.white60, fontSize: 14, letterSpacing: 2),
               ),
               SizedBox(height: 60),
-              CircularProgressIndicator(
-                color: Colors.white54,
-                strokeWidth: 2,
-              ),
+              CircularProgressIndicator(color: Colors.white54, strokeWidth: 2),
             ],
           ),
         ),

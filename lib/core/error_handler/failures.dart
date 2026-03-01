@@ -1,4 +1,4 @@
-// lib/core/error/failures.dart
+// lib/core/error_handler/failures.dart
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
@@ -41,29 +41,4 @@ class TransactionFailure extends Failure {
 
 class InsufficientBalanceFailure extends Failure {
   const InsufficientBalanceFailure({super.message = 'Insufficient balance'});
-}
-
-// lib/core/error/exceptions.dart
-class ServerException implements Exception {
-  final String message;
-  final int? statusCode;
-
-  const ServerException({required this.message, this.statusCode});
-}
-
-class AuthException implements Exception {
-  final String message;
-  final int? statusCode;
-
-  const AuthException({required this.message, this.statusCode});
-}
-
-class NetworkException implements Exception {
-  const NetworkException();
-}
-
-class CacheException implements Exception {
-  final String message;
-
-  const CacheException({required this.message});
 }

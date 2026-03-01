@@ -1,8 +1,7 @@
+import 'package:digital_wallet/core/error_handler/server_exception.dart';
+import 'package:digital_wallet/core/network/api_client.dart';
+import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:dio/dio.dart';
-
-import '../../../../core/api/api_client.dart';
-import '../../../../core/constants/api_endpoints.dart';
-import '../../../../core/error/failures.dart';
 
 abstract class TransactionRemoteDataSource {
   Future<Map<String, dynamic>> getTransactions({
@@ -41,7 +40,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       );
     } on DioException catch (e) {
       throw ServerException(
-        message: e.message ?? 'Network error',
+        message: e.message ?? 'Network error_handler',
         statusCode: e.response?.statusCode,
       );
     }

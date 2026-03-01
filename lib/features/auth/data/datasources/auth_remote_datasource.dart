@@ -1,6 +1,6 @@
-import 'package:digital_wallet/core/api/api_client.dart';
-import 'package:digital_wallet/core/constants/api_endpoints.dart';
-import 'package:digital_wallet/core/error/failures.dart';
+import 'package:digital_wallet/core/error_handler/server_exception.dart';
+import 'package:digital_wallet/core/network/api_client.dart';
+import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/core/utils/token_storage.dart';
 import 'package:digital_wallet/features/auth/data/models/auth_model.dart';
 import 'package:digital_wallet/features/auth/data/models/user_model.dart';
@@ -22,7 +22,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.login,
-        data: {'email': email, 'password': password},
+        pData: {'email': email, 'password': password},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -32,7 +32,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await _tokenStorage.saveAccessToken(auth.accessToken);
         await _tokenStorage.saveRefreshToken(auth.refreshToken);
         await _tokenStorage.saveUserId(auth.user.id);
-
         return auth;
       } else if (response.statusCode == 401) {
         throw const AuthException(
@@ -48,7 +47,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       throw AuthException(
-        message: e.message ?? 'Network error during login',
+        message: e.message ?? 'Network error_handler during login',
         statusCode: e.response?.statusCode,
       );
     }

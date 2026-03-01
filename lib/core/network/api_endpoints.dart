@@ -1,8 +1,7 @@
-// lib/core/constants/api_endpoints.dart
-
 class ApiEndpoints {
   ApiEndpoints._();
 
+  static const String baseUrl = 'https://api.digitalwallet.com/v1';
   // Auth
   static const String login = '/auth/login';
   static const String logout = '/auth/logout';
