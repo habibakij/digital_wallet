@@ -152,6 +152,7 @@ class ApiClient {
   /// refresh token
   Future<bool> _refreshAccessToken() async {
     try {
+      _refreshToken ??= await sl<TokenStorage>().getRefreshToken();
       if (_refreshToken == null) return false;
       final response = await _dio.post(
         '/auth/refresh',
@@ -186,8 +187,32 @@ class ApiClient {
   }
 
   /// GET - JSON Response
-  Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters, CancelToken? cancelToken}) async {
+  Future<Response> get(
+    String endpoint, {
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    String? customBaseUrl,
+  }) async {
     try {
+      if (customBaseUrl != null) {
+        final tempDio = Dio(
+          BaseOptions(
+            baseUrl: customBaseUrl,
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
+            sendTimeout: const Duration(seconds: 30),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            validateStatus: (status) => status != null && status < 500,
+          ),
+        );
+        // if (_accessToken != null) {
+        //   tempDio.options.headers['Authorization'] = 'Bearer $_accessToken';
+        // }
+        return await tempDio.get(endpoint, queryParameters: queryParameters, cancelToken: cancelToken);
+      }
       return await _dio.get(
         endpoint,
         queryParameters: queryParameters,

@@ -14,7 +14,7 @@ import 'package:digital_wallet/features/send_money/domain/usecase/send_money_use
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
 import 'package:digital_wallet/features/transactions/data/repository/transaction_repository_impl.dart';
 import 'package:digital_wallet/features/transactions/data/sources/transaction_remote_datasource.dart';
-import 'package:digital_wallet/features/transactions/domain/repositories/transaction_repository.dart';
+import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';

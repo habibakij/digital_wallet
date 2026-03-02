@@ -1,12 +1,11 @@
+import 'package:digital_wallet/core/error_handler/failures.dart';
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
+import 'package:digital_wallet/features/transactions/data/model/transaction_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class TransactionRemoteDataSource {
-  Future<Map<String, dynamic>> getTransactions({
-    required int page,
-    required int pageSize,
-  });
+  Future<List<TransactionModel>> getData();
 }
 
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
@@ -14,22 +13,25 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   TransactionRemoteDataSourceImpl(this._apiClient);
 
   @override
-  Future<Map<String, dynamic>> getTransactions({required int page, required int pageSize}) async {
+  Future<List<TransactionModel>> getData() async {
     try {
-      final response = await _apiClient.get(
-        //ApiEndpoints.transactions,
-        //queryParameters: {'page': page, 'per_page': pageSize, 'sort': 'created_at', 'order': 'desc'},
-        "products/",
-        queryParameters: {'limit': page},
-      );
+      final response = await _apiClient.get("https://jsonplaceholder.typicode.com/todos");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data as Map<String, dynamic>;
+        final List<dynamic> jsonList = response.data as List<dynamic>;
+        return jsonList.map((x) => TransactionModel.fromJson(x)).toList();
+      } else if (response.statusCode == 422) {
+        throw ValidationFailure(
+          message: (response.data as Map?)?['message']?.toString() ?? 'Validation failed',
+        );
+      } else if (response.statusCode == 402) {
+        throw const InsufficientBalanceFailure();
+      } else {
+        throw ServerException(
+          message: (response.data as Map?)?['message']?.toString() ?? 'Transfer failed',
+          statusCode: response.statusCode,
+        );
       }
-      throw ServerException(
-        message: 'Failed to fetch transactions',
-        statusCode: response.statusCode,
-      );
     } on DioException catch (e) {
       throw ServerException(
         message: e.message ?? 'Network error_handler',

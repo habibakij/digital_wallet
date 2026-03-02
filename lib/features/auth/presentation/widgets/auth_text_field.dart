@@ -1,4 +1,3 @@
-// lib/features/auth/presentation/widgets/auth_text_field.dart
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';

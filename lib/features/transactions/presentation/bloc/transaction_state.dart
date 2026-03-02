@@ -1,6 +1,5 @@
+import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../domain/entities/transaction_entity.dart';
 
 abstract class TransactionState extends Equatable {
   const TransactionState();
@@ -17,42 +16,11 @@ class TransactionLoading extends TransactionState {
 }
 
 class TransactionLoaded extends TransactionState {
-  final List<TransactionEntity> transactionList;
-  final bool hasNextPage;
-  final int currentPage;
-  final int totalCount;
-  final bool isPaginating;
-  final String? paginationError;
-
-  const TransactionLoaded({
-    required this.transactionList,
-    required this.hasNextPage,
-    required this.currentPage,
-    required this.totalCount,
-    this.isPaginating = false,
-    this.paginationError,
-  });
-
-  TransactionLoaded copyWith({
-    List<TransactionEntity>? transactions,
-    bool? hasNextPage,
-    int? currentPage,
-    int? totalCount,
-    bool? isPaginating,
-    String? paginationError,
-  }) {
-    return TransactionLoaded(
-      transactionList: transactions ?? transactionList,
-      hasNextPage: hasNextPage ?? this.hasNextPage,
-      currentPage: currentPage ?? this.currentPage,
-      totalCount: totalCount ?? this.totalCount,
-      isPaginating: isPaginating ?? this.isPaginating,
-      paginationError: paginationError ?? this.paginationError,
-    );
-  }
+  final List<TransactionEntity> entity;
+  const TransactionLoaded(this.entity);
 
   @override
-  List<Object?> get props => [transactionList, hasNextPage, currentPage, isPaginating, paginationError];
+  List<Object?> get props => [entity];
 }
 
 class TransactionEmpty extends TransactionState {

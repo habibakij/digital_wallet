@@ -19,7 +19,7 @@ class AppConstants {
   // Transaction
   static const double minTransactionAmount = 0.01;
   static const double maxTransactionAmount = 50000.0;
-  static const int transactionPageSize = 20;
+  static const int transactionPageSize = 30;
 
   // Retry
   static const int maxRetryAttempts = 3;

@@ -61,7 +61,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<DashboardBloc>().add(const DashboardLoadRequested());
-        context.read<TransactionBloc>().add(const RefreshTransactions());
+        context.read<TransactionBloc>().add(const FetchTransactions());
       },
       color: AppTheme.primaryColor,
       child: CustomScrollView(
@@ -273,18 +273,16 @@ class _DashboardPageState extends State<DashboardPage> {
         if (state is TransactionEmpty) {
           return const SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(
-              child: EmptyTransactions(),
-            ),
+            child: Center(child: EmptyTransactions()),
           );
         }
         if (state is TransactionLoaded) {
-          final recent = state.transactionList.take(5).toList();
+          final recent = state.entity.take(5).toList();
           return SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => TransactionTile(transaction: recent[index]),
+                (context, index) => TransactionTile(entity: state.entity[index]),
                 childCount: recent.length,
               ),
             ),

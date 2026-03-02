@@ -1,5 +1,4 @@
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transection.dart';
-import 'package:digital_wallet/features/transactions/presentation/widgets/pagination_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -92,34 +91,21 @@ class _TransactionListPageState extends State<TransactionListPage> {
             return RefreshIndicator(
               onRefresh: () async {
                 context.read<TransactionBloc>().add(const RefreshTransactions());
-                // Wait for refresh to complete
                 await Future.delayed(const Duration(seconds: 1));
               },
               color: AppTheme.primaryColor,
               child: Column(
                 children: [
-                  _buildHeader(state),
                   Expanded(
                     child: ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      itemCount: state.transactionList.length + (state.isPaginating ? 1 : 0),
+                      itemCount: state.entity.length,
                       itemBuilder: (context, index) {
-                        if (index == state.transactionList.length) {
-                          return const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Center(
-                              child: CircularProgressIndicator(color: AppTheme.primaryColor, strokeWidth: 2),
-                            ),
-                          );
-                        }
-                        return TransactionTile(
-                          transaction: state.transactionList[index],
-                        );
+                        return TransactionTile(entity: state.entity[index]);
                       },
                     ),
                   ),
-                  if (state.paginationError != null) PaginationError(error: state.paginationError!),
                 ],
               ),
             );
@@ -127,34 +113,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
           return const SizedBox.shrink();
         },
-      ),
-    );
-  }
-
-  Widget _buildHeader(TransactionLoaded state) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Text(
-            '${state.totalCount} Transactions',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-              fontSize: 14,
-            ),
-          ),
-          const Spacer(),
-          if (!state.hasNextPage && state.transactionList.isNotEmpty)
-            Text(
-              'Showing all',
-              style: TextStyle(
-                fontSize: 12,
-                color: AppTheme.textSecondary.withValues(alpha: 0.7),
-              ),
-            ),
-        ],
       ),
     );
   }

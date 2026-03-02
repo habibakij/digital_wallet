@@ -1,84 +1,33 @@
-import 'package:digital_wallet/core/constants/app_constants.dart';
-import 'package:digital_wallet/features/transactions/domain/entities/transaction_entity.dart';
-import 'package:digital_wallet/features/transactions/domain/repositories/transaction_repository.dart';
+import 'dart:async';
+
+import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
+import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionRepository _repository;
-  int _currentPage = 1;
-  bool _isFetching = false;
-
   TransactionBloc(this._repository) : super(const TransactionInitial()) {
     on<FetchTransactions>(_onFetchTransactions);
-    on<RefreshTransactions>(_onRefreshTransactions);
-    on<LoadMoreTransactions>(_onLoadMoreTransactions);
+    //on<RefreshTransactions>(_onRefreshTransactions);
+    //on<LoadMoreTransactions>(_onLoadMoreTransactions);
   }
 
-  Future<void> _onFetchTransactions(FetchTransactions event, Emitter<TransactionState> emit) async {
-    if (_isFetching) return;
-    _isFetching = true;
-    _currentPage = 1;
+  FutureOr<void> _onFetchTransactions(FetchTransactions event, Emitter<TransactionState> emit) async {
     emit(const TransactionLoading());
-    await _fetchPage(1, emit, replace: true);
-    _isFetching = false;
-  }
-
-  Future<void> _onRefreshTransactions(RefreshTransactions event, Emitter<TransactionState> emit) async {
-    if (_isFetching) return;
-    _isFetching = true;
-    _currentPage = 1;
-    await _fetchPage(1, emit, replace: true);
-    _isFetching = false;
-  }
-
-  Future<void> _onLoadMoreTransactions(LoadMoreTransactions event, Emitter<TransactionState> emit) async {
-    final current = state;
-    if (_isFetching || current is! TransactionLoaded || !current.hasNextPage) {
-      return;
+    final result = await _repository.getData();
+    if (result.isEmpty) {
+      emit(const TransactionError(message: "failure.message"));
+    } else {
+      List<TransactionEntity> dataList = [];
+      for (var i in result) {
+        dataList.add(TransactionEntity(userId: i.userId, id: i.id, title: i.title, completed: i.completed));
+      }
+      emit(TransactionLoaded(dataList));
+      print("check_data_len: ${dataList.length}");
     }
-    _isFetching = true;
-    emit(current.copyWith(isPaginating: true));
-    await _fetchPage(_currentPage + 1, emit, existingItems: current.transactionList);
-    _isFetching = false;
   }
 
-  Future<void> _fetchPage(int page, Emitter<TransactionState> emit, {bool replace = false, List<TransactionEntity> existingItems = const []}) async {
-    final result = await _repository.getTransactions(
-      page: page,
-      pageSize: AppConstants.transactionPageSize,
-    );
-    result.fold(
-      (failure) {
-        if (replace) {
-          emit(TransactionError(message: failure.message));
-        } else {
-          emit(TransactionLoaded(
-            transactionList: existingItems,
-            hasNextPage: false,
-            currentPage: _currentPage,
-            totalCount: existingItems.length,
-            isPaginating: false,
-            paginationError: failure.message,
-          ));
-        }
-      },
-      (paginated) {
-        _currentPage = page;
-        final allItems = replace ? paginated.transactions : [...existingItems, ...paginated.transactions];
-        if (allItems.isEmpty && replace) {
-          emit(const TransactionEmpty());
-          return;
-        }
-        emit(TransactionLoaded(
-          transactionList: allItems,
-          hasNextPage: paginated.hasNextPage,
-          currentPage: paginated.currentPage,
-          totalCount: paginated.totalCount,
-          isPaginating: false,
-        ));
-      },
-    );
-  }
+  FutureOr<void> _onRefreshTransactions(RefreshTransactions event, Emitter<TransactionState> emit) {}
 }

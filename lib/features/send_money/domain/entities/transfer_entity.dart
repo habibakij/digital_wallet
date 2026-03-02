@@ -1,4 +1,3 @@
-// lib/features/send_money/domain/entities/transfer_entity.dart
 import 'package:equatable/equatable.dart';
 
 class TransferEntity extends Equatable {
