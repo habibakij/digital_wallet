@@ -1,6 +1,6 @@
+import 'package:digital_wallet/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../auth/domain/repositories/auth_repository.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
@@ -12,12 +12,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardBalanceUpdated>(_onBalanceUpdated);
   }
 
-  Future<void> _onLoadRequested(
-    DashboardLoadRequested event,
-    Emitter<DashboardState> emit,
-  ) async {
+  Future<void> _onLoadRequested(DashboardLoadRequested event, Emitter<DashboardState> emit) async {
     emit(const DashboardLoading());
-
     final result = await _authRepository.getCurrentUser();
     result.fold(
       (failure) => emit(DashboardError(message: failure.message)),
@@ -25,10 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
   }
 
-  void _onBalanceUpdated(
-    DashboardBalanceUpdated event,
-    Emitter<DashboardState> emit,
-  ) {
+  void _onBalanceUpdated(DashboardBalanceUpdated event, Emitter<DashboardState> emit) {
     final current = state;
     if (current is DashboardLoaded) {
       emit(DashboardLoaded(user: current.user.copyWith(balance: event.newBalance)));

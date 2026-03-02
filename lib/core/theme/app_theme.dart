@@ -1,10 +1,9 @@
-// lib/core/theme/app_theme.dart
 import 'package:flutter/material.dart';
 
 class AppTheme {
   AppTheme._();
 
-  // Brand Colors (FinTech)
+  // Brand Colors
   static const Color primaryColor = Color(0xFF1A237E); // Deep Indigo
   static const Color secondaryColor = Color(0xFF00BCD4); // Cyan
   static const Color accentColor = Color(0xFF00E676); // Green (success/money)
@@ -58,14 +57,8 @@ class AppTheme {
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(

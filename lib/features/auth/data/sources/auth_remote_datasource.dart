@@ -18,8 +18,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._apiClient, this._tokenStorage);
 
   @override
-  Future<AuthModel> login(
-      {required String email, required String password}) async {
+  Future<AuthModel> login({required String email, required String password}) async {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.login,
@@ -28,11 +27,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final auth = AuthModel.fromJson(response.data as Map<String, dynamic>);
-
-        // Securely persist tokens
-        await _tokenStorage.saveAccessToken(auth.accessToken);
-        await _tokenStorage.saveRefreshToken(auth.refreshToken);
-        await _tokenStorage.saveUserId(auth.user.id);
+        await _tokenStorage.saveAccessToken(auth.accessToken ?? '');
+        await _tokenStorage.saveRefreshToken(auth.refreshToken ?? '');
         return auth;
       } else if (response.statusCode == 401) {
         throw const AuthException(
@@ -68,7 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getCurrentUser() async {
     try {
       final response = await _apiClient.get(ApiEndpoints.profile);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return UserModel.fromJson(response.data as Map<String, dynamic>);
       }
       throw const ServerException(message: 'Failed to fetch user profile');

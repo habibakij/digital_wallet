@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/widgets/auth_text_field.dart
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_theme.dart';
 
 class AuthTextField extends StatelessWidget {
@@ -58,6 +59,8 @@ class AuthTextField extends StatelessWidget {
             color: AppTheme.textPrimary,
             fontWeight: FontWeight.w500,
           ),
+          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+          onTapUpOutside: (_) => FocusScope.of(context).unfocus(),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(prefixIcon, size: 20, color: AppTheme.textSecondary),

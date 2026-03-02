@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
+import 'package:digital_wallet/core/utils/helper/token_storage.dart';
 import 'package:digital_wallet/core/utils/widget/snackbar.dart';
+import 'package:digital_wallet/injection/injection.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -34,7 +37,7 @@ class ApiClient {
     _setupInterceptors();
   }
 
-  /// Setup Interceptors
+  /// setup interceptors
   void _setupInterceptors() {
     _dio.interceptors.add(
       PrettyDioLogger(
@@ -48,7 +51,7 @@ class ApiClient {
       ),
     );
 
-    /// Auth & Token Refresh Interceptor
+    /// token refresh interceptor
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -62,6 +65,7 @@ class ApiClient {
               ),
             );
           }
+          _accessToken = await sl<TokenStorage>().getAccessToken();
           if (_accessToken != null) {
             options.headers['Authorization'] = 'Bearer $_accessToken';
           }
@@ -71,9 +75,7 @@ class ApiClient {
           if (error.response?.statusCode == 401) {
             if (await _refreshAccessToken()) {
               return handler.resolve(
-                await _retry(
-                  error.requestOptions,
-                ),
+                await _retry(error.requestOptions),
               );
             }
           }
@@ -92,9 +94,7 @@ class ApiClient {
               error.requestOptions.extra['retryCount'] = retryCount + 1;
               await Future.delayed(const Duration(seconds: 2));
               return handler.resolve(
-                await _retry(
-                  error.requestOptions,
-                ),
+                await _retry(error.requestOptions),
               );
             }
           }
@@ -142,14 +142,14 @@ class ApiClient {
     }
   }
 
-  /// Listen to internet connection changes
+  /// listen to internet connection changes
   Stream<bool> onInternetStatusChanged() {
     return _connectivity.onConnectivityChanged.map((result) {
       return !result.contains(ConnectivityResult.none);
     });
   }
 
-  /// Refresh Token
+  /// refresh token
   Future<bool> _refreshAccessToken() async {
     try {
       if (_refreshToken == null) return false;
@@ -160,9 +160,11 @@ class ApiClient {
           headers: {'Authorization': null},
         ),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         _accessToken = response.data['accessToken'];
         _refreshToken = response.data['refreshToken'] ?? _refreshToken;
+        await sl<TokenStorage>().saveAccessToken(_accessToken ?? '');
+        await sl<TokenStorage>().saveRefreshToken(_refreshToken ?? '');
         return true;
       }
       return false;
@@ -192,7 +194,7 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
@@ -202,32 +204,25 @@ class ApiClient {
       return await _dio.get(
         endpoint,
         queryParameters: queryParameters,
-        options: Options(
-          responseType: ResponseType.stream,
-        ),
+        options: Options(responseType: ResponseType.stream),
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
   /// POST - JSON
-  Future<Response> post(
-    String endpoint, {
-    Map<String, dynamic>? pData,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-  }) async {
+  Future<Response> post(String endpoint, {Map<String, dynamic>? pData, Map<String, dynamic>? queryParameters, CancelToken? cancelToken}) async {
     try {
       return await _dio.post(
         endpoint,
-        data: pData,
+        data: jsonEncode(pData),
         queryParameters: queryParameters,
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
@@ -261,7 +256,7 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
@@ -280,17 +275,12 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
   /// PATCH
-  Future<Response> patch(
-    String endpoint, {
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-  }) async {
+  Future<Response> patch(String endpoint, {Map<String, dynamic>? data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken}) async {
     try {
       return await _dio.patch(
         endpoint,
@@ -299,7 +289,7 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
@@ -318,7 +308,7 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
@@ -339,12 +329,12 @@ class ApiClient {
         cancelToken: cancelToken,
       );
     } catch (e) {
-      throw _handleError(e);
+      throw _errorHandler(e);
     }
   }
 
   /// Error Handling
-  static Exception _handleError(dynamic error) {
+  static Exception _errorHandler(dynamic error) {
     String message = 'Unknown error_handler occurred';
     if (error is DioException) {
       switch (error.type) {
@@ -369,7 +359,7 @@ class ApiClient {
           message = error.message ?? 'Something went wrong!';
           break;
         default:
-          message = 'An unexpected error_handler occurred.';
+          message = 'An unexpected error occurred.';
       }
     } else if (error is SocketException) {
       message = 'No internet connection.';

@@ -12,10 +12,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     on<SendMoneyReset>(_onReset);
   }
 
-  Future<void> _onSendMoneyRequested(
-    SendMoneyRequested event,
-    Emitter<SendMoneyState> emit,
-  ) async {
+  Future<void> _onSendMoneyRequested(SendMoneyRequested event, Emitter<SendMoneyState> emit) async {
     emit(const SendMoneyLoading());
 
     final result = await _sendMoneyUseCase(SendMoneyParams(
@@ -24,7 +21,6 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       currentBalance: event.currentBalance,
       note: event.note,
     ));
-
     result.fold(
       (failure) => emit(SendMoneyError(message: failure.message)),
       (transfer) => emit(SendMoneySuccess(transfer: transfer)),

@@ -1,7 +1,7 @@
+import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/helper/formatters.dart';
 import '../../domain/entities/transfer_entity.dart';
 
 class SuccessDialog extends StatelessWidget {
@@ -9,11 +9,7 @@ class SuccessDialog extends StatelessWidget {
   final VoidCallback onDone;
   final VoidCallback onSendAnother;
 
-  const SuccessDialog(
-      {super.key,
-      required this.transfer,
-      required this.onDone,
-      required this.onSendAnother});
+  const SuccessDialog({super.key, required this.transfer, required this.onDone, required this.onSendAnother});
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +103,14 @@ class SuccessDialog extends StatelessWidget {
               onPressed: onDone,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text('Done'),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: onSendAnother,
-              child: const Text('Send Another',
-                  style: TextStyle(color: AppTheme.primaryColor)),
+              child: const Text('Send Another', style: TextStyle(color: AppTheme.primaryColor)),
             ),
           ],
         ),
@@ -136,14 +130,8 @@ class _DetailRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style:
-                const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-        Text(value,
-            style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: AppTheme.textPrimary)),
+        Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppTheme.textPrimary)),
       ],
     );
   }

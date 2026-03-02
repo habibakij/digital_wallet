@@ -1,3 +1,5 @@
+import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transection.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/pagination_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,33 +66,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
               child: CircularProgressIndicator(color: AppTheme.primaryColor),
             );
           }
-
           if (state is TransactionEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.receipt_long_outlined, size: 80, color: Colors.grey.shade300),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'No transactions yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Your transactions will appear here once\nyou start sending or receiving money.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
-                  ),
-                ],
-              ),
-            );
+            return const EmptyTransactions();
           }
-
           if (state is TransactionError) {
             return Center(
               child: Column(
@@ -125,26 +103,23 @@ class _TransactionListPageState extends State<TransactionListPage> {
                     child: ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      itemCount: state.transactions.length + (state.isPaginating ? 1 : 0),
+                      itemCount: state.transactionList.length + (state.isPaginating ? 1 : 0),
                       itemBuilder: (context, index) {
-                        if (index == state.transactions.length) {
+                        if (index == state.transactionList.length) {
                           return const Padding(
                             padding: EdgeInsets.all(16),
                             child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppTheme.primaryColor,
-                                strokeWidth: 2,
-                              ),
+                              child: CircularProgressIndicator(color: AppTheme.primaryColor, strokeWidth: 2),
                             ),
                           );
                         }
                         return TransactionTile(
-                          transaction: state.transactions[index],
+                          transaction: state.transactionList[index],
                         );
                       },
                     ),
                   ),
-                  if (state.paginationError != null) _buildPaginationError(state.paginationError!),
+                  if (state.paginationError != null) PaginationError(error: state.paginationError!),
                 ],
               ),
             );
@@ -171,37 +146,14 @@ class _TransactionListPageState extends State<TransactionListPage> {
             ),
           ),
           const Spacer(),
-          if (!state.hasNextPage && state.transactions.isNotEmpty)
+          if (!state.hasNextPage && state.transactionList.isNotEmpty)
             Text(
               'Showing all',
               style: TextStyle(
                 fontSize: 12,
-                color: AppTheme.textSecondary.withOpacity(0.7),
+                color: AppTheme.textSecondary.withValues(alpha: 0.7),
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaginationError(String error) {
-    return Container(
-      color: AppTheme.errorColor.withOpacity(0.1),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          const Icon(Icons.warning_amber_rounded, color: AppTheme.errorColor, size: 16),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              'Failed to load more: $error',
-              style: const TextStyle(fontSize: 12, color: AppTheme.errorColor),
-            ),
-          ),
-          TextButton(
-            onPressed: () => context.read<TransactionBloc>().add(const LoadMoreTransactions()),
-            child: const Text('Retry', style: TextStyle(fontSize: 12, color: AppTheme.primaryColor)),
-          ),
         ],
       ),
     );

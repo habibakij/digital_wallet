@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:digital_wallet/core/error_handler/failures.dart';
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
-
-import '../../../../core/error_handler/failures.dart';
-import '../../domain/entities/paginated_transactions.dart';
-import '../../domain/repositories/transaction_repository.dart';
-import '../datasources/transaction_remote_datasource.dart';
-import '../model/transfer_model.dart';
+import 'package:digital_wallet/features/transactions/data/model/transfer_model.dart';
+import 'package:digital_wallet/features/transactions/data/sources/transaction_remote_datasource.dart';
+import 'package:digital_wallet/features/transactions/domain/entities/paginated_transactions.dart';
+import 'package:digital_wallet/features/transactions/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
   final TransactionRemoteDataSource _remoteDataSource;
@@ -13,15 +12,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure, PaginatedTransactions>> getTransactions({
-    required int page,
-    required int pageSize,
-  }) async {
+  Future<Either<Failure, PaginatedTransactions>> getTransactions({required int page, required int pageSize}) async {
     try {
-      final data = await _remoteDataSource.getTransactions(
-        page: page,
-        pageSize: pageSize,
-      );
+      final data = await _remoteDataSource.getTransactions(page: page, pageSize: pageSize);
 
       final items = (data['data'] as List? ?? []).map((e) => TransactionModel.fromJson(e as Map<String, dynamic>)).toList();
 

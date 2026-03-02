@@ -16,7 +16,7 @@ class TransactionEntity extends Equatable {
   final String? receiverName;
   final String? receiverAccount;
   final String? note;
-  final DateTime createdAt;
+  final DateTime? createdAt;
   final String? failureReason;
 
   const TransactionEntity({

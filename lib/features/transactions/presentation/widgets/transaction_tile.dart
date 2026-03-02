@@ -1,12 +1,10 @@
-// lib/features/transactions/presentation/widgets/transaction_tile.dart
+import 'package:digital_wallet/core/theme/app_theme.dart';
+import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/features/transactions/domain/entities/transaction_entity.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/helper/formatters.dart';
-import '../../domain/entities/transaction_entity.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionEntity transaction;
-
   const TransactionTile({super.key, required this.transaction});
 
   @override
@@ -34,7 +32,7 @@ class TransactionTile extends StatelessWidget {
           children: [
             const SizedBox(height: 2),
             Text(
-              DateFormatter.formatTransaction(transaction.createdAt),
+              DateFormatter.formatTransaction(transaction.createdAt ?? DateTime.now()),
               style: const TextStyle(
                 fontSize: 12,
                 color: AppTheme.textSecondary,
@@ -65,9 +63,7 @@ class TransactionTile extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
-                color: transaction.isCredit
-                    ? AppTheme.accentColor
-                    : AppTheme.textPrimary,
+                color: transaction.isCredit ? AppTheme.accentColor : AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
@@ -140,16 +136,12 @@ class TransactionTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 10,
-          color: color,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600),
       ),
     );
   }

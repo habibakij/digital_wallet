@@ -1,14 +1,13 @@
-// lib/features/auth/data/models/user_model.dart
-import '../../domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
-    required super.id,
-    required super.name,
-    required super.email,
-    required super.phoneNumber,
-    required super.accountNumber,
-    required super.balance,
+    super.id,
+    super.name,
+    super.email,
+    super.phoneNumber,
+    super.accountNumber,
+    super.balance,
     super.avatarUrl,
     super.isKycVerified,
   });

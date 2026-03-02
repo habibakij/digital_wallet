@@ -16,12 +16,8 @@ class TransactionLoading extends TransactionState {
   const TransactionLoading();
 }
 
-class TransactionEmpty extends TransactionState {
-  const TransactionEmpty();
-}
-
 class TransactionLoaded extends TransactionState {
-  final List<TransactionEntity> transactions;
+  final List<TransactionEntity> transactionList;
   final bool hasNextPage;
   final int currentPage;
   final int totalCount;
@@ -29,7 +25,7 @@ class TransactionLoaded extends TransactionState {
   final String? paginationError;
 
   const TransactionLoaded({
-    required this.transactions,
+    required this.transactionList,
     required this.hasNextPage,
     required this.currentPage,
     required this.totalCount,
@@ -46,7 +42,7 @@ class TransactionLoaded extends TransactionState {
     String? paginationError,
   }) {
     return TransactionLoaded(
-      transactions: transactions ?? this.transactions,
+      transactionList: transactions ?? transactionList,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       currentPage: currentPage ?? this.currentPage,
       totalCount: totalCount ?? this.totalCount,
@@ -56,7 +52,11 @@ class TransactionLoaded extends TransactionState {
   }
 
   @override
-  List<Object?> get props => [transactions, hasNextPage, currentPage, isPaginating, paginationError];
+  List<Object?> get props => [transactionList, hasNextPage, currentPage, isPaginating, paginationError];
+}
+
+class TransactionEmpty extends TransactionState {
+  const TransactionEmpty();
 }
 
 class TransactionError extends TransactionState {

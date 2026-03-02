@@ -1,6 +1,5 @@
-// lib/core/app/app_bootstrap.dart
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Handles all Flutter engine + system-level bootstrap tasks
 /// before [runApp] is called. Keeps [main()] thin and readable.

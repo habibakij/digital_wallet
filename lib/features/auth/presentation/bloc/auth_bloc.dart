@@ -1,4 +1,4 @@
-// lib/features/auth/presentation/bloc/auth_bloc.dart
+import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/use_case/usecase.dart';
@@ -11,9 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
   final LogoutUseCase _logoutUseCase;
 
-  AuthBloc(
-      {required LoginUseCase loginUseCase,
-      required LogoutUseCase logoutUseCase})
+  AuthBloc({required LoginUseCase loginUseCase, required LogoutUseCase logoutUseCase})
       : _loginUseCase = loginUseCase,
         _logoutUseCase = logoutUseCase,
         super(const AuthInitial()) {
@@ -21,20 +19,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
   }
 
-  Future<void> _onLoginRequested(
-      LoginRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
     final result = await _loginUseCase(
       LoginParams(email: event.email, password: event.password),
     );
     result.fold(
       (failure) => emit(AuthError(message: failure.message)),
-      (auth) => emit(AuthAuthenticated(user: auth.user)),
+      (auth) => emit(AuthAuthenticated(user: auth.user ?? const UserEntity())),
     );
   }
 
-  Future<void> _onLogoutRequested(
-      LogoutRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
     await _logoutUseCase(const NoParams());
     emit(const AuthUnauthenticated());

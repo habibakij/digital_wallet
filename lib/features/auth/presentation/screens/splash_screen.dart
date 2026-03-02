@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_theme.dart';
-import 'package:digital_wallet/injection/injection.dart';
 import 'package:digital_wallet/core/utils/helper/token_storage.dart';
+import 'package:digital_wallet/injection/injection.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,8 +12,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
   late final Animation<double> _fadeAnim;
   late final Animation<double> _scaleAnim;
@@ -30,27 +29,21 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-
     _fadeAnim = CurvedAnimation(
       parent: _animController,
       curve: Curves.easeIn,
     );
-
     _scaleAnim = Tween<double>(begin: 0.85, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
     );
-
     _animController.forward();
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Minimum splash display time for smooth UX
     await Future.delayed(const Duration(milliseconds: 1800));
     if (!mounted) return;
-
     final isAuthenticated = await sl<TokenStorage>().hasValidSession();
     if (!mounted) return;
-
     if (isAuthenticated) {
       context.goNamed(AppRoutes.dashboard);
     } else {

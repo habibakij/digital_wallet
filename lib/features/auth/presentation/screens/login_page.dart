@@ -1,8 +1,10 @@
+import 'package:digital_wallet/core/navigation/app_routes.dart';
+import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/helper/formatters.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -45,16 +47,15 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            Navigator.of(context).pushReplacementNamed('/dashboard');
+            context.pushReplacementNamed(AppRoutes.dashboard);
+            //Navigator.of(context).pushReplacementNamed('/dashboard');
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: AppTheme.errorColor,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
           }
@@ -158,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
               hint: 'you@example.com',
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icons.email_outlined,
-              validator: InputFormatters.validateEmail,
+              validator: InputValidator.validateEmail,
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
             ),
@@ -171,17 +172,13 @@ class _LoginPageState extends State<LoginPage> {
               prefixIcon: Icons.lock_outline_rounded,
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
+                  _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                   color: AppTheme.textSecondary,
                 ),
-                onPressed: () =>
-                    setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
               ),
-              validator: InputFormatters.validatePassword,
+              validator: InputValidator.validatePassword,
               textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => _onLogin(),
               autofillHints: const [AutofillHints.password],
             ),
             const SizedBox(height: 12),
@@ -192,17 +189,13 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Checkbox(
                       value: _rememberMe,
-                      onChanged: (v) =>
-                          setState(() => _rememberMe = v ?? false),
+                      onChanged: (v) => setState(() => _rememberMe = v ?? false),
                       activeColor: AppTheme.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                     ),
                     const Text(
                       'Remember me',
-                      style: TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 13),
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
@@ -242,10 +235,7 @@ class _LoginPageState extends State<LoginPage> {
           ? const SizedBox(
               width: 24,
               height: 24,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2.5,
-              ),
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
             )
           : const Text(
               'Sign In',
