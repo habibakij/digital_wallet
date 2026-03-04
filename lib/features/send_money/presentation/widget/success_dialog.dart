@@ -1,8 +1,7 @@
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/features/send_money/domain/entities/transfer_entity.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/theme/app_theme.dart';
-import '../../domain/entities/transfer_entity.dart';
 
 class SuccessDialog extends StatelessWidget {
   final TransferEntity transfer;
@@ -25,12 +24,12 @@ class SuccessDialog extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppTheme.accentColor.withValues(alpha: 0.1),
+                color: AppColors.accentColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.check_circle_rounded,
-                color: AppTheme.accentColor,
+                color: AppColors.accentColor,
                 size: 52,
               ),
             ),
@@ -40,13 +39,13 @@ class SuccessDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             const Text(
               'You have successfully sent',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 4),
             Text(
@@ -54,7 +53,7 @@ class SuccessDialog extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
-                color: AppTheme.primaryColor,
+                color: AppColors.primaryColor,
               ),
             ),
             const SizedBox(height: 4),
@@ -63,7 +62,7 @@ class SuccessDialog extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 20),
@@ -71,7 +70,7 @@ class SuccessDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundColor,
+                color: AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -110,7 +109,7 @@ class SuccessDialog extends StatelessWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: onSendAnother,
-              child: const Text('Send Another', style: TextStyle(color: AppTheme.primaryColor)),
+              child: const Text('Send Another', style: TextStyle(color: AppColors.primaryColor)),
             ),
           ],
         ),
@@ -130,8 +129,8 @@ class _DetailRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppTheme.textPrimary)),
+        Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+        Text(value, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
       ],
     );
   }

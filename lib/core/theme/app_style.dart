@@ -1,4 +1,4 @@
-import 'package:digital_wallet/core/constants/color_manager.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
@@ -17,7 +17,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.textColor,
+      color: color ?? AppColors.textPrimary,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration ?? TextDecoration.none,
@@ -38,7 +38,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.textColor,
+      color: color ?? AppColors.textPrimary,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration ?? TextDecoration.none,
@@ -59,7 +59,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.textColor,
+      color: color ?? AppColors.textPrimary,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration ?? TextDecoration.none,
@@ -69,7 +69,7 @@ class AppTextStyles {
 
   /// ---------- Hint / Input ----------
   static TextStyle hintStyle({
-    double fontSize = 13,
+    double fontSize = 12,
     FontWeight fontWeight = FontWeight.w400,
     Color? color,
     double letterSpacing = 0,

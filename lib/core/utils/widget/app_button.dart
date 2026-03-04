@@ -1,4 +1,4 @@
-import 'package:digital_wallet/core/constants/color_manager.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:flutter/material.dart';
 

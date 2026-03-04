@@ -1,14 +1,14 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
+import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:digital_wallet/features/auth/presentation/bloc/auth_event.dart';
+import 'package:digital_wallet/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/theme/app_theme.dart';
-import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
-import '../widgets/auth_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -43,17 +43,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
             context.pushReplacementNamed(AppRoutes.dashboard);
-            //Navigator.of(context).pushReplacementNamed('/dashboard');
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: AppTheme.errorColor,
+                backgroundColor: AppColors.errorColor,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
@@ -79,11 +78,8 @@ class _LoginPageState extends State<LoginPage> {
       height: 280,
       width: double.infinity,
       decoration: const BoxDecoration(
-        gradient: AppTheme.primaryGradient,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
       ),
       child: SafeArea(
         child: Column(
@@ -103,23 +99,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Digital Wallet',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.5,
-              ),
+              style: AppTextStyles.title(fontSize: 28, color: AppColors.white),
             ),
             const SizedBox(height: 6),
             Text(
               'Secure. Fast. Reliable.',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
-                fontSize: 14,
-                letterSpacing: 1,
-              ),
+              style: AppTextStyles.regular(color: AppColors.white.withValues(alpha: 0.7), letterSpacing: 3.0),
             ),
           ],
         ),
@@ -129,51 +116,45 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginForm(BuildContext context, AuthState state) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Welcome back',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
-              ),
+              style: AppTextStyles.title(fontSize: 24),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Sign in to your account',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.textSecondary,
-              ),
+              style: AppTextStyles.regular(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 32),
-            AuthTextField(
+            CommonTextField(
               controller: _emailController,
-              label: 'Email Address',
-              hint: 'you@example.com',
+              labelText: 'Email address',
+              hintText: 'you@example.com',
+              inputTextStyle: AppTextStyles.regular(color: AppColors.textSecondary),
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icons.email_outlined,
               validator: InputValidator.validateEmail,
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
             ),
-            const SizedBox(height: 16),
-            AuthTextField(
+            CommonTextField(
               controller: _passwordController,
-              label: 'Password',
-              hint: '••••••••',
+              labelText: 'Password',
+              hintText: '••••••••',
               obscureText: _obscurePassword,
+              inputTextStyle: AppTextStyles.regular(color: AppColors.textSecondary),
               prefixIcon: Icons.lock_outline_rounded,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                  color: AppTheme.textSecondary,
+                  color: AppColors.textSecondary,
                 ),
                 onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
               ),
@@ -181,8 +162,8 @@ class _LoginPageState extends State<LoginPage> {
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.password],
             ),
-            const SizedBox(height: 12),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -190,24 +171,17 @@ class _LoginPageState extends State<LoginPage> {
                     Checkbox(
                       value: _rememberMe,
                       onChanged: (v) => setState(() => _rememberMe = v ?? false),
-                      activeColor: AppTheme.primaryColor,
+                      activeColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                     ),
-                    const Text(
-                      'Remember me',
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
-                    ),
+                    Text('Remember me', style: AppTextStyles.hintStyle(color: AppColors.textSecondary)),
                   ],
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text(
+                  child: Text(
                     'Forgot Password?',
-                    style: TextStyle(
-                      color: AppTheme.primaryColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                    style: AppTextStyles.regular(fontSize: 13, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -229,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: AppColors.primaryColor,
       ),
       child: isLoading
           ? const SizedBox(
@@ -237,14 +211,9 @@ class _LoginPageState extends State<LoginPage> {
               height: 24,
               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
             )
-          : const Text(
+          : Text(
               'Sign In',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-                color: Colors.white,
-              ),
+              style: AppTextStyles.buttonStyle(fontSize: 18),
             ),
     );
   }
@@ -253,14 +222,11 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.security, size: 14, color: AppTheme.textSecondary),
+        const Icon(Icons.security, size: 14, color: AppColors.textSecondary),
         const SizedBox(width: 6),
         Text(
           '256-bit SSL encrypted connection',
-          style: TextStyle(
-            fontSize: 12,
-            color: AppTheme.textSecondary.withValues(alpha: 0.8),
-          ),
+          style: AppTextStyles.regular(color: AppColors.textSecondary.withValues(alpha: 0.5), fontSize: 12),
         ),
       ],
     );

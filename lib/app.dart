@@ -16,7 +16,8 @@ class App extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Digital Wallet',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
+        theme: const AppTheme(TextTheme()).light(),
+        darkTheme: const AppTheme(TextTheme()).dark(),
         routerConfig: AppRouter.router,
       ),
     );

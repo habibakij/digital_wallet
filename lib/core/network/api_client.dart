@@ -208,9 +208,9 @@ class ApiClient {
             validateStatus: (status) => status != null && status < 500,
           ),
         );
-        // if (_accessToken != null) {
-        //   tempDio.options.headers['Authorization'] = 'Bearer $_accessToken';
-        // }
+        if (_accessToken != null) {
+          tempDio.options.headers['Authorization'] = 'Bearer $_accessToken';
+        }
         return await tempDio.get(endpoint, queryParameters: queryParameters, cancelToken: cancelToken);
       }
       return await _dio.get(

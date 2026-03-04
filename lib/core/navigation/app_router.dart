@@ -32,11 +32,6 @@ class AppRouter {
         name: AppRoutes.login,
         pageBuilder: (context, state) => customTransition(state: state, child: const LoginPage()),
       ),
-      /*GoRoute(
-        path: AppRoutes.dashboard,
-        name: AppRoutes.dashboard,
-        pageBuilder: (context, state) => customTransition(state: state, child: const DashboardPage()),
-      ),*/
       GoRoute(
         path: AppRoutes.transactions,
         name: AppRoutes.transactions,

@@ -1,5 +1,6 @@
-import 'package:digital_wallet/core/constants/color_manager.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../../../core/theme/app_colors.dart';
 
 class TransactionSkeleton extends StatelessWidget {
   const TransactionSkeleton({super.key});

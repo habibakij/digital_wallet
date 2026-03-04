@@ -1,12 +1,11 @@
-import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transection.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/theme/app_theme.dart';
-import '../bloc/transaction_bloc.dart';
-import '../bloc/transaction_event.dart';
-import '../bloc/transaction_state.dart';
-import '../widgets/transaction_tile.dart';
 
 class TransactionListPage extends StatefulWidget {
   const TransactionListPage({super.key});
@@ -50,7 +49,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: const Text('Transaction History'),
         bottom: const PreferredSize(
@@ -62,7 +61,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
         builder: (context, state) {
           if (state is TransactionLoading) {
             return const Center(
-              child: CircularProgressIndicator(color: AppTheme.primaryColor),
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
             );
           }
           if (state is TransactionEmpty) {
@@ -73,7 +72,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+                  const Icon(Icons.error_outline, color: AppColors.errorColor, size: 48),
                   const SizedBox(height: 16),
                   Text(state.message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
@@ -93,7 +92,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                 context.read<TransactionBloc>().add(const RefreshTransactions());
                 await Future.delayed(const Duration(seconds: 1));
               },
-              color: AppTheme.primaryColor,
+              color: AppColors.primaryColor,
               child: Column(
                 children: [
                   Expanded(
@@ -102,6 +101,14 @@ class _TransactionListPageState extends State<TransactionListPage> {
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       itemCount: state.entity.length,
                       itemBuilder: (context, index) {
+                        if (index == state.entity.length - 1) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Center(
+                              child: CircularProgressIndicator(color: AppColors.primaryColor, strokeWidth: 2),
+                            ),
+                          );
+                        }
                         return TransactionTile(entity: state.entity[index]);
                       },
                     ),
@@ -113,6 +120,33 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+
+  Widget _buildHeader(TransactionLoaded state) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Text(
+            '${state.entity.length} Transactions',
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+              fontSize: 14,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            'Showing all',
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,16 +1,15 @@
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
+import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
+import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
+import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
+import 'package:digital_wallet/features/send_money/presentation/widget/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/theme/app_theme.dart';
-import '../../../auth/domain/entities/user_entity.dart';
-import '../../../dashboard/presentation/bloc/dashboard_bloc.dart';
-import '../../../dashboard/presentation/bloc/dashboard_event.dart';
-import '../bloc/send_money_bloc.dart';
-import '../bloc/send_money_event.dart';
-import '../bloc/send_money_state.dart';
-import '../widget/success_dialog.dart';
 
 class SendMoneyPage extends StatefulWidget {
   final UserEntity currentUser;
@@ -50,7 +49,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(title: const Text('Send Money')),
       body: BlocConsumer<SendMoneyBloc, SendMoneyState>(
         listener: (context, state) {
@@ -66,7 +65,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                     Expanded(child: Text(state.message)),
                   ],
                 ),
-                backgroundColor: AppTheme.errorColor,
+                backgroundColor: AppColors.errorColor,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -118,7 +117,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        gradient: AppColors.cardGradient,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -148,10 +147,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w700,
-        color: AppTheme.textPrimary,
+        color: AppColors.textPrimary,
         letterSpacing: 0.3,
       ),
     );
@@ -167,9 +166,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         fontWeight: FontWeight.w600,
         letterSpacing: 2,
       ),
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Enter account number',
-        prefixIcon: Icon(Icons.person_outline, color: AppTheme.textSecondary),
+        prefixIcon: Icon(Icons.person_outline, color: AppColors.textSecondary),
         labelText: 'Receiver Account Number',
       ),
       validator: InputValidator.validateAccountNumber,
@@ -183,10 +182,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
       ],
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w700,
-        color: AppTheme.primaryColor,
+        color: AppColors.primaryColor,
       ),
       decoration: InputDecoration(
         hintText: '0.00',
@@ -194,14 +193,14 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         prefixStyle: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w700,
-          color: AppTheme.primaryColor,
+          color: AppColors.primaryColor,
         ),
         labelText: 'Amount',
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Text(
             'Max ৳50,000',
-            style: TextStyle(fontSize: 11, color: AppTheme.textSecondary.withValues(alpha: 0.7)),
+            style: TextStyle(fontSize: 11, color: AppColors.textSecondary.withValues(alpha: 0.7)),
           ),
         ),
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
@@ -223,7 +222,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
         style: TextStyle(
           fontSize: 12,
-          color: isInsufficient ? AppTheme.errorColor : AppTheme.textSecondary,
+          color: isInsufficient ? AppColors.errorColor : AppColors.textSecondary,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -235,9 +234,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       controller: _noteController,
       maxLength: 100,
       maxLines: 2,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'e.g. Rent payment, Birthday gift...',
-        prefixIcon: Icon(Icons.notes_outlined, color: AppTheme.textSecondary),
+        prefixIcon: Icon(Icons.notes_outlined, color: AppColors.textSecondary),
         labelText: 'Note (optional)',
         counterText: '',
       ),
@@ -249,9 +248,9 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Quick Select',
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 10),
         Row(
@@ -271,10 +270,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                      color: selected ? AppTheme.primaryColor : Colors.white,
+                      color: selected ? AppColors.primaryColor : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: selected ? AppTheme.primaryColor : AppTheme.dividerColor,
+                        color: selected ? AppColors.primaryColor : AppColors.dividerColor,
                       ),
                     ),
                     alignment: Alignment.center,
@@ -283,7 +282,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: selected ? Colors.white : AppTheme.textPrimary,
+                        color: selected ? Colors.white : AppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -345,9 +344,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         onDone: () {
           Navigator.of(context).pop(); // close dialog
           // Update dashboard balance
-          context.read<DashboardBloc>().add(
-                DashboardBalanceUpdated(newBalance: state.transfer.newBalance),
-              );
+          context.read<DashboardBloc>().add(DashboardBalanceUpdated(newBalance: state.transfer.newBalance));
           // Reset send money state
           context.read<SendMoneyBloc>().add(const SendMoneyReset());
           Navigator.of(context).pop(); // go back to dashboard

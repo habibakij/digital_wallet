@@ -1,11 +1,7 @@
 import 'package:intl/intl.dart';
 
 class CurrencyFormatter {
-  static final NumberFormat _formatter = NumberFormat.currency(
-    symbol: '৳ ',
-    decimalDigits: 2,
-    locale: 'en_BD',
-  );
+  static final NumberFormat _formatter = NumberFormat.currency(symbol: '৳ ', decimalDigits: 2, locale: 'en_BD');
 
   static String format(double amount) => _formatter.format(amount);
   static String formatCompact(double amount) {
@@ -43,11 +39,12 @@ class InputValidator {
     return null;
   }
 
-  static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) return 'Password is required';
-    if (value.length < 6) return 'Password must be at least 8 characters';
-    //if (!RegExp(r'[A-Z]').hasMatch(value)) return 'Must contain an uppercase letter';
-    //if (!RegExp(r'[0-9]').hasMatch(value)) return 'Must contain a number';
+  static String? validatePassword(String? v) {
+    if (v == null || v.isEmpty) return 'Password is required';
+    if (v.length < 4) return 'Minimum 4 characters';
+    if (v.length > 8) return 'Maximum 8 characters';
+    if (!RegExp(r'[A-Z]').hasMatch(v)) return 'Must contain an uppercase letter';
+    if (!RegExp(r'[0-9]').hasMatch(v)) return 'Must contain a number';
     return null;
   }
 

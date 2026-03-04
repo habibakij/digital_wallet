@@ -1,23 +1,22 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transection.dart';
-import 'package:digital_wallet/features/transactions/presentation/widgets/tranlist_skelton.dart';
+import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:digital_wallet/features/auth/presentation/bloc/auth_event.dart';
+import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
+import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_state.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_header.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_list_skeleton.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/theme/app_theme.dart';
-import '../../../auth/domain/entities/user_entity.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/bloc/auth_event.dart';
-import '../../../transactions/presentation/bloc/transaction_bloc.dart';
-import '../../../transactions/presentation/bloc/transaction_event.dart';
-import '../../../transactions/presentation/bloc/transaction_state.dart';
-import '../../../transactions/presentation/widgets/transaction_tile.dart';
-import '../bloc/dashboard_bloc.dart';
-import '../bloc/dashboard_event.dart';
-import '../bloc/dashboard_state.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -39,7 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, dashState) {
           if (dashState is DashboardLoading) {
@@ -63,7 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
         context.read<DashboardBloc>().add(const DashboardLoadRequested());
         context.read<TransactionBloc>().add(const FetchTransactions());
       },
-      color: AppTheme.primaryColor,
+      color: AppColors.primaryColor,
       child: CustomScrollView(
         slivers: [
           _buildSliverAppBar(user),
@@ -89,7 +88,7 @@ class _DashboardPageState extends State<DashboardPage> {
       expandedHeight: 280,
       floating: false,
       pinned: true,
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: AppColors.primaryColor,
       flexibleSpace: FlexibleSpaceBar(background: _buildBalanceCard(user)),
       actions: [
         IconButton(
@@ -115,7 +114,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildBalanceCard(UserEntity user) {
     return Container(
-      decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+      decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
@@ -136,17 +135,17 @@ class _DashboardPageState extends State<DashboardPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withValues(alpha: 0.2),
+                        color: AppColors.accentColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppTheme.accentColor, width: 0.5),
+                        border: Border.all(color: AppColors.accentColor, width: 0.5),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.verified, size: 12, color: AppTheme.accentColor),
+                          Icon(Icons.verified, size: 12, color: AppColors.accentColor),
                           SizedBox(width: 4),
                           Text(
                             'KYC Verified',
-                            style: TextStyle(color: AppTheme.accentColor, fontSize: 11),
+                            style: TextStyle(color: AppColors.accentColor, fontSize: 11),
                           ),
                         ],
                       ),
@@ -291,7 +290,7 @@ class _DashboardPageState extends State<DashboardPage> {
         if (state is TransactionError) {
           return SliverToBoxAdapter(
             child: Center(
-              child: Text(state.message, style: const TextStyle(color: AppTheme.errorColor)),
+              child: Text(state.message, style: TextStyle(color: AppColors.errorColor)),
             ),
           );
         }
@@ -307,7 +306,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+            Icon(Icons.error_outline, color: AppColors.errorColor, size: 48),
             const SizedBox(height: 16),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
@@ -335,8 +334,8 @@ class _DashboardPageState extends State<DashboardPage> {
             const Text('Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.logout, color: AppTheme.errorColor),
-              title: const Text('Logout', style: TextStyle(color: AppTheme.errorColor)),
+              leading: Icon(Icons.logout, color: AppColors.errorColor),
+              title: Text('Logout', style: TextStyle(color: AppColors.errorColor)),
               onTap: () {
                 Navigator.pop(context);
                 context.read<AuthBloc>().add(const LogoutRequested());
@@ -355,12 +354,7 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
+  const _ActionButton({required this.icon, required this.label, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +366,7 @@ class _ActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppTheme.dividerColor, width: 0.5),
+            border: Border.all(color: AppColors.dividerColor, width: 0.5),
           ),
           child: Column(
             children: [
@@ -388,10 +382,10 @@ class _ActionButton extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],

@@ -6,13 +6,12 @@ import '../../../../core/use_case/usecase.dart';
 import '../entities/auth_entity.dart';
 import '../repositories/auth_repository.dart';
 
-class LoginUseCase extends UseCase<AuthEntity, LoginParams> {
+class LoginUseCase implements UseCase<AuthEntity, LoginParams> {
   final AuthRepository _repository;
   LoginUseCase(this._repository);
 
   @override
   Future<Either<Failure, AuthEntity>> call(LoginParams params) async {
-    // Validate inputs before hitting API
     if (params.email.isEmpty) {
       return const Left(ValidationFailure(message: 'Email is required'));
     }

@@ -4,10 +4,7 @@ import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
 import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, AuthEntity>> login({
-    required String email,
-    required String password,
-  });
+  Future<Either<Failure, AuthEntity>> login({required String email, required String password});
 
   Future<Either<Failure, void>> logout();
 

@@ -1,5 +1,5 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
-import 'package:digital_wallet/core/theme/app_theme.dart';
+import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/token_storage.dart';
 import 'package:digital_wallet/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: BoxDecoration(gradient: AppColors.primaryGradient),
         child: SafeArea(
           child: Center(
             child: FadeTransition(
