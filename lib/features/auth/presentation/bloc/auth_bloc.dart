@@ -1,15 +1,17 @@
+import 'package:digital_wallet/core/use_case/use_case.dart';
+import 'package:digital_wallet/core/utils/helper/service/local_storage_service.dart';
 import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:digital_wallet/features/auth/domain/use_cases/logout_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/use_case/usecase.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
   final LogoutUseCase _logoutUseCase;
+  late LocalStorageService localStorageService;
 
   AuthBloc({required LoginUseCase loginUseCase, required LogoutUseCase logoutUseCase})
       : _loginUseCase = loginUseCase,

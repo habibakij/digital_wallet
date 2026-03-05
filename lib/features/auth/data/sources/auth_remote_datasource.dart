@@ -1,7 +1,7 @@
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
-import 'package:digital_wallet/core/utils/helper/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/data/models/auth_model.dart';
 import 'package:digital_wallet/features/auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -14,8 +14,8 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient _apiClient;
-  final TokenStorage _tokenStorage;
-  AuthRemoteDataSourceImpl(this._apiClient, this._tokenStorage);
+  final SecureStorageService _secureStorageService;
+  AuthRemoteDataSourceImpl(this._apiClient, this._secureStorageService);
 
   @override
   Future<AuthModel> login({required String email, required String password}) async {
@@ -27,8 +27,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final auth = AuthModel.fromJson(response.data as Map<String, dynamic>);
-        await _tokenStorage.saveAccessToken(auth.accessToken ?? '');
-        await _tokenStorage.saveRefreshToken(auth.refreshToken ?? '');
+        await _secureStorageService.saveAccessToken(auth.accessToken ?? '');
+        await _secureStorageService.saveRefreshToken(auth.refreshToken ?? '');
         return auth;
       } else if (response.statusCode == 401) {
         throw const AuthException(
@@ -56,7 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _apiClient.post(ApiEndpoints.logout);
     } finally {
       // Always clear tokens even if API call fails
-      await _tokenStorage.clearAll();
+      await _secureStorageService.clearAll();
     }
   }
 

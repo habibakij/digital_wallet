@@ -1,9 +1,9 @@
 import 'package:digital_wallet/core/constants/app_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class TokenStorage {
+class SecureStorageService {
   final FlutterSecureStorage _secureStorage;
-  TokenStorage(this._secureStorage);
+  SecureStorageService(this._secureStorage);
 
   // Android options for encrypted storage
   static const _androidOptions = AndroidOptions(encryptedSharedPreferences: true, resetOnError: true);

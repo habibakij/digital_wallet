@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
-import 'package:digital_wallet/core/utils/helper/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _setupAnimations();
-    _checkAuthAndNavigate();
+    //_checkAuthAndNavigate();
   }
 
   void _setupAnimations() {
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Future<void> _checkAuthAndNavigate() async {
     await Future.delayed(const Duration(milliseconds: 1800));
     if (!mounted) return;
-    final isAuthenticated = await sl<TokenStorage>().hasValidSession();
+    final isAuthenticated = await sl<SecureStorageService>().hasValidSession();
     if (!mounted) return;
     if (isAuthenticated) {
       context.goNamed(AppRoutes.dashboard);
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(gradient: AppColors.primaryGradient),
+        decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
         child: SafeArea(
           child: Center(
             child: FadeTransition(
@@ -93,21 +93,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       width: 88,
       height: 88,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: AppColors.white.withValues(alpha: 0.15),
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+        border: Border.all(color: AppColors.white.withValues(alpha: 0.3), width: 1.5),
       ),
-      child: const Icon(
-        Icons.account_balance_wallet_rounded,
-        size: 46,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.account_balance_wallet_rounded, size: 46, color: AppColors.white),
     );
   }
 
   Widget _buildAppName() {
     return const Text(
-      'DigitalWallet',
+      'Digital Wallet',
       style: TextStyle(
         color: Colors.white,
         fontSize: 32,

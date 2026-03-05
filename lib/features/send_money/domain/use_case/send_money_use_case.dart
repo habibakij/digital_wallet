@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:digital_wallet/core/error_handler/failures.dart';
+import 'package:digital_wallet/core/use_case/use_case.dart';
+import 'package:digital_wallet/features/send_money/domain/entities/transfer_entity.dart';
+import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../../../core/error_handler/failures.dart';
-import '../../../../core/use_case/usecase.dart';
-import '../entities/transfer_entity.dart';
-import '../repository/send_money_repository.dart';
 
 class SendMoneyUseCase extends UseCase<TransferEntity, SendMoneyParams> {
   final SendMoneyRepository _repository;
@@ -15,16 +14,13 @@ class SendMoneyUseCase extends UseCase<TransferEntity, SendMoneyParams> {
   Future<Either<Failure, TransferEntity>> call(SendMoneyParams params) async {
     // Domain-level validations
     if (params.receiverAccount.isEmpty) {
-      return const Left(
-          ValidationFailure(message: 'Receiver account is required'));
+      return const Left(ValidationFailure(message: 'Receiver account is required'));
     }
     if (params.amount <= 0) {
-      return const Left(
-          ValidationFailure(message: 'Amount must be greater than 0'));
+      return const Left(ValidationFailure(message: 'Amount must be greater than 0'));
     }
     if (params.amount > 50000) {
-      return const Left(
-          ValidationFailure(message: 'Amount cannot exceed ৳ 50,000'));
+      return const Left(ValidationFailure(message: 'Amount cannot exceed ৳ 50,000'));
     }
     if (params.amount > params.currentBalance) {
       return const Left(InsufficientBalanceFailure());

@@ -2,10 +2,12 @@ import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_event.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_state.dart';
+import 'package:digital_wallet/features/auth/presentation/widget/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -33,10 +35,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      context.read<AuthBloc>().add(LoginRequested(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          ));
+      if (_rememberMe) {
+        context.read<AuthBloc>().localStorageService.saveEmail(_emailController.text);
+      }
+      context.read<AuthBloc>().add(LoginRequested(email: _emailController.text.trim(), password: _passwordController.text));
     }
   }
 
@@ -63,53 +65,12 @@ class _LoginPageState extends State<LoginPage> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                _buildHeader(context),
+                const LoginHeader(),
                 _buildLoginForm(context, state),
               ],
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      height: 280,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGradient,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.account_balance_wallet_rounded,
-                size: 40,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Digital Wallet',
-              style: AppTextStyles.title(fontSize: 28, color: AppColors.white),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Secure. Fast. Reliable.',
-              style: AppTextStyles.regular(color: AppColors.white.withValues(alpha: 0.7), letterSpacing: 3.0),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -198,23 +159,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton(AuthState state) {
     final isLoading = state is AuthLoading;
-    return ElevatedButton(
+    return AppButton(
+      title: 'Sign In',
       onPressed: isLoading ? null : _onLogin,
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        backgroundColor: AppColors.primaryColor,
-      ),
-      child: isLoading
-          ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-            )
-          : Text(
-              'Sign In',
-              style: AppTextStyles.buttonStyle(fontSize: 18),
-            ),
+      textStyle: AppTextStyles.buttonStyle(fontSize: 18),
+      isLoading: isLoading,
+      height: 52,
+      borderRadius: 14,
     );
   }
 

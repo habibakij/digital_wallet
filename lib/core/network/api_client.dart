@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
-import 'package:digital_wallet/core/utils/helper/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/core/utils/widget/snackbar.dart';
 import 'package:digital_wallet/injection/injection.dart';
 import 'package:dio/dio.dart';
@@ -65,7 +65,7 @@ class ApiClient {
               ),
             );
           }
-          _accessToken = await sl<TokenStorage>().getAccessToken();
+          _accessToken = await sl<SecureStorageService>().getAccessToken();
           if (_accessToken != null) {
             options.headers['Authorization'] = 'Bearer $_accessToken';
           }
@@ -152,7 +152,7 @@ class ApiClient {
   /// refresh token
   Future<bool> _refreshAccessToken() async {
     try {
-      _refreshToken ??= await sl<TokenStorage>().getRefreshToken();
+      _refreshToken ??= await sl<SecureStorageService>().getRefreshToken();
       if (_refreshToken == null) return false;
       final response = await _dio.post(
         '/auth/refresh',
@@ -164,8 +164,8 @@ class ApiClient {
       if (response.statusCode == 200 || response.statusCode == 201) {
         _accessToken = response.data['accessToken'];
         _refreshToken = response.data['refreshToken'] ?? _refreshToken;
-        await sl<TokenStorage>().saveAccessToken(_accessToken ?? '');
-        await sl<TokenStorage>().saveRefreshToken(_refreshToken ?? '');
+        await sl<SecureStorageService>().saveAccessToken(_accessToken ?? '');
+        await sl<SecureStorageService>().saveRefreshToken(_refreshToken ?? '');
         return true;
       }
       return false;

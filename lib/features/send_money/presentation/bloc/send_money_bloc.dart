@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:digital_wallet/features/send_money/domain/use_case/send_money_use_case.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
-
-import '../../domain/usecase/send_money_usecase.dart';
 
 class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
   final SendMoneyUseCase _sendMoneyUseCase;

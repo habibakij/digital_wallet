@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_wallet/core/error_handler/failures.dart';
 import 'package:digital_wallet/core/error_handler/server_exception.dart';
-import 'package:digital_wallet/core/utils/helper/token_storage.dart';
+import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/data/sources/auth_remote_datasource.dart';
 import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
 import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
@@ -9,8 +9,8 @@ import 'package:digital_wallet/features/auth/domain/repositories/auth_repository
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
-  final TokenStorage _tokenStorage;
-  AuthRepositoryImpl(this._remoteDataSource, this._tokenStorage);
+  final SecureStorageService _secureStorageService;
+  AuthRepositoryImpl(this._remoteDataSource, this._secureStorageService);
 
   @override
   Future<Either<Failure, AuthEntity>> login({required String email, required String password}) async {
@@ -38,7 +38,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } catch (_) {
       // Even if remote logout fails, clear local tokens
-      await _tokenStorage.clearAll();
+      await _secureStorageService.clearAll();
       return const Right(null);
     }
   }
@@ -57,6 +57,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> isAuthenticated() async {
-    return await _tokenStorage.hasValidSession();
+    return await _secureStorageService.hasValidSession();
   }
 }
