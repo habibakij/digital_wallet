@@ -1,5 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
-import 'package:digital_wallet/core/theme/app_style.dart';
+import 'package:digital_wallet/features/splash/presentation/screen/build_app_name.dart';
+import 'package:digital_wallet/features/splash/presentation/screen/build_tag_name.dart';
 import 'package:flutter/material.dart';
 
 class LoginHeader extends StatelessWidget {
@@ -32,15 +33,9 @@ class LoginHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Digital Wallet',
-              style: AppTextStyles.title(fontSize: 28, color: AppColors.white),
-            ),
+            const BuildAppName(),
             const SizedBox(height: 6),
-            Text(
-              'Secure. Fast. Reliable.',
-              style: AppTextStyles.regular(color: AppColors.white.withValues(alpha: 0.7), letterSpacing: 3.0),
-            ),
+            const BuildTagName(),
           ],
         ),
       ),

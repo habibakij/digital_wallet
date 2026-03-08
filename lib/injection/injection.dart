@@ -12,6 +12,7 @@ import 'package:digital_wallet/features/send_money/data/sources/send_money_remot
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
 import 'package:digital_wallet/features/send_money/domain/use_case/send_money_use_case.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
+import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
 import 'package:digital_wallet/features/transactions/data/repository/transaction_repository_impl.dart';
 import 'package:digital_wallet/features/transactions/data/sources/transaction_remote_datasource.dart';
 import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
@@ -26,6 +27,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
   sl.registerLazySingleton<SecureStorageService>(() => SecureStorageService(sl<FlutterSecureStorage>()));
   sl.registerLazySingleton<ApiClient>(() => ApiClient());
+
+  // ─── Splash ──────────────────────────────────────────────────────────────────
+  sl.registerFactory<SplashCubit>(() => SplashCubit());
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl<ApiClient>(), sl<SecureStorageService>()));

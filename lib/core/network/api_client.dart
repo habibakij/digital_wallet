@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
-import 'package:digital_wallet/core/utils/widget/snackbar.dart';
+import 'package:digital_wallet/core/utils/widget/snack_bar.dart';
 import 'package:digital_wallet/injection/injection.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -27,10 +27,7 @@ class ApiClient {
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         validateStatus: (status) => status != null && status < 500,
       ),
     );
@@ -74,9 +71,7 @@ class ApiClient {
         onError: (DioException error, handler) async {
           if (error.response?.statusCode == 401) {
             if (await _refreshAccessToken()) {
-              return handler.resolve(
-                await _retry(error.requestOptions),
-              );
+              return handler.resolve(await _retry(error.requestOptions));
             }
           }
           return handler.next(error);
@@ -93,9 +88,7 @@ class ApiClient {
             if (retryCount < 3) {
               error.requestOptions.extra['retryCount'] = retryCount + 1;
               await Future.delayed(const Duration(seconds: 2));
-              return handler.resolve(
-                await _retry(error.requestOptions),
-              );
+              return handler.resolve(await _retry(error.requestOptions));
             }
           }
           return handler.next(error);
@@ -106,10 +99,7 @@ class ApiClient {
 
   /// Retry failed request
   Future<Response> _retry(RequestOptions requestOptions) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-    );
+    final options = Options(method: requestOptions.method, headers: requestOptions.headers);
     return _dio.request<dynamic>(
       requestOptions.path,
       data: requestOptions.data,
@@ -201,10 +191,7 @@ class ApiClient {
             connectTimeout: const Duration(seconds: 30),
             receiveTimeout: const Duration(seconds: 30),
             sendTimeout: const Duration(seconds: 30),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
             validateStatus: (status) => status != null && status < 500,
           ),
         );
@@ -286,12 +273,7 @@ class ApiClient {
   }
 
   /// PUT
-  Future<Response> put(
-    String endpoint, {
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-  }) async {
+  Future<Response> put(String endpoint, {Map<String, dynamic>? data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken}) async {
     try {
       return await _dio.put(
         endpoint,
@@ -319,12 +301,7 @@ class ApiClient {
   }
 
   /// DELETE
-  Future<Response> delete(
-    String endpoint, {
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-  }) async {
+  Future<Response> delete(String endpoint, {Map<String, dynamic>? data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken}) async {
     try {
       return await _dio.delete(
         endpoint,
@@ -360,7 +337,7 @@ class ApiClient {
 
   /// Error Handling
   static Exception _errorHandler(dynamic error) {
-    String message = 'Unknown error_handler occurred';
+    String message = 'Unknown exception_handler occurred';
     if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.badResponse:

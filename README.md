@@ -15,7 +15,7 @@ lib/
 │   ├── constants/
 │   │   ├── app_constants.dart      # Timeouts, limits, keys
 │   │   └── api_endpoints.dart      # All API endpoint constants
-│   ├── error_handler/
+│   ├── exception_handler/
 │   │   └── failures.dart           # Failure + Exception types
 │   ├── theme/
 │   │   └── app_theme.dart          # FinTech design system
@@ -219,7 +219,7 @@ flutter_bloc: ^8.1.5     # State management
 dio: ^5.4.3               # HTTP client
 flutter_secure_storage    # Encrypted token storage
 get_it: ^7.7.0            # Dependency injection
-dartz: ^0.10.1            # Either type (functional error_handler handling)
+dartz: ^0.10.1            # Either type (functional exception_handler handling)
 equatable: ^2.0.5         # Value equality for BLoC states
 intl: ^0.19.0             # Currency & date formatting
 connectivity_plus          # Network connectivity check

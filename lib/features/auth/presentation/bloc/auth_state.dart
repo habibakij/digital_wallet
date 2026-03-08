@@ -7,30 +7,41 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthInitial extends AuthState {
-  const AuthInitial();
+class InitialState extends AuthState {
+  const InitialState();
 }
 
-class AuthLoading extends AuthState {
-  const AuthLoading();
+class LoadingState extends AuthState {
+  const LoadingState();
 }
 
-class AuthAuthenticated extends AuthState {
+class AuthenticatedState extends AuthState {
   final UserEntity user;
-  const AuthAuthenticated({required this.user});
+  const AuthenticatedState({required this.user});
 
   @override
   List<Object> get props => [user];
 }
 
-class AuthUnauthenticated extends AuthState {
-  const AuthUnauthenticated();
+class UnauthenticatedState extends AuthState {
+  const UnauthenticatedState();
 }
 
 class AuthError extends AuthState {
-  final String message;
-  const AuthError({required this.message});
+  final String? emailError;
+  final String? passwordError;
+  final String? errorMessage;
+  final bool isValid;
+  final bool isSuccess;
+
+  const AuthError({
+    this.emailError,
+    this.passwordError,
+    this.errorMessage,
+    this.isValid = false,
+    this.isSuccess = false,
+  });
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [emailError ?? '', passwordError ?? '', isValid, isSuccess];
 }

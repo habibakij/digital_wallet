@@ -5,49 +5,51 @@ import 'package:flutter/material.dart';
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? labelText;
+  final String? hintText;
+  final String? errorText;
   final TextStyle? labelStyle;
   final TextStyle? inputTextStyle;
-  final String? hintText;
   final TextStyle? hintStyle;
-  final bool obscureText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
-  final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
-  final Function(String)? onFieldSubmitted;
   final Iterable<String>? autofillHints;
   final FocusNode? focusNode;
   final bool readOnly;
+  final bool obscureText;
   final int? maxLength;
   final int maxLines;
-  final EdgeInsetsGeometry contentPadding;
+  final String? Function(String?)? validator;
+  final Function(String)? onFieldSubmitted;
   final Function(String)? onChanged;
   final Function()? onTap;
+  final EdgeInsetsGeometry contentPadding;
 
   const CommonTextField({
     super.key,
     required this.controller,
     this.labelText,
     this.hintText,
-    this.prefixIcon,
+    this.errorText,
     this.labelStyle,
     this.inputTextStyle,
     this.hintStyle,
-    this.obscureText = false,
+    this.prefixIcon,
     this.suffixIcon,
-    this.validator,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
-    this.onFieldSubmitted,
     this.autofillHints,
     this.focusNode,
     this.readOnly = false,
+    this.obscureText = false,
     this.maxLength,
     this.maxLines = 1,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.validator,
+    this.onFieldSubmitted,
     this.onChanged,
     this.onTap,
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
 
   @override
@@ -90,24 +92,14 @@ class CommonTextField extends StatelessWidget {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             counterText: "",
             helperText: "",
+            errorText: errorText,
+            errorMaxLines: 1,
             helperStyle: AppTextStyles.regular(),
             errorStyle: AppTextStyles.errorStyle(),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.red, width: 1.5),
-            ),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey.shade300, width: 1)),
+            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5)),
+            errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.red, width: 1)),
+            focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
           ),
         ),
       ],

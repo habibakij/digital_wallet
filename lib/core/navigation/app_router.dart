@@ -1,10 +1,10 @@
-import 'package:digital_wallet/core/error_handler/route_exception.dart';
+import 'package:digital_wallet/core/exception_handler/route_exception.dart';
 import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
 import 'package:digital_wallet/features/auth/presentation/screens/login_page.dart';
-import 'package:digital_wallet/features/auth/presentation/screens/splash_screen.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/screens/dashboard_page.dart';
 import 'package:digital_wallet/features/send_money/presentation/screens/send_money_page.dart';
+import 'package:digital_wallet/features/splash/presentation/screen/splash_screen.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/screens/transaction_list_page.dart';
 import 'package:digital_wallet/injection/injection.dart';

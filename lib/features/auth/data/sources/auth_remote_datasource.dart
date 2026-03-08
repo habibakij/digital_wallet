@@ -1,4 +1,4 @@
-import 'package:digital_wallet/core/error_handler/server_exception.dart';
+import 'package:digital_wallet/core/exception_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
@@ -44,7 +44,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       throw AuthException(
-        message: e.message ?? 'Network error_handler during login',
+        message: e.message ?? 'Network exception_handler during login',
         statusCode: e.response?.statusCode,
       );
     }

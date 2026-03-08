@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:digital_wallet/core/error_handler/failures.dart';
-import 'package:digital_wallet/core/error_handler/server_exception.dart';
+import 'package:digital_wallet/core/exception_handler/failures.dart';
+import 'package:digital_wallet/core/exception_handler/server_exception.dart';
 import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/data/sources/auth_remote_datasource.dart';
 import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';

@@ -27,6 +27,7 @@ class AppSnackBar {
               textColor: AppColors.white,
             )
           : null,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
     );
     AppConstants.scaffoldMessengerKey.currentState
       ?..hideCurrentSnackBar()

@@ -1,9 +1,9 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
-import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
+import 'package:digital_wallet/core/utils/widget/snack_bar.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_event.dart';
 import 'package:digital_wallet/features/auth/presentation/bloc/auth_state.dart';
@@ -47,26 +47,23 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) {
+          return false;
+        },
         listener: (context, state) {
-          if (state is AuthAuthenticated) {
+          if (state is AuthenticatedState) {
             context.pushReplacementNamed(AppRoutes.dashboard);
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.errorColor,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            );
+            AppSnackBar.error(state.emailError ?? '');
           }
         },
         builder: (context, state) {
+          final bloc = context.read<AuthBloc>();
           return SingleChildScrollView(
             child: Column(
               children: [
                 const LoginHeader(),
-                _buildLoginForm(context, state),
+                _buildLoginForm(context, state, bloc),
               ],
             ),
           );
@@ -75,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginForm(BuildContext context, AuthState state) {
+  Widget _buildLoginForm(BuildContext context, AuthState state, AuthBloc bloc) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -84,33 +81,28 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            Text(
-              'Welcome back',
-              style: AppTextStyles.title(fontSize: 24),
-            ),
+            Text('Welcome back', style: AppTextStyles.title(fontSize: 24)),
             const SizedBox(height: 4),
-            Text(
-              'Sign in to your account',
-              style: AppTextStyles.regular(color: AppColors.textSecondary),
-            ),
+            Text('Sign in to your account', style: AppTextStyles.regular(color: AppColors.textSecondary)),
             const SizedBox(height: 32),
             CommonTextField(
               controller: _emailController,
               labelText: 'Email address',
               hintText: 'you@example.com',
-              inputTextStyle: AppTextStyles.regular(color: AppColors.textSecondary),
+              inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icons.email_outlined,
-              validator: InputValidator.validateEmail,
+              //validator: InputValidator.validateEmail,
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
+              onChanged: (value) => bloc.add(EmailChanged(value)),
             ),
             CommonTextField(
               controller: _passwordController,
               labelText: 'Password',
               hintText: '••••••••',
               obscureText: _obscurePassword,
-              inputTextStyle: AppTextStyles.regular(color: AppColors.textSecondary),
+              inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
               prefixIcon: Icons.lock_outline_rounded,
               suffixIcon: IconButton(
                 icon: Icon(
@@ -119,9 +111,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
               ),
-              validator: InputValidator.validatePassword,
+              //validator: InputValidator.validatePassword,
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.password],
+              onChanged: (value) => bloc.add(PasswordChanged(value)),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: Text(
                     'Forgot Password?',
-                    style: AppTextStyles.regular(fontSize: 13, fontWeight: FontWeight.w600),
+                    style: AppTextStyles.regular(color: AppColors.primaryColor, fontSize: 13, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -158,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton(AuthState state) {
-    final isLoading = state is AuthLoading;
+    final isLoading = state is LoadingState;
     return AppButton(
       title: 'Sign In',
       onPressed: isLoading ? null : _onLogin,

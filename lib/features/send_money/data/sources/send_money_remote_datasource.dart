@@ -1,5 +1,5 @@
-import 'package:digital_wallet/core/error_handler/failures.dart';
-import 'package:digital_wallet/core/error_handler/server_exception.dart';
+import 'package:digital_wallet/core/exception_handler/failures.dart';
+import 'package:digital_wallet/core/exception_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/features/send_money/data/model/transfer_model.dart';
@@ -44,7 +44,7 @@ class SendMoneyRemoteDataSourceImpl implements SendMoneyRemoteDataSource {
       }
     } on DioException catch (e) {
       throw ServerException(
-        message: e.message ?? 'Network error_handler',
+        message: e.message ?? 'Network exception_handler',
         statusCode: e.response?.statusCode,
       );
     }

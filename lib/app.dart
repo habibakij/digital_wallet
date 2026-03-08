@@ -1,3 +1,4 @@
+import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +13,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: _globalProviders(),
+      providers: [
+        BlocProvider(create: (context) => sl<SplashCubit>()..startSplash()),
+        BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
+      ],
       child: MaterialApp.router(
         title: 'Digital Wallet',
         debugShowCheckedModeBanner: false,
@@ -21,11 +25,5 @@ class App extends StatelessWidget {
         routerConfig: AppRouter.router,
       ),
     );
-  }
-
-  List<BlocProvider> _globalProviders() {
-    return [
-      BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
-    ];
   }
 }

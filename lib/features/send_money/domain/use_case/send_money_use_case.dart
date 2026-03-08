@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:digital_wallet/core/error_handler/failures.dart';
+import 'package:digital_wallet/core/exception_handler/failures.dart';
 import 'package:digital_wallet/core/use_case/use_case.dart';
 import 'package:digital_wallet/features/send_money/domain/entities/transfer_entity.dart';
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
