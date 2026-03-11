@@ -1,6 +1,7 @@
 import 'package:digital_wallet/core/exception_handler/route_exception.dart';
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
-import 'package:digital_wallet/features/auth/presentation/screens/login_page.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/presentation/screens/sign_in_screen.dart';
+import 'package:digital_wallet/features/auth/sign_up/presentation/screens/signup_screen.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/screens/dashboard_page.dart';
 import 'package:digital_wallet/features/send_money/presentation/screens/send_money_page.dart';
@@ -28,9 +29,14 @@ class AppRouter {
         pageBuilder: (context, state) => customTransition(state: state, child: const SplashScreen()),
       ),
       GoRoute(
-        path: AppRoutes.login,
-        name: AppRoutes.login,
-        pageBuilder: (context, state) => customTransition(state: state, child: const LoginPage()),
+        path: AppRoutes.signIn,
+        name: AppRoutes.signIn,
+        pageBuilder: (context, state) => customTransition(state: state, child: const SignInScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        name: AppRoutes.signUp,
+        pageBuilder: (context, state) => customTransition(state: state, child: const SignUpScreen()),
       ),
       GoRoute(
         path: AppRoutes.transactions,

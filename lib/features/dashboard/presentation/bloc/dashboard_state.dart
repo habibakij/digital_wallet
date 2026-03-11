@@ -1,6 +1,5 @@
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../../auth/domain/entities/user_entity.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();

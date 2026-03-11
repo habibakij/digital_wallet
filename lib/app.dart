@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'injection/injection.dart';
 
 class App extends StatelessWidget {
@@ -15,7 +15,7 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<SplashCubit>()..startSplash()),
-        BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
+        BlocProvider<SignInBloc>(create: (_) => sl<SignInBloc>()),
       ],
       child: MaterialApp.router(
         title: 'Digital Wallet',

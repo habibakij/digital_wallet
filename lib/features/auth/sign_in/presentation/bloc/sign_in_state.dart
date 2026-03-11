@@ -1,21 +1,21 @@
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class AuthState extends Equatable {
-  const AuthState();
+abstract class SignInState extends Equatable {
+  const SignInState();
   @override
   List<Object?> get props => [];
 }
 
-class InitialState extends AuthState {
+class InitialState extends SignInState {
   const InitialState();
 }
 
-class LoadingState extends AuthState {
+class LoadingState extends SignInState {
   const LoadingState();
 }
 
-class AuthenticatedState extends AuthState {
+class AuthenticatedState extends SignInState {
   final UserEntity user;
   const AuthenticatedState({required this.user});
 
@@ -23,18 +23,18 @@ class AuthenticatedState extends AuthState {
   List<Object> get props => [user];
 }
 
-class UnauthenticatedState extends AuthState {
+class UnauthenticatedState extends SignInState {
   const UnauthenticatedState();
 }
 
-class AuthError extends AuthState {
+class ValidationFailedState extends SignInState {
   final String? emailError;
   final String? passwordError;
   final String? errorMessage;
   final bool isValid;
   final bool isSuccess;
 
-  const AuthError({
+  const ValidationFailedState({
     this.emailError,
     this.passwordError,
     this.errorMessage,
@@ -44,4 +44,12 @@ class AuthError extends AuthState {
 
   @override
   List<Object> get props => [emailError ?? '', passwordError ?? '', isValid, isSuccess];
+}
+
+class SignInErrorState extends SignInState {
+  final String errorMessage;
+  const SignInErrorState({this.errorMessage = ''});
+
+  @override
+  List<Object> get props => [errorMessage];
 }

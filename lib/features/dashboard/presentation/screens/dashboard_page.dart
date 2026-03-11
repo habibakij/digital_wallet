@@ -1,9 +1,9 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
-import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:digital_wallet/features/auth/presentation/bloc/auth_event.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
+import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_state.dart';
@@ -290,7 +290,7 @@ class _DashboardPageState extends State<DashboardPage> {
         if (state is TransactionError) {
           return SliverToBoxAdapter(
             child: Center(
-              child: Text(state.message, style: TextStyle(color: AppColors.errorColor)),
+              child: Text(state.message, style: const TextStyle(color: AppColors.errorColor)),
             ),
           );
         }
@@ -306,7 +306,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, color: AppColors.errorColor, size: 48),
+            const Icon(Icons.error_outline, color: AppColors.errorColor, size: 48),
             const SizedBox(height: 16),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
@@ -334,11 +334,11 @@ class _DashboardPageState extends State<DashboardPage> {
             const Text('Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.logout, color: AppColors.errorColor),
-              title: Text('Logout', style: TextStyle(color: AppColors.errorColor)),
+              leading: const Icon(Icons.logout, color: AppColors.errorColor),
+              title: const Text('Logout', style: TextStyle(color: AppColors.errorColor)),
               onTap: () {
                 Navigator.pop(context);
-                context.read<AuthBloc>().add(const LogoutRequested());
+                context.read<SignInBloc>().add(const LogoutRequested());
               },
             ),
           ],
@@ -382,7 +382,7 @@ class _ActionButton extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,

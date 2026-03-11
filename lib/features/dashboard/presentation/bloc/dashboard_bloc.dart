@@ -1,4 +1,4 @@
-import 'package:digital_wallet/features/auth/domain/repositories/auth_repository.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'dashboard_event.dart';

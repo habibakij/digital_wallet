@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AuthEvent extends Equatable {
-  const AuthEvent();
+abstract class SignInEvent extends Equatable {
+  const SignInEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class EmailChanged extends AuthEvent {
+class EmailChanged extends SignInEvent {
   final String email;
   const EmailChanged(this.email);
 
@@ -15,7 +15,7 @@ class EmailChanged extends AuthEvent {
   List<Object> get props => [];
 }
 
-class PasswordChanged extends AuthEvent {
+class PasswordChanged extends SignInEvent {
   final String password;
   const PasswordChanged(this.password);
 
@@ -23,7 +23,7 @@ class PasswordChanged extends AuthEvent {
   List<Object> get props => [];
 }
 
-class LoginRequested extends AuthEvent {
+class LoginRequested extends SignInEvent {
   final String email;
   final String password;
 
@@ -33,6 +33,6 @@ class LoginRequested extends AuthEvent {
   List<Object> get props => [email, password];
 }
 
-class LogoutRequested extends AuthEvent {
+class LogoutRequested extends SignInEvent {
   const LogoutRequested();
 }

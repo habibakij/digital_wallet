@@ -1,5 +1,5 @@
-import 'package:digital_wallet/features/auth/data/models/user_model.dart';
-import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/models/user_model.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/auth_entity.dart';
 
 class AuthModel extends AuthEntity {
   const AuthModel({

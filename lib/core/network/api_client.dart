@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
-import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
+import 'package:digital_wallet/core/service/secure_storage_service.dart';
 import 'package:digital_wallet/core/utils/widget/snack_bar.dart';
 import 'package:digital_wallet/injection/injection.dart';
 import 'package:dio/dio.dart';

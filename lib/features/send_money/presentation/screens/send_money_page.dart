@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';

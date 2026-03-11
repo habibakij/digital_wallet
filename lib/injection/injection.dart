@@ -1,11 +1,11 @@
 import 'package:digital_wallet/core/network/api_client.dart';
-import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
-import 'package:digital_wallet/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:digital_wallet/features/auth/data/sources/auth_remote_datasource.dart';
-import 'package:digital_wallet/features/auth/domain/repositories/auth_repository.dart';
-import 'package:digital_wallet/features/auth/domain/use_cases/login_use_case.dart';
-import 'package:digital_wallet/features/auth/domain/use_cases/logout_use_case.dart';
-import 'package:digital_wallet/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:digital_wallet/core/service/secure_storage_service.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/repositories_impl/auth_repository_impl.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/sources/auth_remote_datasource.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/repositories/auth_repository.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/login_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/logout_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/send_money/data/repository/send_money_repository_impl.dart';
 import 'package:digital_wallet/features/send_money/data/sources/send_money_remote_datasource.dart';
@@ -36,7 +36,7 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>(), sl<SecureStorageService>()));
   sl.registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()));
   sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
-  sl.registerFactory<AuthBloc>(() => AuthBloc(loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()));
+  sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()));
 
   // ─── Dashboard ─────────────────────────────────────────────────────────────
   sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<AuthRepository>()));

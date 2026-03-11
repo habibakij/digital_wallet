@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_wallet/core/exception_handler/failures.dart';
 import 'package:digital_wallet/core/exception_handler/server_exception.dart';
-import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
-import 'package:digital_wallet/features/auth/data/sources/auth_remote_datasource.dart';
-import 'package:digital_wallet/features/auth/domain/entities/auth_entity.dart';
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
-import 'package:digital_wallet/features/auth/domain/repositories/auth_repository.dart';
+import 'package:digital_wallet/core/service/secure_storage_service.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/sources/auth_remote_datasource.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/auth_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
@@ -15,10 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthEntity>> login({required String email, required String password}) async {
     try {
-      final auth = await _remoteDataSource.login(
-        email: email,
-        password: password,
-      );
+      final auth = await _remoteDataSource.login(email: email, password: password);
       return Right(auth);
     } on AuthException catch (e) {
       return Left(AuthFailure(message: e.message, statusCode: e.statusCode));

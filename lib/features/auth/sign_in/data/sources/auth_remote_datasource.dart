@@ -1,9 +1,9 @@
 import 'package:digital_wallet/core/exception_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
-import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
-import 'package:digital_wallet/features/auth/data/models/auth_model.dart';
-import 'package:digital_wallet/features/auth/data/models/user_model.dart';
+import 'package:digital_wallet/core/service/secure_storage_service.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/models/auth_model.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/models/user_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class AuthRemoteDataSource {

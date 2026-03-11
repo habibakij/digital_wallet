@@ -1,4 +1,4 @@
-import 'package:digital_wallet/features/auth/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 
 class AuthEntity {
   final String? accessToken;

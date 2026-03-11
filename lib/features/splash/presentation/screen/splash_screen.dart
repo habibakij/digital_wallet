@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
+import 'package:digital_wallet/core/service/secure_storage_service.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
-import 'package:digital_wallet/core/utils/helper/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
 import 'package:digital_wallet/features/splash/presentation/screen/build_app_name.dart';
 import 'package:digital_wallet/features/splash/presentation/screen/build_tag_name.dart';
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     if (isAuthenticated) {
       context.goNamed(AppRoutes.dashboard);
     } else {
-      context.goNamed(AppRoutes.login);
+      context.goNamed(AppRoutes.signIn);
     }
   }
 
