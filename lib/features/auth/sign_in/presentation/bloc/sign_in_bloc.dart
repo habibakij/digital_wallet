@@ -8,7 +8,6 @@ import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/login_use_
 import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/logout_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
@@ -28,24 +27,25 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   FutureOr<void> _onEmailChangeRequest(EmailChanged event, Emitter<SignInState> emit) {
     String emailValidationError = InputValidator.validateEmail(event.email) ?? '';
-    debugPrint("check_email_e: $emailValidationError");
     if (emailValidationError.isNotEmpty) {
-      emit(ValidationFailedState(emailError: emailValidationError, isValid: false));
+      emit(ValidationFailedState(emailError: emailValidationError, validEmail: false));
+    } else if (emailValidationError.isEmpty) {
+      emit(ValidationFailedState(emailError: emailValidationError, validEmail: true));
     }
   }
 
   FutureOr<void> _onPasswordChangeRequest(PasswordChanged event, Emitter<SignInState> emit) {
     String passwordValidationError = InputValidator.validatePassword(event.password) ?? '';
     if (passwordValidationError.isNotEmpty) {
-      emit(ValidationFailedState(passwordError: passwordValidationError, isValid: false));
+      emit(ValidationFailedState(passwordError: passwordValidationError, validPassword: false));
+    } else if (passwordValidationError.isEmpty) {
+      emit(ValidationFailedState(emailError: passwordValidationError, validPassword: true));
     }
   }
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<SignInState> emit) async {
     emit(const LoadingState());
-    final result = await _loginUseCase(
-      LoginParams(email: event.email, password: event.password),
-    );
+    final result = await _loginUseCase(LoginParams(email: event.email, password: event.password));
     result.fold(
       (failure) => emit(SignInErrorState(errorMessage: failure.message)),
       (auth) => emit(AuthenticatedState(user: auth.user ?? const UserEntity())),

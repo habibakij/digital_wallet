@@ -133,7 +133,7 @@ class AppTextStyles {
   /// ---------- Error ----------
   static TextStyle errorStyle({
     double fontSize = 13,
-    FontWeight fontWeight = FontWeight.w600,
+    FontWeight fontWeight = FontWeight.w400,
     Color? color,
     double letterSpacing = 0,
     double height = 1.2,

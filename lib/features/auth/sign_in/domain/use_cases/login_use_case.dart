@@ -17,10 +17,7 @@ class LoginUseCase implements UseCase<AuthEntity, LoginParams> {
     if (params.password.isEmpty) {
       return const Left(ValidationFailure(message: 'Password is required'));
     }
-    return await _repository.login(
-      email: params.email,
-      password: params.password,
-    );
+    return await _repository.login(email: params.email, password: params.password);
   }
 }
 

@@ -30,20 +30,18 @@ class UnauthenticatedState extends SignInState {
 class ValidationFailedState extends SignInState {
   final String? emailError;
   final String? passwordError;
-  final String? errorMessage;
-  final bool isValid;
-  final bool isSuccess;
+  final bool validEmail;
+  final bool validPassword;
 
   const ValidationFailedState({
     this.emailError,
     this.passwordError,
-    this.errorMessage,
-    this.isValid = false,
-    this.isSuccess = false,
+    this.validEmail = false,
+    this.validPassword = false,
   });
 
   @override
-  List<Object> get props => [emailError ?? '', passwordError ?? '', isValid, isSuccess];
+  List<Object> get props => [emailError ?? '', passwordError ?? '', validEmail, validPassword];
 }
 
 class SignInErrorState extends SignInState {
