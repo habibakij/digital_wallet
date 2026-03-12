@@ -1,5 +1,5 @@
+import 'package:digital_wallet/core/exception_handler/app_exception.dart';
 import 'package:digital_wallet/core/exception_handler/failures.dart';
-import 'package:digital_wallet/core/exception_handler/server_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/features/send_money/data/model/transfer_model.dart';

@@ -1,10 +1,10 @@
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/service/secure_storage_service.dart';
-import 'package:digital_wallet/features/auth/sign_in/data/repositories_impl/auth_repository_impl.dart';
-import 'package:digital_wallet/features/auth/sign_in/data/sources/auth_remote_datasource.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/repositories/auth_repository.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/login_use_case.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/logout_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/repositories_impl/sign_in_repository_impl.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/sources/sign_in_remote_datasource.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/repositories/sign_in_repository.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_in_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_out_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/send_money/data/repository/send_money_repository_impl.dart';
@@ -32,14 +32,14 @@ Future<void> configureDependencies() async {
   sl.registerFactory<SplashCubit>(() => SplashCubit());
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl<ApiClient>(), sl<SecureStorageService>()));
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>(), sl<SecureStorageService>()));
-  sl.registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()));
-  sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
-  sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<LoginUseCase>(), logoutUseCase: sl<LogoutUseCase>()));
+  sl.registerLazySingleton<SignInRemoteDatasource>(() => SignInRemoteDatasourceImpl(sl<ApiClient>(), sl<SecureStorageService>()));
+  sl.registerLazySingleton<SignInRepository>(() => SignInRepositoryImpl(sl<SignInRemoteDatasource>(), sl<SecureStorageService>()));
+  sl.registerLazySingleton(() => SignInUseCase(sl<SignInRepository>()));
+  sl.registerLazySingleton(() => SignOutUseCase(sl<SignInRepository>()));
+  sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<SignInUseCase>(), logoutUseCase: sl<SignOutUseCase>()));
 
   // ─── Dashboard ─────────────────────────────────────────────────────────────
-  sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<AuthRepository>()));
+  sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<SignInRepository>()));
 
   // ─── Transactions ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(sl<ApiClient>()));

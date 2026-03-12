@@ -16,9 +16,7 @@ class ApiClient {
   String? _refreshToken;
   final Connectivity _connectivity = Connectivity();
 
-  factory ApiClient() {
-    return _instance;
-  }
+  factory ApiClient() => _instance;
 
   ApiClient._internal() {
     _dio = Dio(
@@ -36,17 +34,20 @@ class ApiClient {
 
   /// setup interceptors
   void _setupInterceptors() {
-    _dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-        compact: false,
-        maxWidth: 90,
-      ),
-    );
+    assert(() {
+      _dio.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: false,
+          responseBody: true,
+          error: true,
+          compact: false,
+          maxWidth: 120,
+        ),
+      );
+      return true;
+    }());
 
     /// token refresh interceptor
     _dio.interceptors.add(
@@ -60,6 +61,7 @@ class ApiClient {
                 type: DioExceptionType.connectionError,
                 message: 'No internet connection',
               ),
+              true,
             );
           }
           _accessToken = await sl<SecureStorageService>().getAccessToken();

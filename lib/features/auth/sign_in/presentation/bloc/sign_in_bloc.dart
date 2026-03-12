@@ -4,18 +4,18 @@ import 'package:digital_wallet/core/service/local_storage_service.dart';
 import 'package:digital_wallet/core/use_case/use_case.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/login_use_case.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/logout_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_in_use_case.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_out_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  final LoginUseCase _loginUseCase;
-  final LogoutUseCase _logoutUseCase;
+  final SignInUseCase _loginUseCase;
+  final SignOutUseCase _logoutUseCase;
   late LocalStorageService localStorageService;
 
-  SignInBloc({required LoginUseCase loginUseCase, required LogoutUseCase logoutUseCase})
+  SignInBloc({required SignInUseCase loginUseCase, required SignOutUseCase logoutUseCase})
       : _loginUseCase = loginUseCase,
         _logoutUseCase = logoutUseCase,
         super(const InitialState()) {
@@ -45,7 +45,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<SignInState> emit) async {
     emit(const LoadingState());
-    final result = await _loginUseCase(LoginParams(email: event.email, password: event.password));
+    //final result = await _loginUseCase(LoginParams(email: event.email, password: event.password));
+    final result = await _loginUseCase(const SignInParams(email: "john@mail.com", password: "changeme"));
     result.fold(
       (failure) => emit(SignInErrorState(errorMessage: failure.message)),
       (auth) => emit(AuthenticatedState(user: auth.user ?? const UserEntity())),

@@ -1,16 +1,16 @@
 import 'package:digital_wallet/features/auth/sign_in/data/models/user_model.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/auth_entity.dart';
+import 'package:digital_wallet/features/auth/sign_in/domain/entities/sign_in_entity.dart';
 
-class AuthModel extends AuthEntity {
-  const AuthModel({
+class SignInModel extends SignInEntity {
+  const SignInModel({
     super.accessToken,
     super.refreshToken,
     super.user,
     super.expiresAt,
   });
 
-  factory AuthModel.fromJson(Map<String, dynamic> json) {
-    return AuthModel(
+  factory SignInModel.fromJson(Map<String, dynamic> json) {
+    return SignInModel(
       accessToken: json['access_token']?.toString() ?? '',
       refreshToken: json['refresh_token']?.toString() ?? '',
       user: json['user'] != null ? UserModel.fromJson(json['user'] as Map<String, dynamic>) : null,

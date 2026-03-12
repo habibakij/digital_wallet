@@ -1,38 +1,8 @@
-import 'package:flutter/material.dart';
-
-class AppConstants {
-  AppConstants._();
-
-  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-
-  // API
-  static const int connectTimeout = 30000; // 30 seconds
-  static const int receiveTimeout = 30000;
-  static const int sendTimeout = 30000;
-
-  // Secure Storage Keys
-  static const String accessTokenKey = 'access_token';
-  static const String refreshTokenKey = 'refresh_token';
-  static const String userIdKey = 'user_id';
-  static const String pinKey = 'wallet_pin';
-
-  // Transaction
-  static const double minTransactionAmount = 0.01;
-  static const double maxTransactionAmount = 50000.0;
-  static const int transactionPageSize = 30;
-
-  // Retry
-  static const int maxRetryAttempts = 3;
-  static const int retryDelay = 1000; // ms
-
-  // Token
-  static const int tokenRefreshBufferSeconds = 60;
-
-  // status code message
+abstract final class AppExceptionMessages {
   static const noInternet = 'No internet connection. Please check your network and try again.';
   static const connectionTimeout = 'Connection timed out. Please check your internet and retry.';
-  static const sendTimeoutMes = 'Request timed out while sending. Please try again.';
-  static const receiveTimeoutMes = 'The server took too long to respond. Please try again.';
+  static const sendTimeout = 'Request timed out while sending. Please try again.';
+  static const receiveTimeout = 'The server took too long to respond. Please try again.';
   static const requestTimeout = 'The request timed out. Please try again.';
   static const badCertificate = 'Secure connection failed. Please update the app or contact support.';
   static const sessionExpired = 'Your session has expired. Please log in again.';
