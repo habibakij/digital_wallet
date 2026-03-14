@@ -1,4 +1,3 @@
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SignInState extends Equatable {
@@ -16,11 +15,10 @@ class LoadingState extends SignInState {
 }
 
 class AuthenticatedState extends SignInState {
-  final UserEntity user;
-  const AuthenticatedState({required this.user});
+  const AuthenticatedState();
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [];
 }
 
 class UnauthenticatedState extends SignInState {

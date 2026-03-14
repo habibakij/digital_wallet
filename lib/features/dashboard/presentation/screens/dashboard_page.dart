@@ -1,9 +1,9 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
+import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_state.dart';
@@ -32,7 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     context.read<DashboardBloc>().add(const DashboardLoadRequested());
-    context.read<TransactionBloc>().add(const FetchTransactions());
+    //context.read<TransactionBloc>().add(const FetchTransactions());
   }
 
   @override
@@ -56,7 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildContent(UserEntity user) {
+  Widget _buildContent(CurrentUserEntity user) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<DashboardBloc>().add(const DashboardLoadRequested());
@@ -83,7 +83,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  SliverAppBar _buildSliverAppBar(UserEntity user) {
+  SliverAppBar _buildSliverAppBar(CurrentUserEntity user) {
     return SliverAppBar(
       expandedHeight: 280,
       floating: false,
@@ -112,7 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildBalanceCard(UserEntity user) {
+  Widget _buildBalanceCard(CurrentUserEntity user) {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
       child: SafeArea(

@@ -1,7 +1,7 @@
 import 'package:digital_wallet/core/exception_handler/route_exception.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/screens/sign_in_screen.dart';
 import 'package:digital_wallet/features/auth/sign_up/presentation/screens/signup_screen.dart';
+import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/screens/dashboard_page.dart';
 import 'package:digital_wallet/features/send_money/presentation/screens/send_money_page.dart';
@@ -47,7 +47,7 @@ class AppRouter {
         path: AppRoutes.sendMoney,
         name: AppRoutes.sendMoney,
         pageBuilder: (context, state) {
-          final user = state.extra as UserEntity;
+          final user = state.extra as CurrentUserEntity;
           return customTransition(state: state, child: SendMoneyPage(currentUser: user));
         },
       ),

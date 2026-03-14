@@ -1,19 +1,23 @@
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/service/secure_storage_service.dart';
-import 'package:digital_wallet/features/auth/sign_in/data/repositories_impl/sign_in_repository_impl.dart';
+import 'package:digital_wallet/features/auth/sign_in/data/repository_impl/sign_in_repository_impl.dart';
 import 'package:digital_wallet/features/auth/sign_in/data/sources/sign_in_remote_datasource.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/repositories/sign_in_repository.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_in_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_out_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
+import 'package:digital_wallet/features/dashboard/data/repository_impl/dashboard_repository_impl.dart';
+import 'package:digital_wallet/features/dashboard/data/sources/dashboard_remote_data_source.dart';
+import 'package:digital_wallet/features/dashboard/domain/repository/dashboard_repository.dart';
+import 'package:digital_wallet/features/dashboard/domain/use_cases/dashboard_use_case.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:digital_wallet/features/send_money/data/repository/send_money_repository_impl.dart';
+import 'package:digital_wallet/features/send_money/data/repository_impl/send_money_repository_impl.dart';
 import 'package:digital_wallet/features/send_money/data/sources/send_money_remote_datasource.dart';
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
 import 'package:digital_wallet/features/send_money/domain/use_case/send_money_use_case.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
 import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
-import 'package:digital_wallet/features/transactions/data/repository/transaction_repository_impl.dart';
+import 'package:digital_wallet/features/transactions/data/repository_impl/transaction_repository_impl.dart';
 import 'package:digital_wallet/features/transactions/data/sources/transaction_remote_datasource.dart';
 import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
@@ -39,7 +43,10 @@ Future<void> configureDependencies() async {
   sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<SignInUseCase>(), logoutUseCase: sl<SignOutUseCase>()));
 
   // ─── Dashboard ─────────────────────────────────────────────────────────────
-  sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<SignInRepository>()));
+  sl.registerLazySingleton<DashboardRemoteDataSource>(() => DashboardRemoteDataSourceImpl(sl<ApiClient>()));
+  sl.registerLazySingleton<DashboardRepository>(() => DashboardRepositoryImpl(sl<DashboardRemoteDataSource>()));
+  sl.registerLazySingleton(() => DashboardUseCase(sl<DashboardRepository>()));
+  sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<DashboardUseCase>()));
 
   // ─── Transactions ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(sl<ApiClient>()));

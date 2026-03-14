@@ -1,15 +1,11 @@
-import 'package:digital_wallet/core/exception_handler/app_exception.dart';
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/core/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/sign_in/data/models/sign_in_model.dart';
-import 'package:digital_wallet/features/auth/sign_in/data/models/user_model.dart';
-import 'package:dio/dio.dart';
 
 abstract class SignInRemoteDatasource {
   Future<SignInModel> signIn({required String email, required String password});
   Future<void> signOut();
-  Future<UserModel> getCurrentUser();
 }
 
 class SignInRemoteDatasourceImpl implements SignInRemoteDatasource {
@@ -41,22 +37,6 @@ class SignInRemoteDatasourceImpl implements SignInRemoteDatasource {
       await _apiClient.post(ApiEndpoints.logout);
     } finally {
       await _secureStorageService.clearAll();
-    }
-  }
-
-  @override
-  Future<UserModel> getCurrentUser() async {
-    try {
-      final response = await _apiClient.get(ApiEndpoints.profile);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return UserModel.fromJson(response.data as Map<String, dynamic>);
-      }
-      throw const ServerException(message: 'Failed to fetch user profile');
-    } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? 'Failed to fetch profile',
-        statusCode: e.response?.statusCode,
-      );
     }
   }
 }

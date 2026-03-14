@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:digital_wallet/core/service/local_storage_service.dart';
 import 'package:digital_wallet/core/use_case/use_case.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_in_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_out_use_case.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
@@ -49,7 +48,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     final result = await _loginUseCase(const SignInParams(email: "john@mail.com", password: "changeme"));
     result.fold(
       (failure) => emit(SignInErrorState(errorMessage: failure.message)),
-      (auth) => emit(AuthenticatedState(user: auth.user ?? const UserEntity())),
+      (auth) => emit(const AuthenticatedState()),
     );
   }
 

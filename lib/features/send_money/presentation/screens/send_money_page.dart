@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SendMoneyPage extends StatefulWidget {
-  final UserEntity currentUser;
+  final CurrentUserEntity currentUser;
 
   const SendMoneyPage({super.key, required this.currentUser});
 
@@ -147,7 +147,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
@@ -166,7 +166,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         fontWeight: FontWeight.w600,
         letterSpacing: 2,
       ),
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Enter account number',
         prefixIcon: Icon(Icons.person_outline, color: AppColors.textSecondary),
         labelText: 'Receiver Account Number',
@@ -182,7 +182,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
       ],
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w700,
         color: AppColors.primaryColor,
@@ -234,7 +234,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
       controller: _noteController,
       maxLength: 100,
       maxLines: 2,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'e.g. Rent payment, Birthday gift...',
         prefixIcon: Icon(Icons.notes_outlined, color: AppColors.textSecondary),
         labelText: 'Note (optional)',
@@ -248,7 +248,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Quick Select',
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
         ),

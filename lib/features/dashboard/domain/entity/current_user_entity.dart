@@ -1,35 +1,35 @@
 import 'package:equatable/equatable.dart';
 
-class UserEntity extends Equatable {
+class CurrentUserEntity extends Equatable {
   final String? id;
   final String? name;
   final String? email;
   final String? phoneNumber;
   final String? accountNumber;
   final double? balance;
-  final String? avatarUrl;
+  final String? avatar;
   final bool isKycVerified;
 
-  const UserEntity({
+  const CurrentUserEntity({
     this.id,
     this.name,
     this.email,
     this.phoneNumber,
     this.accountNumber,
     this.balance,
-    this.avatarUrl,
+    this.avatar,
     this.isKycVerified = false,
   });
 
-  UserEntity copyWith({double? balance, String? avatarUrl, bool? isKycVerified}) {
-    return UserEntity(
+  CurrentUserEntity copyWith({double? balance, String? avatar, bool? isKycVerified}) {
+    return CurrentUserEntity(
       id: id,
       name: name,
       email: email,
       phoneNumber: phoneNumber,
       accountNumber: accountNumber,
       balance: balance ?? this.balance,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      avatar: avatar ?? this.avatar,
       isKycVerified: isKycVerified ?? this.isKycVerified,
     );
   }

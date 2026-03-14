@@ -1,4 +1,4 @@
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class DashboardState extends Equatable {
@@ -16,7 +16,7 @@ class DashboardLoading extends DashboardState {
 }
 
 class DashboardLoaded extends DashboardState {
-  final UserEntity user;
+  final CurrentUserEntity user;
   const DashboardLoaded({required this.user});
   @override
   List<Object> get props => [user];

@@ -1,26 +1,26 @@
-import 'package:digital_wallet/features/auth/sign_in/domain/entities/user_entity.dart';
+import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 
-class UserModel extends UserEntity {
-  const UserModel({
+class CurrentUserModel extends CurrentUserEntity {
+  const CurrentUserModel({
     super.id,
     super.name,
     super.email,
     super.phoneNumber,
     super.accountNumber,
     super.balance,
-    super.avatarUrl,
+    super.avatar,
     super.isKycVerified,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
+  factory CurrentUserModel.fromJson(Map<String, dynamic> json) {
+    return CurrentUserModel(
       id: json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
       phoneNumber: json['phone_number']?.toString() ?? '',
       accountNumber: json['account_number']?.toString() ?? '',
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
-      avatarUrl: json['avatar_url']?.toString(),
+      avatar: json['avatar']?.toString(),
       isKycVerified: json['is_kyc_verified'] as bool? ?? false,
     );
   }
@@ -33,7 +33,7 @@ class UserModel extends UserEntity {
       'phone_number': phoneNumber,
       'account_number': accountNumber,
       'balance': balance,
-      'avatar_url': avatarUrl,
+      'avatar': avatar,
       'is_kyc_verified': isKycVerified,
     };
   }
