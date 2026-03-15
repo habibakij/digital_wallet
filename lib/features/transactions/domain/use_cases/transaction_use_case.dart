@@ -1,16 +1,11 @@
-import 'package:dartz/dartz.dart';
-import 'package:digital_wallet/core/exception_handler/failures.dart';
-import 'package:digital_wallet/core/use_case/use_case.dart';
 import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
 import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
 
-class TransactionUseCase extends UseCase<TransactionEntity, NoParams> {
+class TransactionUseCase {
   final TransactionRepository _repository;
   TransactionUseCase(this._repository);
 
-  @override
-  Future<Either<Failure, TransactionEntity>> call(NoParams params) {
-    // TODO: implement call
-    throw UnimplementedError();
+  Future<List<TransactionEntity>> getTransactionList() {
+    return _repository.getTransactionListData();
   }
 }

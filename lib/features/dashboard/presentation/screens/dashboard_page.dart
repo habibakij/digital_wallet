@@ -1,5 +1,6 @@
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
@@ -41,14 +42,15 @@ class _DashboardPageState extends State<DashboardPage> {
       backgroundColor: AppColors.backgroundColor,
       body: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, dashState) {
+          final bloc = context.read<DashboardBloc>();
           if (dashState is DashboardLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           if (dashState is DashboardError) {
-            return _buildError(dashState.message);
+            return _buildError(bloc, dashState.message);
           }
           if (dashState is DashboardLoaded) {
-            return _buildContent(dashState.user);
+            return _buildContent(bloc, dashState.user);
           }
           return const SizedBox.shrink();
         },
@@ -56,7 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildContent(CurrentUserEntity user) {
+  Widget _buildContent(DashboardBloc bloc, CurrentUserEntity user) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<DashboardBloc>().add(const DashboardLoadRequested());
@@ -65,16 +67,18 @@ class _DashboardPageState extends State<DashboardPage> {
       color: AppColors.primaryColor,
       child: CustomScrollView(
         slivers: [
-          _buildSliverAppBar(user),
+          _buildSliverAppBar(bloc, user),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const SizedBox(height: 8),
-                _buildQuickActions(),
-                const SizedBox(height: 24),
-                const TransactionHeader(),
-              ]),
+              delegate: SliverChildListDelegate(
+                [
+                  const SizedBox(height: 8),
+                  _buildQuickActions(),
+                  const SizedBox(height: 24),
+                  const TransactionHeader(),
+                ],
+              ),
             ),
           ),
           _buildTransactionList(),
@@ -83,31 +87,53 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  SliverAppBar _buildSliverAppBar(CurrentUserEntity user) {
+  final ValueNotifier<bool> _collapsed = ValueNotifier(false);
+  SliverAppBar _buildSliverAppBar(DashboardBloc bloc, CurrentUserEntity user) {
     return SliverAppBar(
       expandedHeight: 280,
-      floating: false,
       pinned: true,
       backgroundColor: AppColors.primaryColor,
-      flexibleSpace: FlexibleSpaceBar(background: _buildBalanceCard(user)),
+      flexibleSpace: LayoutBuilder(
+        builder: (context, constraint) {
+          final collapsed = constraint.biggest.height < 100;
+          if (_collapsed.value != collapsed) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _collapsed.value = collapsed;
+            });
+          }
+          return FlexibleSpaceBar(background: _buildBalanceCard(user));
+        },
+      ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+          icon: const Icon(Icons.notifications_outlined, color: AppColors.white),
           onPressed: () {},
         ),
         IconButton(
-          icon: const CircleAvatar(
-            radius: 16,
-            backgroundColor: Colors.white24,
-            child: Icon(Icons.person, size: 18, color: Colors.white),
+          icon: CircleAvatar(
+            radius: 16.0,
+            backgroundColor: AppColors.primaryColor,
+            backgroundImage: NetworkImage(user.avatar ?? ''),
           ),
           onPressed: () => _showProfileMenu(),
         ),
         const SizedBox(width: 8),
       ],
-      title: const Text(
-        'Digital Wallet',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+      title: ValueListenableBuilder(
+        valueListenable: _collapsed,
+        builder: (context, collapsed, _) {
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 600),
+            reverseDuration: const Duration(milliseconds: 0),
+            switchInCurve: Curves.easeIn,
+            switchOutCurve: Curves.easeOut,
+            child: Text(
+              key: ValueKey(collapsed),
+              collapsed ? 'Recent Transaction' : 'Digital Wallet',
+              style: AppTextStyles.title(color: AppColors.white),
+            ),
+          );
+        },
       ),
     );
   }
@@ -125,10 +151,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: [
                   Text(
                     'Hello, ${user.name?.split(' ').first} 👋',
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
+                    style: AppTextStyles.regular(color: AppColors.greyShade300, fontSize: 16),
                   ),
                   const Spacer(),
                   if (user.isKycVerified)
@@ -153,13 +176,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
               const SizedBox(height: 12),
-              // Balance card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: AppColors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 0.5),
+                  border: Border.all(color: AppColors.white.withValues(alpha: 0.2), width: 0.5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,15 +189,15 @@ class _DashboardPageState extends State<DashboardPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Available Balance',
-                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          style: AppTextStyles.regular(color: AppColors.whiteLiteColor),
                         ),
                         GestureDetector(
                           onTap: () => setState(() => _balanceVisible = !_balanceVisible),
                           child: Icon(
                             _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                            color: Colors.white70,
+                            color: AppColors.whiteLiteColor,
                             size: 20,
                           ),
                         ),
@@ -188,18 +210,18 @@ class _DashboardPageState extends State<DashboardPage> {
                           ? Text(
                               CurrencyFormatter.format(user.balance ?? 0),
                               key: const ValueKey('visible'),
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: AppTextStyles.title(
+                                color: AppColors.white,
                                 fontSize: 32,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.5,
                               ),
                             )
-                          : const Text(
+                          : Text(
                               '৳ ••••••',
-                              key: ValueKey('hidden'),
-                              style: TextStyle(
-                                color: Colors.white,
+                              key: const ValueKey('hidden'),
+                              style: AppTextStyles.title(
+                                color: AppColors.white,
                                 fontSize: 32,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -208,7 +230,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     const SizedBox(height: 8),
                     Text(
                       'Account: ${user.accountNumber}',
-                      style: const TextStyle(color: Colors.white60, fontSize: 12),
+                      style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
                     ),
                   ],
                 ),
@@ -270,18 +292,15 @@ class _DashboardPageState extends State<DashboardPage> {
           );
         }
         if (state is TransactionEmpty) {
-          return const SliverFillRemaining(
-            hasScrollBody: false,
-            child: Center(child: EmptyTransactions()),
-          );
+          return const EmptyTransactions();
         }
         if (state is TransactionLoaded) {
-          final recent = state.entity.take(5).toList();
+          final recent = state.transactionList.take(10).toList();
           return SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => TransactionTile(entity: state.entity[index]),
+                (context, index) => TransactionTile(entity: state.transactionList[index]),
                 childCount: recent.length,
               ),
             ),
@@ -299,7 +318,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildError(String message) {
+  Widget _buildError(DashboardBloc bloc, String message) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -311,7 +330,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => context.read<DashboardBloc>().add(const DashboardLoadRequested()),
+              onPressed: () => bloc.add(const DashboardLoadRequested()),
               child: const Text('Retry'),
             ),
           ],
@@ -331,7 +350,9 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            Text('Profile', style: AppTextStyles.regular(fontSize: 18, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 10),
+            const Divider(color: AppColors.greyLite),
             const SizedBox(height: 20),
             ListTile(
               leading: const Icon(Icons.logout, color: AppColors.errorColor),

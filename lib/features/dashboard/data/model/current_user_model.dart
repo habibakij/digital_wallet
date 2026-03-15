@@ -15,13 +15,13 @@ class CurrentUserModel extends CurrentUserEntity {
   factory CurrentUserModel.fromJson(Map<String, dynamic> json) {
     return CurrentUserModel(
       id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-      email: json['email']?.toString() ?? '',
-      phoneNumber: json['phone_number']?.toString() ?? '',
-      accountNumber: json['account_number']?.toString() ?? '',
-      balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
-      avatar: json['avatar']?.toString(),
-      isKycVerified: json['is_kyc_verified'] as bool? ?? false,
+      name: json['name'],
+      email: json['email'],
+      phoneNumber: json['phone_number'],
+      accountNumber: json['account_number'] ?? '01234567890',
+      balance: (json['balance'] as num?)?.toDouble() ?? 8454.0,
+      avatar: json['avatar'] ?? 'https://www.shareicon.net/data/512x512/2016/09/15/829472_man_512x512.png',
+      isKycVerified: json['is_kyc_verified'] ?? true,
     );
   }
 

@@ -99,9 +99,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
                     child: ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      itemCount: state.entity.length,
+                      itemCount: state.transactionList.length,
                       itemBuilder: (context, index) {
-                        if (index == state.entity.length - 1) {
+                        if (index == state.transactionList.length - 1) {
                           return const Padding(
                             padding: EdgeInsets.all(16),
                             child: Center(
@@ -109,7 +109,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                             ),
                           );
                         }
-                        return TransactionTile(entity: state.entity[index]);
+                        return TransactionTile(entity: state.transactionList[index]);
                       },
                     ),
                   ),
@@ -117,7 +117,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
               ),
             );
           }
-
           return const SizedBox.shrink();
         },
       ),
@@ -131,7 +130,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
       child: Row(
         children: [
           Text(
-            '${state.entity.length} Transactions',
+            '${state.transactionList.length} Transactions',
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,

@@ -1,5 +1,5 @@
-import 'package:digital_wallet/features/transactions/data/model/transaction_model.dart';
+import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
 
 abstract class TransactionRepository {
-  Future<List<TransactionModel>> getData();
+  Future<List<TransactionEntity>> getTransactionListData();
 }

@@ -16,11 +16,11 @@ class TransactionLoading extends TransactionState {
 }
 
 class TransactionLoaded extends TransactionState {
-  final List<TransactionEntity> entity;
-  const TransactionLoaded(this.entity);
+  final List<TransactionEntity> transactionList;
+  const TransactionLoaded(this.transactionList);
 
   @override
-  List<Object?> get props => [entity];
+  List<Object?> get props => [transactionList];
 }
 
 class TransactionEmpty extends TransactionState {
