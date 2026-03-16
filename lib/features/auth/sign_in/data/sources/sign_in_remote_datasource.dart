@@ -20,6 +20,8 @@ class SignInRemoteDatasourceImpl implements SignInRemoteDatasource {
       pData: {'email': email, 'password': password},
     );
     final auth = SignInModel.fromJson(response.data as Map<String, dynamic>);
+    await _secureStorageService.saveAccessToken(auth.accessToken ?? '');
+    await _secureStorageService.saveRefreshToken(auth.refreshToken ?? '');
     return auth;
     /*return parseResponse(
       response,

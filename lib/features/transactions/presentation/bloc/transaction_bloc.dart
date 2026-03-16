@@ -14,10 +14,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   FutureOr<void> _onFetchTransactions(FetchTransactions event, Emitter<TransactionState> emit) async {
     emit(const TransactionLoading());
     final result = await _repository.getTransactionListData();
-    if (result.isEmpty) {
+    if (result.isNotEmpty) {
       emit(TransactionLoaded(result));
     } else {
-      emit(const TransactionError(message: "No transaction yet"));
+      emit(const TransactionError(message: "Transaction loading failed. Tap 'Retry' to try again."));
     }
   }
 

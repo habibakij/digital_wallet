@@ -2,6 +2,7 @@ import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
+import 'package:digital_wallet/features/transactions/presentation/screens/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -68,21 +69,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
             return const EmptyTransactions();
           }
           if (state is TransactionError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, color: AppColors.errorColor, size: 48),
-                  const SizedBox(height: 16),
-                  Text(state.message, textAlign: TextAlign.center),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => context.read<TransactionBloc>().add(const FetchTransactions()),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Try Again'),
-                  ),
-                ],
-              ),
+            return TransactionRetry(
+              message: state.message,
+              onTab: () {
+                context.read<TransactionBloc>().add(const FetchTransactions());
+              },
             );
           }
 

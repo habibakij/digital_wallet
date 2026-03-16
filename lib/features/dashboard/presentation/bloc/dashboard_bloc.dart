@@ -6,7 +6,6 @@ import 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final DashboardUseCase _dashboardUseCase;
-  double toolbarHeight = 0.0;
 
   DashboardBloc(this._dashboardUseCase) : super(const DashboardInitial()) {
     on<DashboardLoadRequested>(_onLoadRequested);

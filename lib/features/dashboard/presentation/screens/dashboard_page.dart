@@ -11,6 +11,7 @@ import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_st
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
+import 'package:digital_wallet/features/transactions/presentation/screens/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_header.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_list_skeleton.dart';
@@ -33,288 +34,249 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     context.read<DashboardBloc>().add(const DashboardLoadRequested());
-    //context.read<TransactionBloc>().add(const FetchTransactions());
+    context.read<TransactionBloc>().add(const FetchTransactions());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, dashState) {
-          final bloc = context.read<DashboardBloc>();
-          if (dashState is DashboardLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (dashState is DashboardError) {
-            return _buildError(bloc, dashState.message);
-          }
-          if (dashState is DashboardLoaded) {
-            return _buildContent(bloc, dashState.user);
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-    );
-  }
-
-  Widget _buildContent(DashboardBloc bloc, CurrentUserEntity user) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<DashboardBloc>().add(const DashboardLoadRequested());
-        context.read<TransactionBloc>().add(const FetchTransactions());
-      },
-      color: AppColors.primaryColor,
-      child: CustomScrollView(
-        slivers: [
-          _buildSliverAppBar(bloc, user),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  const SizedBox(height: 8),
-                  _buildQuickActions(),
-                  const SizedBox(height: 24),
-                  const TransactionHeader(),
-                ],
-              ),
+      backgroundColor: AppColors.primaryColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: BlocBuilder<DashboardBloc, DashboardState>(
+              builder: (context, dashState) {
+                final bloc = context.read<DashboardBloc>();
+                if (dashState is DashboardLoading) {
+                  return const Center(child: CircularProgressIndicator(color: AppColors.white));
+                } else if (dashState is DashboardError) {
+                  return _buildError(bloc, dashState.message);
+                } else if (dashState is DashboardLoaded) {
+                  return _buildContent(bloc, dashState.user);
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ),
-          _buildTransactionList(),
+          Expanded(
+            flex: 1,
+            child: BlocBuilder<TransactionBloc, TransactionState>(
+              builder: (context, trState) {
+                if (trState is TransactionLoading) {
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    itemCount: 10,
+                    itemBuilder: (context, index) => const TransactionSkeleton(),
+                  );
+                } else if (trState is TransactionEmpty) {
+                  return const EmptyTransactions();
+                } else if (trState is TransactionLoaded) {
+                  final recent = trState.transactionList.take(10).toList();
+                  return Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      const TransactionHeader(),
+                      Expanded(
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(color: AppColors.backgroundColor),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
+                            itemCount: recent.length,
+                            itemBuilder: (context, index) => TransactionTile(entity: trState.transactionList[index]),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (trState is TransactionError) {
+                  return TransactionRetry(
+                    message: trState.message,
+                    onTab: () {
+                      context.read<TransactionBloc>().add(const FetchTransactions());
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
-  final ValueNotifier<bool> _collapsed = ValueNotifier(false);
-  SliverAppBar _buildSliverAppBar(DashboardBloc bloc, CurrentUserEntity user) {
-    return SliverAppBar(
-      expandedHeight: 280,
-      pinned: true,
-      backgroundColor: AppColors.primaryColor,
-      flexibleSpace: LayoutBuilder(
-        builder: (context, constraint) {
-          final collapsed = constraint.biggest.height < 100;
-          if (_collapsed.value != collapsed) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _collapsed.value = collapsed;
-            });
-          }
-          return FlexibleSpaceBar(background: _buildBalanceCard(user));
-        },
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_outlined, color: AppColors.white),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: CircleAvatar(
-            radius: 16.0,
-            backgroundColor: AppColors.primaryColor,
-            backgroundImage: NetworkImage(user.avatar ?? ''),
+  Widget _buildContent(DashboardBloc bloc, CurrentUserEntity user) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: MediaQuery.of(context).padding.top),
+          child: Row(
+            children: [
+              Text(
+                'Digital Wallet',
+                style: AppTextStyles.title(color: AppColors.white70),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.notifications_outlined, color: AppColors.white),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: CircleAvatar(
+                  radius: 16.0,
+                  backgroundColor: AppColors.primaryColor,
+                  backgroundImage: NetworkImage(user.avatar ?? ''),
+                ),
+                onPressed: () => _showProfileMenu(),
+              ),
+            ],
           ),
-          onPressed: () => _showProfileMenu(),
         ),
-        const SizedBox(width: 8),
+        _buildBalanceCard(user),
+        const SizedBox(height: 12),
+        _horizontalQuickActions(),
       ],
-      title: ValueListenableBuilder(
-        valueListenable: _collapsed,
-        builder: (context, collapsed, _) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 600),
-            reverseDuration: const Duration(milliseconds: 0),
-            switchInCurve: Curves.easeIn,
-            switchOutCurve: Curves.easeOut,
-            child: Text(
-              key: ValueKey(collapsed),
-              collapsed ? 'Recent Transaction' : 'Digital Wallet',
-              style: AppTextStyles.title(color: AppColors.white),
-            ),
-          );
-        },
-      ),
     );
   }
 
   Widget _buildBalanceCard(CurrentUserEntity user) {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Hello, ${user.name?.split(' ').first} 👋',
-                    style: AppTextStyles.regular(color: AppColors.greyShade300, fontSize: 16),
-                  ),
-                  const Spacer(),
-                  if (user.isKycVerified)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentColor.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.accentColor, width: 0.5),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.verified, size: 12, color: AppColors.accentColor),
-                          SizedBox(width: 4),
-                          Text(
-                            'KYC Verified',
-                            style: TextStyle(color: AppColors.accentColor, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.white.withValues(alpha: 0.2), width: 0.5),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Hello, ${user.name?.split(' ').first} 👋',
+                  style: AppTextStyles.regular(color: AppColors.greyShade300, fontSize: 16),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const Spacer(),
+                if (user.isKycVerified)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentColor.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.accentColor, width: 0.5),
+                    ),
+                    child: const Row(
                       children: [
+                        Icon(Icons.verified, size: 12, color: AppColors.accentColor),
+                        SizedBox(width: 4),
                         Text(
-                          'Available Balance',
-                          style: AppTextStyles.regular(color: AppColors.whiteLiteColor),
-                        ),
-                        GestureDetector(
-                          onTap: () => setState(() => _balanceVisible = !_balanceVisible),
-                          child: Icon(
-                            _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                            color: AppColors.whiteLiteColor,
-                            size: 20,
-                          ),
+                          'KYC Verified',
+                          style: TextStyle(color: AppColors.accentColor, fontSize: 11),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: _balanceVisible
-                          ? Text(
-                              CurrencyFormatter.format(user.balance ?? 0),
-                              key: const ValueKey('visible'),
-                              style: AppTextStyles.title(
-                                color: AppColors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5,
-                              ),
-                            )
-                          : Text(
-                              '৳ ••••••',
-                              key: const ValueKey('hidden'),
-                              style: AppTextStyles.title(
-                                color: AppColors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Account: ${user.accountNumber}',
-                      style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
-                    ),
-                  ],
-                ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.white.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.white.withValues(alpha: 0.2), width: 0.5),
               ),
-            ],
-          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Available Balance',
+                        style: AppTextStyles.regular(color: AppColors.whiteLiteColor),
+                      ),
+                      GestureDetector(
+                        onTap: () => setState(() => _balanceVisible = !_balanceVisible),
+                        child: Icon(
+                          _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          color: AppColors.whiteLiteColor,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: _balanceVisible
+                        ? Text(
+                            CurrencyFormatter.format(user.balance ?? 0),
+                            key: const ValueKey('visible'),
+                            style: AppTextStyles.title(
+                              color: AppColors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                            ),
+                          )
+                        : Text(
+                            '৳ ••••••',
+                            key: const ValueKey('hidden'),
+                            style: AppTextStyles.title(
+                              color: AppColors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Account: ${user.accountNumber}',
+                    style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildQuickActions() {
-    return Row(
-      children: [
-        _ActionButton(
+  Widget _horizontalQuickActions() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        spacing: 8.0,
+        children: [
+          _ActionButton(
             icon: Icons.send_rounded,
             label: 'Send',
             color: const Color(0xFF4CAF50),
             onTap: () {
               context.goNamed(AppRoutes.sendMoney);
-              /*Navigator.of(context).pushNamed('/send-money').then((_) {
-                context.read<DashboardBloc>().add(const DashboardLoadRequested());
-              });*/
-            }),
-        const SizedBox(width: 12),
-        _ActionButton(
-          icon: Icons.add_rounded,
-          label: 'Top Up',
-          color: const Color(0xFF2196F3),
-          onTap: () {},
-        ),
-        const SizedBox(width: 12),
-        _ActionButton(
-          icon: Icons.history_rounded,
-          label: 'History',
-          color: const Color(0xFF9C27B0),
-          onTap: () => Navigator.of(context).pushNamed('/transactions'),
-        ),
-        const SizedBox(width: 12),
-        _ActionButton(
-          icon: Icons.more_horiz_rounded,
-          label: 'More',
-          color: const Color(0xFFFF9800),
-          onTap: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTransactionList() {
-    return BlocBuilder<TransactionBloc, TransactionState>(
-      builder: (context, state) {
-        if (state is TransactionLoading) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, __) => const TransactionSkeleton(),
-              childCount: 4,
-            ),
-          );
-        }
-        if (state is TransactionEmpty) {
-          return const EmptyTransactions();
-        }
-        if (state is TransactionLoaded) {
-          final recent = state.transactionList.take(10).toList();
-          return SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => TransactionTile(entity: state.transactionList[index]),
-                childCount: recent.length,
-              ),
-            ),
-          );
-        }
-        if (state is TransactionError) {
-          return SliverToBoxAdapter(
-            child: Center(
-              child: Text(state.message, style: const TextStyle(color: AppColors.errorColor)),
-            ),
-          );
-        }
-        return const SliverToBoxAdapter(child: SizedBox.shrink());
-      },
+            },
+          ),
+          _ActionButton(
+            icon: Icons.add_rounded,
+            label: 'Top Up',
+            color: const Color(0xFF2196F3),
+            onTap: () {},
+          ),
+          _ActionButton(
+            icon: Icons.history_rounded,
+            label: 'History',
+            color: const Color(0xFF9C27B0),
+            onTap: () => Navigator.of(context).pushNamed('/transactions'),
+          ),
+          _ActionButton(
+            icon: Icons.more_horiz_rounded,
+            label: 'More',
+            color: const Color(0xFFFF9800),
+            onTap: () {},
+          ),
+        ],
+      ),
     );
   }
 
@@ -383,7 +345,7 @@ class _ActionButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),

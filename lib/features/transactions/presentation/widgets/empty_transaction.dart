@@ -11,7 +11,7 @@ class EmptyTransactions extends StatelessWidget {
       children: [
         Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey.shade300),
         const SizedBox(height: 16),
-        Text(
+        const Text(
           'No transactions yet',
           style: TextStyle(
             fontSize: 16,
@@ -20,7 +20,7 @@ class EmptyTransactions extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
+        const Text(
           'Your transaction history will appear here',
           style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
         ),
