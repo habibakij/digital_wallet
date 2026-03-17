@@ -1,4 +1,5 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
 import 'package:flutter/material.dart';
@@ -12,49 +13,59 @@ class TransactionTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.dividerColor, width: 0.5),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: const FlutterLogo(size: 100),
-        title: Text(
-          entity.title ?? '',
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        subtitle: Column(
+        leading: const Icon(Icons.monetization_on, size: 44.0),
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 2),
+            Text(
+              entity.title ?? '',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.title(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            const SizedBox(height: 4),
             Text(
               DateFormatter.formatTransaction(DateTime.now()),
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-              ),
+              style: AppTextStyles.regular(color: AppColors.textSecondary, fontSize: 12),
             ),
+          ],
+        ),
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Text(
-              entity.completed ?? false ? "Done" : "Incomplete",
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: AppColors.textPrimary,
+              "\$${(entity.id! * 11).toStringAsFixed(2)}",
+              style: AppTextStyles.title(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            const SizedBox(height: 4),
+            Container(
+              width: 80,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6.0),
+                color: entity.completed ?? false ? AppColors.green : AppColors.warningColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                child: Text(
+                  entity.completed ?? false ? "Confirmed" : "Pending",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: AppColors.white,
+                  ),
+                ),
               ),
             )
           ],
-        ),
-        trailing: Text(
-          "${entity.userId}",
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: AppColors.textPrimary,
-          ),
         ),
       ),
     );

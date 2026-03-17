@@ -82,9 +82,11 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: DecoratedBox(
                           decoration: const BoxDecoration(color: AppColors.backgroundColor),
                           child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
                             itemCount: recent.length,
-                            itemBuilder: (context, index) => TransactionTile(entity: trState.transactionList[index]),
+                            itemBuilder: (context, index) =>
+                                TransactionTile(entity: trState.transactionList[index]),
                           ),
                         ),
                       ),
@@ -111,7 +113,8 @@ class _DashboardPageState extends State<DashboardPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: MediaQuery.of(context).padding.top),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0)
+              .copyWith(top: MediaQuery.of(context).padding.top),
           child: Row(
             children: [
               Text(
@@ -198,7 +201,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       GestureDetector(
                         onTap: () => setState(() => _balanceVisible = !_balanceVisible),
                         child: Icon(
-                          _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          _balanceVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: AppColors.whiteLiteColor,
                           size: 20,
                         ),
@@ -208,6 +213,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   const SizedBox(height: 8),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
+                    reverseDuration: const Duration(milliseconds: 0),
                     child: _balanceVisible
                         ? Text(
                             CurrencyFormatter.format(user.balance ?? 0),
@@ -220,7 +226,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           )
                         : Text(
-                            '৳ ••••••',
+                            '৳ ••••••••••••',
                             key: const ValueKey('hidden'),
                             style: AppTextStyles.title(
                               color: AppColors.white,
@@ -230,9 +236,22 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    'Account: ${user.accountNumber}',
-                    style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
+                  RichText(
+                    text: TextSpan(
+                      style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
+                      children: [
+                        TextSpan(
+                          text: 'Account: ',
+                          style:
+                              AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
+                        ),
+                        TextSpan(
+                          text: user.accountNumber,
+                          style: AppTextStyles.regular(
+                              color: AppColors.whiteLiteColor, fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -312,7 +331,8 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Profile', style: AppTextStyles.regular(fontSize: 18, fontWeight: FontWeight.w700)),
+            Text('Profile',
+                style: AppTextStyles.regular(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 10),
             const Divider(color: AppColors.greyLite),
             const SizedBox(height: 20),
@@ -337,7 +357,8 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton({required this.icon, required this.label, required this.color, required this.onTap});
+  const _ActionButton(
+      {required this.icon, required this.label, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
