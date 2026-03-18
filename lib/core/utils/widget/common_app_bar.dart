@@ -46,10 +46,12 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ? const Icon(Icons.menu, color: AppColors.black, size: 28)
                     : const Icon(
                         Icons.arrow_back_ios_new,
-                        color: AppColors.black,
+                        color: AppColors.white,
                         size: 20,
                       ),
-                onPressed: hasDrawer ? () => scaffoldKey!.currentState?.openDrawer() : (onLeadingTab ?? () => Navigator.maybePop(context)),
+                onPressed: hasDrawer
+                    ? () => scaffoldKey!.currentState?.openDrawer()
+                    : (onLeadingTab ?? () => Navigator.maybePop(context)),
               )
           : const SizedBox.shrink(),
       bottom: bottomWidget,

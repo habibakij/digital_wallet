@@ -1,5 +1,6 @@
 import 'package:digital_wallet/core/constants/app_constants.dart';
 import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
+import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +18,7 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => sl<SplashCubit>()..startSplash()),
         BlocProvider<SignInBloc>(create: (_) => sl<SignInBloc>()),
+        BlocProvider<TransactionBloc>(create: (_) => sl<TransactionBloc>()),
       ],
       child: MaterialApp.router(
         scaffoldMessengerKey: AppConstants.scaffoldMessengerKey,

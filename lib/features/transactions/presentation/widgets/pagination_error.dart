@@ -15,17 +15,18 @@ class PaginationError extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.warning_amber_rounded, color: AppColors.errorColor, size: 16),
+          const Icon(Icons.warning_amber_rounded, color: AppColors.errorColor, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Failed to load more: $error',
-              style: TextStyle(fontSize: 12, color: AppColors.errorColor),
+              style: const TextStyle(fontSize: 12, color: AppColors.errorColor),
             ),
           ),
           TextButton(
             onPressed: () => context.read<TransactionBloc>().add(const LoadMoreTransactions()),
-            child: Text('Retry', style: TextStyle(fontSize: 12, color: AppColors.primaryColor)),
+            child:
+                const Text('Retry', style: TextStyle(fontSize: 12, color: AppColors.primaryColor)),
           ),
         ],
       ),

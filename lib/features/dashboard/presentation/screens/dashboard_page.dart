@@ -11,10 +11,10 @@ import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_st
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
-import 'package:digital_wallet/features/transactions/presentation/screens/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_header.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_list_skeleton.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

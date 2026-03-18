@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TransactionHeader extends StatelessWidget {
-  const TransactionHeader({super.key});
+  final bool isTransactionPage;
+  const TransactionHeader({super.key, this.isTransactionPage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +21,15 @@ class TransactionHeader extends StatelessWidget {
               'Recent Transactions',
               style: AppTextStyles.regular(fontSize: 16, fontWeight: FontWeight.w700),
             ),
-            TextButton(
-              onPressed: () => context.goNamed(AppRoutes.transactions),
-              child: Text(
-                'See all',
-                style: AppTextStyles.regular(fontWeight: FontWeight.w600),
-              ),
-            ),
+            isTransactionPage
+                ? const SizedBox.shrink()
+                : TextButton(
+                    onPressed: () => context.goNamed(AppRoutes.transactions),
+                    child: Text(
+                      'See all',
+                      style: AppTextStyles.regular(fontWeight: FontWeight.w600),
+                    ),
+                  ),
           ],
         ),
       ),

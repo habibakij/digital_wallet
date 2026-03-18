@@ -1,12 +1,17 @@
+import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
+import 'package:digital_wallet/core/utils/widget/common_app_bar.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
-import 'package:digital_wallet/features/transactions/presentation/screens/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_list_skeleton.dart';
+import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class TransactionListPage extends StatefulWidget {
   const TransactionListPage({super.key});
@@ -21,11 +26,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
   @override
   void initState() {
     super.initState();
+    context.read<TransactionBloc>().add(const FetchTransactions());
+
     _scrollController.addListener(_onScroll);
-    final state = context.read<TransactionBloc>().state;
-    if (state is! TransactionLoaded) {
-      context.read<TransactionBloc>().add(const FetchTransactions());
-    }
   }
 
   @override
@@ -51,18 +54,23 @@ class _TransactionListPageState extends State<TransactionListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: const Text('Transaction History'),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1, color: Colors.white12),
-        ),
-      ),
+      appBar: CommonAppBar(
+          title: "Transaction History",
+          titleStyle: AppTextStyles.title(color: AppColors.white),
+          onLeadingTab: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.goNamed(AppRoutes.dashboard);
+            }
+          }),
       body: BlocBuilder<TransactionBloc, TransactionState>(
         builder: (context, state) {
           if (state is TransactionLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
+            return ListView.builder(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              itemCount: 10,
+              itemBuilder: (context, index) => const TransactionSkeleton(),
             );
           }
           if (state is TransactionEmpty) {
@@ -76,7 +84,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
               },
             );
           }
-
           if (state is TransactionLoaded) {
             return RefreshIndicator(
               onRefresh: () async {
@@ -96,7 +103,8 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           return const Padding(
                             padding: EdgeInsets.all(16),
                             child: Center(
-                              child: CircularProgressIndicator(color: AppColors.primaryColor, strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                  color: AppColors.primaryColor, strokeWidth: 2),
                             ),
                           );
                         }
@@ -110,33 +118,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
           }
           return const SizedBox.shrink();
         },
-      ),
-    );
-  }
-
-  Widget _buildHeader(TransactionLoaded state) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Text(
-            '${state.transactionList.length} Transactions',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-              fontSize: 14,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            'Showing all',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
       ),
     );
   }
