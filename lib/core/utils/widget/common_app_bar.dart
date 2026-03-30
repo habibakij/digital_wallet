@@ -49,9 +49,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                         color: AppColors.white,
                         size: 20,
                       ),
-                onPressed: hasDrawer
-                    ? () => scaffoldKey!.currentState?.openDrawer()
-                    : (onLeadingTab ?? () => Navigator.maybePop(context)),
+                onPressed: hasDrawer ? () => scaffoldKey!.currentState?.openDrawer() : (onLeadingTab ?? () => Navigator.maybePop(context)),
               )
           : const SizedBox.shrink(),
       bottom: bottomWidget,

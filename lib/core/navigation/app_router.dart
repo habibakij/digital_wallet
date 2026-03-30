@@ -2,15 +2,11 @@ import 'package:digital_wallet/core/exception_handler/route_exception.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/screens/sign_in_screen.dart';
 import 'package:digital_wallet/features/auth/sign_up/presentation/screens/signup_screen.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
-import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/screens/dashboard_page.dart';
 import 'package:digital_wallet/features/send_money/presentation/screens/send_money_page.dart';
 import 'package:digital_wallet/features/splash/presentation/screen/splash_screen.dart';
-import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/screens/transaction_list_page.dart';
-import 'package:digital_wallet/injection/injection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'app_routes.dart';
@@ -51,7 +47,12 @@ class AppRouter {
           return customTransition(state: state, child: SendMoneyPage(currentUser: user));
         },
       ),
-      ShellRoute(
+      GoRoute(
+        path: AppRoutes.dashboard,
+        name: AppRoutes.dashboard,
+        pageBuilder: (context, state) => customTransition(state: state, child: const DashboardPage()),
+      ),
+      /*ShellRoute(
         builder: (context, state, child) => MultiBlocProvider(
           providers: [
             BlocProvider<DashboardBloc>.value(value: sl<DashboardBloc>()),
@@ -66,7 +67,7 @@ class AppRouter {
             pageBuilder: (context, state) => customTransition(state: state, child: const DashboardPage()),
           ),
         ],
-      ),
+      ),*/
       /*GoRoute(
         path: AppRoutes.sendMoney,
         name: AppRoutes.sendMoney,

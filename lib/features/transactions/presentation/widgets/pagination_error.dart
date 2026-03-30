@@ -25,8 +25,7 @@ class PaginationError extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => context.read<TransactionBloc>().add(const LoadMoreTransactions()),
-            child:
-                const Text('Retry', style: TextStyle(fontSize: 12, color: AppColors.primaryColor)),
+            child: const Text('Retry', style: TextStyle(fontSize: 12, color: AppColors.primaryColor)),
           ),
         ],
       ),

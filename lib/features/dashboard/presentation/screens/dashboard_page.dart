@@ -41,70 +41,74 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: BlocBuilder<DashboardBloc, DashboardState>(
-              builder: (context, dashState) {
-                final bloc = context.read<DashboardBloc>();
-                if (dashState is DashboardLoading) {
-                  return const Center(child: CircularProgressIndicator(color: AppColors.white));
-                } else if (dashState is DashboardError) {
-                  return _buildError(bloc, dashState.message);
-                } else if (dashState is DashboardLoaded) {
-                  return _buildContent(bloc, dashState.user);
-                }
-                return const SizedBox.shrink();
-              },
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<DashboardBloc>().add(const DashboardLoadRequested(forceRefresh: true));
+          context.read<TransactionBloc>().add(const FetchTransactions(forceRefresh: true));
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: BlocBuilder<DashboardBloc, DashboardState>(
+                builder: (context, dashState) {
+                  final bloc = context.read<DashboardBloc>();
+                  if (dashState is DashboardLoading) {
+                    return const Center(child: CircularProgressIndicator(color: AppColors.white));
+                  } else if (dashState is DashboardError) {
+                    return _buildError(bloc, dashState.message);
+                  } else if (dashState is DashboardLoaded) {
+                    return _buildContent(bloc, dashState.user);
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: BlocBuilder<TransactionBloc, TransactionState>(
-              builder: (context, trState) {
-                if (trState is TransactionLoading) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    itemCount: 10,
-                    itemBuilder: (context, index) => const TransactionSkeleton(),
-                  );
-                } else if (trState is TransactionEmpty) {
-                  return const EmptyTransactions();
-                } else if (trState is TransactionLoaded) {
-                  final recent = trState.transactionList.take(10).toList();
-                  return Column(
-                    children: [
-                      const SizedBox(height: 12),
-                      const TransactionHeader(),
-                      Expanded(
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(color: AppColors.backgroundColor),
-                          child: ListView.builder(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
-                            itemCount: recent.length,
-                            itemBuilder: (context, index) =>
-                                TransactionTile(entity: trState.transactionList[index]),
+            Expanded(
+              flex: 1,
+              child: BlocBuilder<TransactionBloc, TransactionState>(
+                builder: (context, trState) {
+                  if (trState is TransactionLoading) {
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      itemCount: 10,
+                      itemBuilder: (context, index) => const TransactionSkeleton(),
+                    );
+                  } else if (trState is TransactionEmpty) {
+                    return const EmptyTransactions();
+                  } else if (trState is TransactionLoaded) {
+                    final recent = trState.transactionList.take(10).toList();
+                    return Column(
+                      children: [
+                        const SizedBox(height: 12),
+                        const TransactionHeader(),
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: const BoxDecoration(color: AppColors.backgroundColor),
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 0.0).copyWith(bottom: 16.0),
+                              itemCount: recent.length,
+                              itemBuilder: (context, index) => TransactionItem(isCredit: index % 2 == 0),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                } else if (trState is TransactionError) {
-                  return TransactionRetry(
-                    message: trState.message,
-                    onTab: () {
-                      context.read<TransactionBloc>().add(const FetchTransactions());
-                    },
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+                      ],
+                    );
+                  } else if (trState is TransactionError) {
+                    return TransactionRetry(
+                      message: trState.message,
+                      onTab: () {
+                        context.read<TransactionBloc>().add(const FetchTransactions());
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -113,8 +117,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0)
-              .copyWith(top: MediaQuery.of(context).padding.top),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: MediaQuery.of(context).padding.top),
           child: Row(
             children: [
               Text(
@@ -167,13 +170,13 @@ class _DashboardPageState extends State<DashboardPage> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.accentColor, width: 0.5),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.verified, size: 12, color: AppColors.accentColor),
-                        SizedBox(width: 4),
+                        const Icon(Icons.verified, size: 12, color: AppColors.accentColor),
+                        const SizedBox(width: 4),
                         Text(
                           'KYC Verified',
-                          style: TextStyle(color: AppColors.accentColor, fontSize: 11),
+                          style: AppTextStyles.regular(color: AppColors.accentColor, fontSize: 11),
                         ),
                       ],
                     ),
@@ -201,9 +204,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       GestureDetector(
                         onTap: () => setState(() => _balanceVisible = !_balanceVisible),
                         child: Icon(
-                          _balanceVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                          _balanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                           color: AppColors.whiteLiteColor,
                           size: 20,
                         ),
@@ -228,11 +229,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         : Text(
                             '৳ ••••••••••••',
                             key: const ValueKey('hidden'),
-                            style: AppTextStyles.title(
-                              color: AppColors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: AppTextStyles.title(color: AppColors.white, fontSize: 32, fontWeight: FontWeight.w700),
                           ),
                   ),
                   const SizedBox(height: 8),
@@ -242,13 +239,11 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         TextSpan(
                           text: 'Account: ',
-                          style:
-                              AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
+                          style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontSize: 12),
                         ),
                         TextSpan(
                           text: user.accountNumber,
-                          style: AppTextStyles.regular(
-                              color: AppColors.whiteLiteColor, fontWeight: FontWeight.w700),
+                          style: AppTextStyles.regular(color: AppColors.whiteLiteColor, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -331,8 +326,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Profile',
-                style: AppTextStyles.regular(fontSize: 18, fontWeight: FontWeight.w700)),
+            Text('Profile', style: AppTextStyles.regular(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 10),
             const Divider(color: AppColors.greyLite),
             const SizedBox(height: 20),
@@ -357,8 +351,7 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton(
-      {required this.icon, required this.label, required this.color, required this.onTap});
+  const _ActionButton({required this.icon, required this.label, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

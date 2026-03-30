@@ -13,6 +13,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   Future<void> _onLoadRequested(DashboardLoadRequested event, Emitter<DashboardState> emit) async {
+    if (state is DashboardLoaded && !event.forceRefresh) {
+      return;
+    }
     emit(const DashboardLoading());
     final result = await _dashboardUseCase.getCurrentUser();
     emit(DashboardLoaded(user: result));

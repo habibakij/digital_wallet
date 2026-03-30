@@ -31,7 +31,7 @@ dependencies:
 
   # Utils
   dartz: ^0.10.1
-  intl: ^0.19.0
+  intl: ^0.20.2
   connectivity_plus: ^6.0.3
 
   # UI

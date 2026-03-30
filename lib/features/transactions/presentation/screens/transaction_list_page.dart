@@ -91,28 +91,22 @@ class _TransactionListPageState extends State<TransactionListPage> {
                 await Future.delayed(const Duration(seconds: 1));
               },
               color: AppColors.primaryColor,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      itemCount: state.transactionList.length,
-                      itemBuilder: (context, index) {
-                        if (index == state.transactionList.length - 1) {
-                          return const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.primaryColor, strokeWidth: 2),
-                            ),
-                          );
-                        }
-                        return TransactionTile(entity: state.transactionList[index]);
-                      },
-                    ),
-                  ),
-                ],
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: state.transactionList.length,
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                itemBuilder: (context, index) {
+                  if (index == state.transactionList.length - 1) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(color: AppColors.primaryColor, strokeWidth: 2),
+                      ),
+                    );
+                  }
+                  //return TransactionTile(entity: state.transactionList[index]);
+                  return TransactionItem(isCredit: index % 2 == 0);
+                },
               ),
             );
           }

@@ -37,6 +37,7 @@ class AppColors {
   static const Color green = Color(0XFF009933);
   static const Color greenLite = Color(0XFF99ffbb);
   static const Color yellow = Color(0XFFF5A905);
+  static const Color orange = Color(0XFFFFA500);
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryLiteColor],

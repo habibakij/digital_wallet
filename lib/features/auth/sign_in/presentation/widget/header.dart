@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
-import 'package:digital_wallet/features/splash/presentation/screen/build_app_name.dart';
-import 'package:digital_wallet/features/splash/presentation/screen/build_tag_name.dart';
+import 'package:digital_wallet/features/splash/presentation/widgets/build_app_name.dart';
+import 'package:digital_wallet/features/splash/presentation/widgets/build_tag_name.dart';
 import 'package:flutter/material.dart';
 
 class LoginHeader extends StatelessWidget {
@@ -26,11 +26,7 @@ class LoginHeader extends StatelessWidget {
                 color: AppColors.white.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.account_balance_wallet_rounded,
-                size: 40,
-                color: AppColors.white,
-              ),
+              child: const Icon(Icons.account_balance_wallet_rounded, size: 40, color: AppColors.white),
             ),
             const SizedBox(height: 16),
             const BuildAppName(),
