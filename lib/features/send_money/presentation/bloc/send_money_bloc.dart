@@ -14,12 +14,14 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
   Future<void> _onSendMoneyRequested(SendMoneyRequested event, Emitter<SendMoneyState> emit) async {
     emit(const SendMoneyLoading());
 
-    final result = await _sendMoneyUseCase(SendMoneyParams(
-      receiverAccount: event.receiverAccount,
-      amount: event.amount,
-      currentBalance: event.currentBalance,
-      note: event.note,
-    ));
+    final result = await _sendMoneyUseCase(
+      SendMoneyParams(
+        receiverAccount: event.receiverAccount,
+        amount: event.amount,
+        currentBalance: event.currentBalance,
+        note: event.note,
+      ),
+    );
     result.fold(
       (failure) => emit(SendMoneyError(message: failure.message)),
       (transfer) => emit(SendMoneySuccess(transfer: transfer)),

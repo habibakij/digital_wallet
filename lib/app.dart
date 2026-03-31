@@ -1,5 +1,6 @@
 import 'package:digital_wallet/core/constants/app_constants.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ class App extends StatelessWidget {
         BlocProvider<SignInBloc>(create: (_) => sl<SignInBloc>()),
         BlocProvider<DashboardBloc>(create: (_) => sl<DashboardBloc>()),
         BlocProvider<TransactionBloc>(create: (_) => sl<TransactionBloc>()),
+        BlocProvider<SendMoneyBloc>(create: (_) => sl<SendMoneyBloc>()),
       ],
       child: MaterialApp.router(
         scaffoldMessengerKey: AppConstants.scaffoldMessengerKey,

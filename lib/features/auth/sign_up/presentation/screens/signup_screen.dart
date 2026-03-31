@@ -61,7 +61,7 @@ class _SignupViewState extends State<SignUpScreen> {
                       hintText: 'Abdullah Aman',
                       inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
                       keyboardType: TextInputType.name,
-                      prefixIcon: Icons.email_outlined,
+                      prefixIcon: const Icon(Icons.person_outline),
                       textInputAction: TextInputAction.next,
                       autofillHints: const [AutofillHints.name],
                       //onChanged: (value) => bloc.add(EmailChanged(value)),
@@ -72,7 +72,7 @@ class _SignupViewState extends State<SignUpScreen> {
                       hintText: 'you@example.com',
                       inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
                       keyboardType: TextInputType.emailAddress,
-                      prefixIcon: Icons.email_outlined,
+                      prefixIcon: const Icon(Icons.email_outlined),
                       //validator: InputValidator.validateEmail,
                       textInputAction: TextInputAction.next,
                       autofillHints: const [AutofillHints.email],
@@ -84,7 +84,7 @@ class _SignupViewState extends State<SignUpScreen> {
                       hintText: '••••••••',
                       obscureText: obscurePassword,
                       inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
-                      prefixIcon: Icons.lock_outline_rounded,
+                      prefixIcon: const Icon(Icons.lock_outline_rounded),
                       suffixIcon: IconButton(
                         icon: Icon(
                           obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -103,7 +103,7 @@ class _SignupViewState extends State<SignUpScreen> {
                       hintText: '••••••••',
                       obscureText: obscureConfirmPassword,
                       inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
-                      prefixIcon: Icons.lock_outline_rounded,
+                      prefixIcon: const Icon(Icons.lock_outline_rounded),
                       suffixIcon: IconButton(
                         icon: Icon(
                           obscureConfirmPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,

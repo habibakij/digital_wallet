@@ -12,6 +12,7 @@ class AppButton extends StatelessWidget {
   final TextStyle? textStyle;
   final bool isLoading;
   final EdgeInsetsGeometry padding;
+  final IconData? prefixIcon;
 
   const AppButton({
     super.key,
@@ -24,6 +25,7 @@ class AppButton extends StatelessWidget {
     this.textStyle,
     this.isLoading = false,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    this.prefixIcon,
   });
 
   @override
@@ -45,9 +47,22 @@ class AppButton extends StatelessWidget {
                 width: 22,
                 child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.white),
               )
-            : Text(
-                title,
-                style: textStyle ?? AppTextStyles.title(fontSize: 16),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  prefixIcon != null
+                      ? Icon(
+                          prefixIcon,
+                          size: 22,
+                          color: AppColors.white,
+                        )
+                      : const SizedBox.shrink(),
+                  if (prefixIcon != null) const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: textStyle ?? AppTextStyles.title(fontSize: 16),
+                  ),
+                ],
               ),
       ),
     );

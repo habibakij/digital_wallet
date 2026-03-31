@@ -10,10 +10,13 @@ class CommonTextField extends StatelessWidget {
   final TextStyle? labelStyle;
   final TextStyle? inputTextStyle;
   final TextStyle? hintStyle;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
+  final String? prefixText;
+  final TextStyle? prefixTextStyle;
   final Widget? suffixIcon;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
+  final dynamic inputFormatters;
   final Iterable<String>? autofillHints;
   final FocusNode? focusNode;
   final bool readOnly;
@@ -36,9 +39,12 @@ class CommonTextField extends StatelessWidget {
     this.inputTextStyle,
     this.hintStyle,
     this.prefixIcon,
+    this.prefixText,
+    this.prefixTextStyle,
     this.suffixIcon,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
+    this.inputFormatters,
     this.autofillHints,
     this.focusNode,
     this.readOnly = false,
@@ -69,6 +75,7 @@ class CommonTextField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          inputFormatters: inputFormatters ?? [],
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
           validator: validator,
@@ -84,11 +91,13 @@ class CommonTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: hintStyle ?? AppTextStyles.hintStyle(),
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon, size: 20, color: AppColors.textSecondary) : null,
+            prefixIcon: prefixIcon,
+            prefixText: prefixText,
+            prefixStyle: prefixTextStyle ?? AppTextStyles.regular(),
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: Colors.grey.shade100,
-            //contentPadding: contentPadding,
+            suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
             contentPadding: EdgeInsets.zero,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             counterText: "",

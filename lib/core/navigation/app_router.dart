@@ -68,17 +68,6 @@ class AppRouter {
           ),
         ],
       ),*/
-      /*GoRoute(
-        path: AppRoutes.sendMoney,
-        name: AppRoutes.sendMoney,
-        pageBuilder: (context, state) {
-          final user = state.extra as UserEntity;
-          return customTransition(
-            state: state,
-            child: BlocProvider<SendMoneyBloc>(create: (_) => sl<SendMoneyBloc>(), child: SendMoneyPage(currentUser: user)),
-          );
-        },
-      ),*/
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       child: RouteException(error: state.error),

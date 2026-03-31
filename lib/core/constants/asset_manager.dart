@@ -1,11 +1,8 @@
 // Asset Path
 
-const jpegPath = "assets/jpeg/";
-const jpgPath = "assets/jpg/";
-const logoPath = "assets/logo/";
-const pngPath = "assets/png/";
-const svgPath = "assets/svg/";
+const iconsPath = "assets/icons/";
+const imagesPath = "assets/images/";
 
 /// load image path
-const walletLogo = "${pngPath}wallet_logo.png";
-const flutterLogo = "${logoPath}flutter_logo.png";
+const tkSign = "${iconsPath}tk_sign.png";
+const flutterLogo = "${imagesPath}flutter_logo.png";

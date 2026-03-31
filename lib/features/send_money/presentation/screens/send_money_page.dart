@@ -1,15 +1,23 @@
+import 'package:digital_wallet/core/constants/asset_manager.dart';
+import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/widget/app_button.dart';
+import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
+import 'package:digital_wallet/core/utils/widget/common_app_bar.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
+import 'package:digital_wallet/features/send_money/presentation/widget/balance_summary.dart';
 import 'package:digital_wallet/features/send_money/presentation/widget/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SendMoneyPage extends StatefulWidget {
   final CurrentUserEntity currentUser;
@@ -36,13 +44,15 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   }
 
   void _onSend() {
-    if (_formKey.currentState?.validate() ?? false) {
-      context.read<SendMoneyBloc>().add(SendMoneyRequested(
-            receiverAccount: _accountController.text.trim(),
-            amount: double.parse(_amountController.text),
-            currentBalance: widget.currentUser.balance ?? 0,
-            note: _noteController.text.trim(),
-          ));
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      context.read<SendMoneyBloc>().add(
+            SendMoneyRequested(
+              receiverAccount: _accountController.text.trim(),
+              amount: double.parse(_amountController.text),
+              currentBalance: widget.currentUser.balance ?? 0,
+              note: _noteController.text.trim(),
+            ),
+          );
     }
   }
 
@@ -50,7 +60,17 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(title: const Text('Send Money')),
+      appBar: CommonAppBar(
+        title: "Send Money",
+        titleStyle: AppTextStyles.title(color: AppColors.white),
+        onLeadingTab: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.goNamed(AppRoutes.dashboard);
+          }
+        },
+      ),
       body: BlocConsumer<SendMoneyBloc, SendMoneyState>(
         listener: (context, state) {
           if (state is SendMoneySuccess) {
@@ -60,16 +80,14 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.error_outline, color: Colors.white),
+                    const Icon(Icons.error_outline, color: AppColors.white),
                     const SizedBox(width: 8),
                     Expanded(child: Text(state.message)),
                   ],
                 ),
                 backgroundColor: AppColors.errorColor,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             );
           }
@@ -83,25 +101,62 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildBalanceSummary(),
+                  BalanceSummary(balance: widget.currentUser.balance ?? 0),
                   const SizedBox(height: 24),
                   _buildSectionTitle('Recipient Details'),
-                  const SizedBox(height: 12),
-                  _buildAccountField(),
-                  const SizedBox(height: 20),
-                  _buildSectionTitle('Transfer Amount'),
-                  const SizedBox(height: 12),
-                  _buildAmountField(),
+                  CommonTextField(
+                    controller: _accountController,
+                    hintText: 'Enter account number',
+                    inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
+                    keyboardType: TextInputType.number,
+                    prefixIcon: const Icon(Icons.person_outline),
+                    autofillHints: const [AutofillHints.name],
+                    validator: InputValidator.validateAccountNumber,
+                  ),
                   const SizedBox(height: 4),
+                  _buildSectionTitle('Transfer Amount'),
+                  CommonTextField(
+                    controller: _amountController,
+                    hintText: '৳ 0.00',
+                    inputTextStyle: AppTextStyles.title(fontSize: 22, color: AppColors.textPrimary),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                    ],
+                    prefixIcon: Padding(padding: const EdgeInsets.all(16.0), child: Image.asset(tkSign, width: 10, height: 10)),
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text(
+                        'Max ৳50,000',
+                        style: TextStyle(fontSize: 11, color: AppColors.textSecondary.withValues(alpha: 0.7)),
+                      ),
+                    ),
+                    autofillHints: const [AutofillHints.name],
+                    onChanged: (value) => _enteredAmount = double.tryParse(value) ?? 0,
+                  ),
                   _buildAmountHint(),
-                  const SizedBox(height: 20),
-                  _buildSectionTitle('Note (Optional)'),
                   const SizedBox(height: 12),
-                  _buildNoteField(),
-                  const SizedBox(height: 32),
+                  _buildSectionTitle('Note (Optional)'),
+                  CommonTextField(
+                    controller: _noteController,
+                    hintText: 'e.g. Rent payment, Birthday gift...',
+                    inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
+                    keyboardType: TextInputType.text,
+                    prefixIcon: const Icon(Icons.notes),
+                    autofillHints: const [AutofillHints.name],
+                    maxLength: 100,
+                  ),
                   _buildQuickAmounts(),
-                  const SizedBox(height: 32),
-                  _buildSendButton(isLoading),
+                  const SizedBox(height: 34),
+                  AppButton(
+                    title: 'Send Money',
+                    onPressed: _onSend,
+                    textStyle: AppTextStyles.buttonStyle(fontSize: 18),
+                    isLoading: isLoading,
+                    height: 52,
+                    borderRadius: 14,
+                    prefixIcon: Icons.send_rounded,
+                  ),
                   const SizedBox(height: 16),
                   _buildSecurityNote(),
                 ],
@@ -113,102 +168,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     );
   }
 
-  Widget _buildBalanceSummary() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: AppColors.cardGradient,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Available Balance', style: TextStyle(color: Colors.white70, fontSize: 13)),
-              const SizedBox(height: 6),
-              Text(
-                CurrencyFormatter.format(widget.currentUser.balance ?? 0),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const Icon(Icons.account_balance_wallet_outlined, color: Colors.white54, size: 36),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-        letterSpacing: 0.3,
-      ),
-    );
-  }
-
-  Widget _buildAccountField() {
-    return TextFormField(
-      controller: _accountController,
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 2,
-      ),
-      decoration: const InputDecoration(
-        hintText: 'Enter account number',
-        prefixIcon: Icon(Icons.person_outline, color: AppColors.textSecondary),
-        labelText: 'Receiver Account Number',
-      ),
-      validator: InputValidator.validateAccountNumber,
-    );
-  }
-
-  Widget _buildAmountField() {
-    return TextFormField(
-      controller: _amountController,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-      ],
-      style: const TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        color: AppColors.primaryColor,
-      ),
-      decoration: InputDecoration(
-        hintText: '0.00',
-        prefixText: '৳ ',
-        prefixStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w700,
-          color: AppColors.primaryColor,
-        ),
-        labelText: 'Amount',
-        suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: Text(
-            'Max ৳50,000',
-            style: TextStyle(fontSize: 11, color: AppColors.textSecondary.withValues(alpha: 0.7)),
-          ),
-        ),
-        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-      ),
-      onChanged: (v) {
-        setState(() => _enteredAmount = double.tryParse(v) ?? 0);
-      },
-      validator: (v) => InputValidator.validateAmount(v, widget.currentUser.balance ?? 0),
+      style: AppTextStyles.title(fontSize: 14, color: AppColors.textPrimary, letterSpacing: 0.3),
     );
   }
 
@@ -216,29 +179,12 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     if (_enteredAmount <= 0) return const SizedBox.shrink();
     final remaining = widget.currentUser.balance ?? 0 - _enteredAmount;
     final isInsufficient = remaining < 0;
-    return Padding(
-      padding: const EdgeInsets.only(top: 6, left: 4),
-      child: Text(
-        isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
-        style: TextStyle(
-          fontSize: 12,
-          color: isInsufficient ? AppColors.errorColor : AppColors.textSecondary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoteField() {
-    return TextFormField(
-      controller: _noteController,
-      maxLength: 100,
-      maxLines: 2,
-      decoration: const InputDecoration(
-        hintText: 'e.g. Rent payment, Birthday gift...',
-        prefixIcon: Icon(Icons.notes_outlined, color: AppColors.textSecondary),
-        labelText: 'Note (optional)',
-        counterText: '',
+    return Text(
+      isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
+      style: AppTextStyles.regular(
+        fontSize: 12,
+        color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -248,11 +194,8 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Quick Select',
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: 10),
+        _buildSectionTitle('Quick Select'),
+        const SizedBox(height: 12),
         Row(
           children: amounts.map((amount) {
             final selected = _enteredAmount == amount;
@@ -267,22 +210,19 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                     });
                   },
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    duration: const Duration(milliseconds: 500),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
                     decoration: BoxDecoration(
-                      color: selected ? AppColors.primaryColor : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: selected ? AppColors.primaryColor : AppColors.dividerColor,
-                      ),
+                      color: selected ? AppColors.primaryColor : AppColors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: selected ? AppColors.primaryColor : AppColors.dividerColor),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       '৳${amount.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        fontSize: 13,
+                      style: AppTextStyles.regular(
                         fontWeight: FontWeight.w600,
-                        color: selected ? Colors.white : AppColors.textPrimary,
+                        color: selected ? AppColors.white : AppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -295,40 +235,16 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
     );
   }
 
-  Widget _buildSendButton(bool isLoading) {
-    return ElevatedButton(
-      onPressed: isLoading ? null : _onSend,
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 54),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-      child: isLoading
-          ? const SizedBox(
-              height: 24,
-              width: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-            )
-          : const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.send_rounded, size: 18),
-                SizedBox(width: 10),
-                Text('Send Money', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-              ],
-            ),
-    );
-  }
-
   Widget _buildSecurityNote() {
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.shield_outlined, size: 14, color: Colors.grey.shade500),
+          const Icon(Icons.shield_outlined, size: 14, color: AppColors.greyShade500),
           const SizedBox(width: 6),
           Text(
             'End-to-end encrypted transfer',
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+            style: AppTextStyles.regular(fontSize: 12, color: AppColors.greyShade500),
           ),
         ],
       ),

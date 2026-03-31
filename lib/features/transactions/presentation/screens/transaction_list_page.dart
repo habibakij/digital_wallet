@@ -55,15 +55,16 @@ class _TransactionListPageState extends State<TransactionListPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(
-          title: "Transaction History",
-          titleStyle: AppTextStyles.title(color: AppColors.white),
-          onLeadingTab: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.goNamed(AppRoutes.dashboard);
-            }
-          }),
+        title: "Transaction History",
+        titleStyle: AppTextStyles.title(color: AppColors.white),
+        onLeadingTab: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.goNamed(AppRoutes.dashboard);
+          }
+        },
+      ),
       body: BlocBuilder<TransactionBloc, TransactionState>(
         builder: (context, state) {
           if (state is TransactionLoading) {

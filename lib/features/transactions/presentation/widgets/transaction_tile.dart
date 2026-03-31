@@ -17,10 +17,10 @@ class TransactionItem extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(8.0),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.black.withValues(alpha: 0.04),
@@ -129,7 +129,7 @@ class TransactionItem extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(12.0), bottomLeft: Radius.circular(6.0)),
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(8.0), bottomLeft: Radius.circular(4.0)),
       ),
       child: Text(
         text,
