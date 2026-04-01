@@ -17,7 +17,7 @@ class SignInRemoteDatasourceImpl implements SignInRemoteDatasource {
   Future<SignInModel> signIn({required String email, required String password}) async {
     final response = await _apiClient.post(
       ApiEndpoints.login,
-      pData: {'email': email, 'password': password},
+      queryParameters: {'email': email, 'password': password},
     );
     final auth = SignInModel.fromJson(response.data as Map<String, dynamic>);
     await _secureStorageService.saveAccessToken(auth.accessToken ?? '');

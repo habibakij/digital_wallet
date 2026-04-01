@@ -34,11 +34,13 @@ class AppColors {
   static const Color greyShade200 = Color(0xFFEEEEEE);
   static const Color greyShade300 = Color(0xFFE0E0E0);
   static const Color greyShade500 = Color(0xFF9E9E9E);
-  static const Color orangeColor = Color(0XFFff9900);
+  static const Color orangeColor = Color(0XFFFFA500);
+  static const Color deepOrangeColor = Color(0XFFFF5722);
   static const Color green = Color(0XFF009933);
   static const Color greenLite = Color(0XFF99ffbb);
   static const Color yellow = Color(0XFFF5A905);
-  static const Color orange = Color(0XFFFFA500);
+  static const Color purple = Color(0XFF800080);
+  static const Color cyan = Color(0XFF00BCD4);
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, primaryLiteColor],

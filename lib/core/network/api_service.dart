@@ -1,4 +1,4 @@
-import 'api_client.dart';
+import 'package:digital_wallet/core/network/api_client.dart';
 
 class ApiService {
   Future<String?> getProducts() async {

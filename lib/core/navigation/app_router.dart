@@ -35,9 +35,19 @@ class AppRouter {
         pageBuilder: (context, state) => customTransition(state: state, child: const SignUpScreen()),
       ),
       GoRoute(
+        path: AppRoutes.dashboard,
+        name: AppRoutes.dashboard,
+        pageBuilder: (context, state) => customTransition(state: state, child: const DashboardPage()),
+      ),
+      GoRoute(
         path: AppRoutes.transactions,
         name: AppRoutes.transactions,
         pageBuilder: (context, state) => customTransition(state: state, child: const TransactionListPage()),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionsDetails,
+        name: AppRoutes.transactionsDetails,
+        //pageBuilder: (context, state) => customTransition(state: state, child: const TransactionDetailsPage(tx: null,)),
       ),
       GoRoute(
         path: AppRoutes.sendMoney,
@@ -47,11 +57,7 @@ class AppRouter {
           return customTransition(state: state, child: SendMoneyPage(currentUser: user));
         },
       ),
-      GoRoute(
-        path: AppRoutes.dashboard,
-        name: AppRoutes.dashboard,
-        pageBuilder: (context, state) => customTransition(state: state, child: const DashboardPage()),
-      ),
+
       /*ShellRoute(
         builder: (context, state, child) => MultiBlocProvider(
           providers: [

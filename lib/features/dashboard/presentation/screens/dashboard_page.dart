@@ -13,6 +13,7 @@ import 'package:digital_wallet/features/transactions/presentation/widgets/transa
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -36,6 +37,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.primaryLiteColor,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ));
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: Column(

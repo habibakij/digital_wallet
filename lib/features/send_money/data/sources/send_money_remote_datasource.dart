@@ -22,7 +22,7 @@ class SendMoneyRemoteDataSourceImpl implements SendMoneyRemoteDataSource {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.sendMoney,
-        pData: {
+        queryParameters: {
           'receiver_account': receiverAccount,
           'amount': amount,
           if (note != null && note.isNotEmpty) 'note': note,
