@@ -16,10 +16,16 @@ import 'package:digital_wallet/features/send_money/data/sources/send_money_remot
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
 import 'package:digital_wallet/features/send_money/domain/use_case/send_money_use_case.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/data/repository_impl/otp_verification_repository_impl.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/data/sources/remote/otp_verification_remote_source.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/domain/repository/otp_verification_repository.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_bloc.dart';
 import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart';
 import 'package:digital_wallet/features/transactions/data/repository_impl/transaction_repository_impl.dart';
 import 'package:digital_wallet/features/transactions/data/sources/transaction_remote_datasource.dart';
 import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
+import 'package:digital_wallet/features/transactions/domain/use_cases/transaction_use_case.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -51,11 +57,17 @@ Future<void> configureDependencies() async {
   // ─── Transactions ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(sl<ApiClient>()));
   sl.registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(sl<TransactionRemoteDataSource>()));
-  sl.registerFactory<TransactionBloc>(() => TransactionBloc(sl<TransactionRepository>()));
+  sl.registerFactory(() => TransactionUseCase(sl<TransactionRepository>()));
+  sl.registerFactory<TransactionBloc>(() => TransactionBloc(sl<TransactionUseCase>()));
 
   // ─── Send Money ────────────────────────────────────────────────────────────
   sl.registerLazySingleton<SendMoneyRemoteDataSource>(() => SendMoneyRemoteDataSourceImpl(sl<ApiClient>()));
   sl.registerLazySingleton<SendMoneyRepository>(() => SendMoneyRepositoryImpl(sl<SendMoneyRemoteDataSource>()));
   sl.registerLazySingleton(() => SendMoneyUseCase(sl<SendMoneyRepository>()));
   sl.registerFactory<SendMoneyBloc>(() => SendMoneyBloc(sl<SendMoneyUseCase>()));
+
+  sl.registerLazySingleton<OtpVerificationRemoteDataSource>(() => OtpVerificationRemoteDataSourceImpl(sl<ApiClient>()));
+  sl.registerLazySingleton<OtpVerificationRepository>(() => OtpVerificationRepositoryImpl(sl<OtpVerificationRemoteDataSource>()));
+  sl.registerLazySingleton(() => OtpVerificationUseCase(sl<OtpVerificationRepository>()));
+  sl.registerFactory<OtpVerificationBloc>(() => OtpVerificationBloc(sl<OtpVerificationUseCase>()));
 }

@@ -19,16 +19,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class SendMoneyPage extends StatefulWidget {
+class SendMoneyScreen extends StatefulWidget {
   final CurrentUserEntity currentUser;
 
-  const SendMoneyPage({super.key, required this.currentUser});
+  const SendMoneyScreen({super.key, required this.currentUser});
 
   @override
-  State<SendMoneyPage> createState() => _SendMoneyPageState();
+  State<SendMoneyScreen> createState() => _SendMoneyScreenState();
 }
 
-class _SendMoneyPageState extends State<SendMoneyPage> {
+class _SendMoneyScreenState extends State<SendMoneyScreen> {
   final _formKey = GlobalKey<FormState>();
   final _accountController = TextEditingController();
   final _amountController = TextEditingController();

@@ -13,14 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class TransactionListPage extends StatefulWidget {
-  const TransactionListPage({super.key});
+class TransactionListScreen extends StatefulWidget {
+  const TransactionListScreen({super.key});
 
   @override
-  State<TransactionListPage> createState() => _TransactionListPageState();
+  State<TransactionListScreen> createState() => _TransactionListScreenState();
 }
 
-class _TransactionListPageState extends State<TransactionListPage> {
+class _TransactionListScreenState extends State<TransactionListScreen> {
   final _scrollController = ScrollController();
 
   @override

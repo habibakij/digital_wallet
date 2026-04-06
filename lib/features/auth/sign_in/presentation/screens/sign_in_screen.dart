@@ -192,7 +192,7 @@ class _LoginPageState extends State<SignInScreen> {
                     TextSpan(
                       text: "Sign Up",
                       style: AppTextStyles.regular(color: AppColors.primaryColor, fontWeight: FontWeight.w600),
-                      recognizer: TapGestureRecognizer()..onTap = () => context.goNamed(AppRoutes.signUp),
+                      recognizer: TapGestureRecognizer()..onTap = () => context.pushReplacementNamed(AppRoutes.signUp),
                     ),
                   ],
                 ),

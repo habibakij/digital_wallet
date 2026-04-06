@@ -1,3 +1,4 @@
+import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/widget/app_button.dart';
@@ -5,6 +6,7 @@ import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/widget/footer_security_text.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/widget/header.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -147,7 +149,7 @@ class _SignupViewState extends State<SignUpScreen> {
                         const Text("Already have an account? "),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
+                            context.pushReplacementNamed(AppRoutes.signIn);
                           },
                           child: const Text(
                             "Sign In",

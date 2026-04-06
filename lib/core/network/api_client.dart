@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -207,7 +206,7 @@ class ApiClient {
     try {
       return await _dio.post(
         endpoint,
-        data: jsonEncode(data),
+        data: data,
         queryParameters: queryParameters,
         cancelToken: cancelToken,
         options: options,

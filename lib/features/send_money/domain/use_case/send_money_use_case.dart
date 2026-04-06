@@ -12,7 +12,6 @@ class SendMoneyUseCase extends UseCase<TransferEntity, SendMoneyParams> {
 
   @override
   Future<Either<Failure, TransferEntity>> call(SendMoneyParams params) async {
-    // Domain-level validations
     if (params.receiverAccount.isEmpty) {
       return const Left(ValidationFailure(message: 'Receiver account is required'));
     }
@@ -25,12 +24,7 @@ class SendMoneyUseCase extends UseCase<TransferEntity, SendMoneyParams> {
     if (params.amount > params.currentBalance) {
       return const Left(InsufficientBalanceFailure());
     }
-
-    return await _repository.sendMoney(
-      receiverAccount: params.receiverAccount,
-      amount: params.amount,
-      note: params.note,
-    );
+    return await _repository.sendMoney(receiverAccount: params.receiverAccount, amount: params.amount, note: params.note);
   }
 }
 
@@ -40,12 +34,7 @@ class SendMoneyParams extends Equatable {
   final double currentBalance;
   final String? note;
 
-  const SendMoneyParams({
-    required this.receiverAccount,
-    required this.amount,
-    required this.currentBalance,
-    this.note,
-  });
+  const SendMoneyParams({required this.receiverAccount, required this.amount, required this.currentBalance, this.note});
 
   @override
   List<Object?> get props => [receiverAccount, amount, currentBalance, note];

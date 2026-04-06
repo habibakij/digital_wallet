@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
+import 'package:digital_wallet/features/transactions/domain/use_cases/transaction_use_case.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  final TransactionRepository _repository;
-  TransactionBloc(this._repository) : super(const TransactionInitial()) {
+  final TransactionUseCase _transactionUseCase;
+  TransactionBloc(this._transactionUseCase) : super(const TransactionInitial()) {
     on<FetchTransactions>(_onFetchTransactions);
   }
 
   FutureOr<void> _onFetchTransactions(FetchTransactions event, Emitter<TransactionState> emit) async {
     emit(const TransactionLoading());
-    final result = await _repository.getTransactionListData();
+    final result = await _transactionUseCase.getTransactionList();
     if (result.isNotEmpty) {
       emit(TransactionLoaded(result));
     } else {

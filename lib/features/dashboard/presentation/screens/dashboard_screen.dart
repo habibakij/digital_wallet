@@ -16,14 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardScreenState extends State<DashboardScreen> {
   void _loadData({bool forceRefresh = false}) {
     context.read<DashboardBloc>().add(DashboardLoadRequested(forceRefresh: forceRefresh));
     context.read<TransactionBloc>().add(FetchTransactions(forceRefresh: forceRefresh));
