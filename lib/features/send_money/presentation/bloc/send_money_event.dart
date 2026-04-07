@@ -12,12 +12,7 @@ class SendMoneyRequested extends SendMoneyEvent {
   final double currentBalance;
   final String? note;
 
-  const SendMoneyRequested({
-    required this.receiverAccount,
-    required this.amount,
-    required this.currentBalance,
-    this.note,
-  });
+  const SendMoneyRequested({required this.receiverAccount, required this.amount, required this.currentBalance, this.note});
 
   @override
   List<Object?> get props => [receiverAccount, amount, currentBalance, note];

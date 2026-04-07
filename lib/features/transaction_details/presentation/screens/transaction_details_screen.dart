@@ -1,3 +1,4 @@
+import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/features/transaction_details/data/model/tr_details_model.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,12 @@ class TransactionDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomSheet: _buildBottomAction(),
+      bottomSheet: AppButton(
+        title: 'Download Receipt',
+        height: 52,
+        borderRadius: 14,
+        onPressed: () {},
+      ),
     );
   }
 
@@ -81,7 +87,7 @@ class TransactionDetailsPage extends StatelessWidget {
           Container(
             height: 60,
             width: 60,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               //color: _statusColor(tx.status).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
@@ -156,21 +162,6 @@ class TransactionDetailsPage extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomAction() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(16),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        child: const Text("Download Receipt"),
       ),
     );
   }

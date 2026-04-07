@@ -5,6 +5,7 @@ import 'package:digital_wallet/core/utils/widget/snack_bar.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_event.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_state.dart';
+import 'package:flutter/cupertino.dart';
 
 class OtpVerificationBloc extends Bloc<OtpVerificationEvent, OtpVerificationState> {
   final OtpVerificationUseCase _otpVerificationUseCase;
@@ -15,12 +16,18 @@ class OtpVerificationBloc extends Bloc<OtpVerificationEvent, OtpVerificationStat
 
   FutureOr<void> _onOtpVerification(OtpVerificationInitEvent event, Emitter<OtpVerificationState> emit) async {
     emit(const OtpVerificationLoadingState());
-    var otpParams = OtpParams(otp: event.otp ?? '');
+    var otpParams = OtpParams(otp: event.otp);
     final result = await _otpVerificationUseCase.call(otpParams);
-    result.fold(
-      (error) => emit(OtpVerificationFailState(message: error.message)),
-      (entity) => emit(OtpVerificationSuccessState(entity.message ?? 'OTP verification successful')),
-    );
+    result.fold((error) {
+      emit(OtpVerificationFailState(message: error.message));
+    }, (entity) {
+      debugPrint("input: ${event.otp} and server: ${entity.otp}");
+      if (event.otp == entity.otp) {
+        emit(OtpVerificationSuccessState(entity.message ?? ''));
+      } else {
+        emit(const OtpVerificationFailState(message: "Invalid otp"));
+      }
+    });
   }
 
   String otp = '';

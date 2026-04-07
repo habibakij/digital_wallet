@@ -1,6 +1,5 @@
+import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../domain/entities/transfer_entity.dart';
 
 abstract class SendMoneyState extends Equatable {
   const SendMoneyState();
@@ -17,10 +16,10 @@ class SendMoneyLoading extends SendMoneyState {
 }
 
 class SendMoneySuccess extends SendMoneyState {
-  final TransferEntity transfer;
-  const SendMoneySuccess({required this.transfer});
+  final SendMoneyEntity entity;
+  const SendMoneySuccess({required this.entity});
   @override
-  List<Object> get props => [transfer];
+  List<Object> get props => [entity];
 }
 
 class SendMoneyError extends SendMoneyState {

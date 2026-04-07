@@ -7,13 +7,10 @@ import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
 import 'package:digital_wallet/core/utils/widget/common_app_bar.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
-import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
 import 'package:digital_wallet/features/send_money/presentation/widget/balance_summary.dart';
-import 'package:digital_wallet/features/send_money/presentation/widget/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +18,6 @@ import 'package:go_router/go_router.dart';
 
 class SendMoneyScreen extends StatefulWidget {
   final CurrentUserEntity currentUser;
-
   const SendMoneyScreen({super.key, required this.currentUser});
 
   @override
@@ -74,7 +70,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
       body: BlocConsumer<SendMoneyBloc, SendMoneyState>(
         listener: (context, state) {
           if (state is SendMoneySuccess) {
-            _showSuccessDialog(state);
+            context.goNamed(AppRoutes.otpVerification, extra: state.entity);
           } else if (state is SendMoneyError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -247,33 +243,6 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
             style: AppTextStyles.regular(fontSize: 12, color: AppColors.greyShade500),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showSuccessDialog(SendMoneySuccess state) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => SuccessDialog(
-        transfer: state.transfer,
-        onDone: () {
-          Navigator.of(context).pop(); // close dialog
-          // Update dashboard balance
-          context.read<DashboardBloc>().add(DashboardBalanceUpdated(newBalance: state.transfer.newBalance));
-          // Reset send money state
-          context.read<SendMoneyBloc>().add(const SendMoneyReset());
-          Navigator.of(context).pop(); // go back to dashboard
-        },
-        onSendAnother: () {
-          Navigator.of(context).pop(); // close dialog
-          context.read<SendMoneyBloc>().add(const SendMoneyReset());
-          _formKey.currentState?.reset();
-          _accountController.clear();
-          _amountController.clear();
-          _noteController.clear();
-          setState(() => _enteredAmount = 0);
-        },
       ),
     );
   }

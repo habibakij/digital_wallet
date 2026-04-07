@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class TransferEntity extends Equatable {
+class SendMoneyEntity extends Equatable {
+  final String otp;
   final String transactionId;
   final String referenceNumber;
   final String receiverName;
@@ -10,7 +11,8 @@ class TransferEntity extends Equatable {
   final String? note;
   final DateTime timestamp;
 
-  const TransferEntity({
+  const SendMoneyEntity({
+    required this.otp,
     required this.transactionId,
     required this.referenceNumber,
     required this.receiverName,
@@ -22,5 +24,5 @@ class TransferEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [transactionId, referenceNumber];
+  List<Object?> get props => [otp, transactionId, referenceNumber, receiverName, receiverAccount, amount, newBalance, timestamp];
 }

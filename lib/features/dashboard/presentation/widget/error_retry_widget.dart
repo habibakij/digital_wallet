@@ -1,4 +1,5 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:flutter/material.dart';
 
 class ErrorRetryWidget extends StatelessWidget {
@@ -18,9 +19,11 @@ class ErrorRetryWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => onRetry(),
-              child: const Text('Retry'),
+            AppButton(
+              title: 'Retry',
+              onPressed: onRetry,
+              height: 52,
+              borderRadius: 14,
             ),
           ],
         ),

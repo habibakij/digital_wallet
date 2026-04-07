@@ -1,17 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_wallet/core/exception_handler/failures.dart';
 import 'package:digital_wallet/core/use_case/use_case.dart';
-import 'package:digital_wallet/features/send_money/domain/entities/transfer_entity.dart';
+import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
 import 'package:equatable/equatable.dart';
 
-class SendMoneyUseCase extends UseCase<TransferEntity, SendMoneyParams> {
+class SendMoneyUseCase extends UseCase<SendMoneyEntity, SendMoneyParams> {
   final SendMoneyRepository _repository;
 
   SendMoneyUseCase(this._repository);
 
   @override
-  Future<Either<Failure, TransferEntity>> call(SendMoneyParams params) async {
+  Future<Either<Failure, SendMoneyEntity>> call(SendMoneyParams params) async {
     if (params.receiverAccount.isEmpty) {
       return const Left(ValidationFailure(message: 'Receiver account is required'));
     }

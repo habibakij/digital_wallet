@@ -1,24 +1,30 @@
+import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/theme/app_style.dart';
+import 'package:digital_wallet/core/utils/widget/app_button.dart';
+import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_bloc.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_event.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_state.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/presentation/widget/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
-  const OtpVerificationScreen({super.key});
+  final SendMoneyEntity sendMoneyEntity;
+  const OtpVerificationScreen({super.key, required this.sendMoneyEntity});
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
 
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
-
+  final _formKey = GlobalKey<FormState>();
+  final List<TextEditingController> otpController = List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
-  String get _otp => _controllers.map((e) => e.text).join();
+  String get _otp => otpController.map((e) => e.text).join();
 
   @override
   void dispose() {
-    for (var c in _controllers) {
+    for (var c in otpController) {
       c.dispose();
     }
     for (var f in _focusNodes) {
@@ -28,7 +34,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   void _onVerify() {
-    context.read<OtpVerificationBloc>().add(OtpVerificationInitEvent(otp: _otp));
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      context.read<OtpVerificationBloc>().add(OtpVerificationInitEvent(otp: _otp));
+    }
   }
 
   @override
@@ -43,83 +51,76 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       body: BlocListener<OtpVerificationBloc, OtpVerificationState>(
         listener: (context, state) {
           if (state is OtpVerificationSuccessState) {
-            Navigator.pop(context, true);
+            _showSuccessDialog(widget.sendMoneyEntity);
           } else if (state is OtpVerificationFailState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Enter Verification Code",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "Enter the 6-digit code sent to your number",
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 30),
-              _buildOtpFields(),
-              const SizedBox(height: 20),
-              /*Center(
-                child: BlocBuilder<OtpVerificationBloc, OtpVerificationState>(
-                  buildWhen: (prev, curr) => curr is OtpTimerState,
-                  builder: (context, state) {
-                    int seconds = 0;
-                    if (state is OtpTimerState) {
-                      seconds = state.seconds;
-                    }
-                    if (seconds == 0) {
-                      return TextButton(
-                        onPressed: () {
-                          context.read<OtpVerificationBloc>().add(ResendOtpEvent());
-                        },
-                        child: const Text("Resend OTP"),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Enter Verification Code",
+                  style: AppTextStyles.title(),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Enter the 6-digit code sent to your number",
+                  style: AppTextStyles.regular(color: AppColors.textSecondary),
+                ),
+                const SizedBox(height: 30),
+                _buildOtpFields(),
+                const SizedBox(height: 20),
+                /*Center(
+                  child: BlocBuilder<OtpVerificationBloc, OtpVerificationState>(
+                    buildWhen: (prev, curr) => curr is OtpTimerState,
+                    builder: (context, state) {
+                      int seconds = 0;
+                      if (state is OtpTimerState) {
+                        seconds = state.seconds;
+                      }
+                      if (seconds == 0) {
+                        return TextButton(
+                          onPressed: () {
+                            context.read<OtpVerificationBloc>().add(ResendOtpEvent());
+                          },
+                          child: const Text("Resend OTP"),
+                        );
+                      }
+                      return Text(
+                        "Resend in ${seconds}s",
+                        style: const TextStyle(color: Colors.grey),
                       );
-                    }
-                    return Text(
-                      "Resend in ${seconds}s",
-                      style: const TextStyle(color: Colors.grey),
+                    },
+                  ),
+                ),*/
+                const Spacer(),
+                BlocBuilder<OtpVerificationBloc, OtpVerificationState>(
+                  builder: (context, state) {
+                    final isLoading = state is OtpVerificationLoadingState;
+                    return AppButton(
+                      title: 'Verify & Send Money',
+                      onPressed: _onVerify,
+                      textStyle: AppTextStyles.buttonStyle(fontSize: 18),
+                      isLoading: isLoading,
+                      height: 52,
+                      borderRadius: 14,
                     );
                   },
                 ),
-              ),*/
-              const Spacer(),
-              BlocBuilder<OtpVerificationBloc, OtpVerificationState>(
-                buildWhen: (prev, curr) => curr is OtpVerificationLoadingState || curr is OtpVerificationInitState,
-                builder: (context, state) {
-                  final isLoading = state is OtpVerificationLoadingState;
-                  return SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: isLoading ? null : _onVerify,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text("Verify & Send Money"),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                const SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -133,7 +134,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         return SizedBox(
           width: 45,
           child: TextField(
-            controller: _controllers[index],
+            controller: otpController[index],
             focusNode: _focusNodes[index],
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
@@ -142,9 +143,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               counterText: "",
               filled: true,
               fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
             onChanged: (value) {
               if (value.isNotEmpty && index < 5) {
@@ -156,6 +155,24 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           ),
         );
       }),
+    );
+  }
+
+  void _showSuccessDialog(SendMoneyEntity entity) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => SuccessDialog(
+        entity: entity,
+        onDone: () {
+          Navigator.of(context).pop();
+          //context.read<DashboardBloc>().add(DashboardBalanceUpdated(newBalance: state.entity.newBalance));
+          //context.read<SendMoneyBloc>().add(const SendMoneyReset());
+        },
+        onSendAnother: () {
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 }

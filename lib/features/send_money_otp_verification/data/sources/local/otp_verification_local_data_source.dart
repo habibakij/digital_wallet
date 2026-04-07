@@ -1,12 +1,13 @@
 import 'package:digital_wallet/features/send_money_otp_verification/data/model/otp_verification_model.dart';
+import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart';
 
 abstract class OtpVerificationLocalDataSource {
-  Future<OtpVerificationModel> otpVerification();
+  Future<OtpVerificationModel> otpVerification(OtpParams params);
 }
 
 class OtpVerificationLocalDataSourceImpl implements OtpVerificationLocalDataSource {
   @override
-  Future<OtpVerificationModel> otpVerification() {
+  Future<OtpVerificationModel> otpVerification(params) {
     return Future.delayed(const Duration(seconds: 2), () {
       return const OtpVerificationModel(
         otp: "001122",

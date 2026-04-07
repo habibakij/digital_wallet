@@ -1,4 +1,5 @@
 import 'package:digital_wallet/core/network/api_client.dart';
+import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/features/transactions/data/model/transaction_model.dart';
 
 abstract class TransactionRemoteDataSource {
@@ -11,7 +12,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
 
   @override
   Future<List<TransactionModel>> getTransactionListData() async {
-    final response = await _apiClient.get("/todos", customBaseUrl: "https://jsonplaceholder.typicode.com");
+    final response = await _apiClient.get(ApiEndpoints.transactionList, customBaseUrl: ApiEndpoints.baseUrlV2);
     final List data = response.data;
     final result = data.map((json) => TransactionModel.fromJson(json)).toList();
     return result;

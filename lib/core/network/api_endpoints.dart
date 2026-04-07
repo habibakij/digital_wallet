@@ -2,7 +2,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   static const String baseUrl = "https://api.escuelajs.co/api/v1";
-  static const String transactionBaseUrl = "https://jsonplaceholder.typicode.com/";
+  static const String baseUrlV2 = "https://jsonplaceholder.typicode.com/";
   // Auth
   static const String login = '/auth/login';
   static const String logout = '/auth/logout';
@@ -12,7 +12,7 @@ class ApiEndpoints {
 
   // Wallet
   static const String balance = '/wallet/balance';
-  static const String sendMoney = '/wallet/transfer';
+  static const String sendMoney = 'posts';
 
   // Transactions
   static const String transactionList = 'todos';

@@ -11,8 +11,8 @@ class OtpVerificationRemoteDataSourceImpl implements OtpVerificationRemoteDataSo
   OtpVerificationRemoteDataSourceImpl(this._apiClient);
 
   @override
-  Future<OtpVerificationModel> otpVerification(OtpParams params) {
-    /*return _apiClient.post("otp/verification", data: {"otp": params.otp}).then((response){
+  Future<OtpVerificationModel> otpVerification(OtpParams params) async {
+    /*return await _apiClient.post("otp/verification", data: {"otp": params.otp}).then((response){
       final data = response.data;
       return OtpVerificationModel.fromJson(data);
     }).catchError((error){

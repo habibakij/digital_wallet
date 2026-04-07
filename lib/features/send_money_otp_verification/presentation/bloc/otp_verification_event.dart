@@ -7,8 +7,8 @@ abstract class OtpVerificationEvent extends Equatable {
 }
 
 class OtpVerificationInitEvent extends OtpVerificationEvent {
-  final String? otp;
-  const OtpVerificationInitEvent({this.otp});
+  final String otp;
+  const OtpVerificationInitEvent({required this.otp});
 
   @override
   List<Object?> get props => [otp];
