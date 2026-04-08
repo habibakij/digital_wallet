@@ -13,7 +13,7 @@ class DashboardRemoteDataSourceImpl extends DashboardRemoteDataSource {
   @override
   Future<CurrentUserModel> getCurrentUser() async {
     final response = await _apiClient.get(ApiEndpoints.currentUser(2));
-    var result = CurrentUserModel.fromJson(response.data as Map<String, dynamic>);
+    var result = CurrentUserModel.fromJson(response.data);
     return result;
   }
 }

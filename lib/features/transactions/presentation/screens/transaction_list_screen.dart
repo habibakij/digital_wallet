@@ -61,7 +61,7 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
           if (context.canPop()) {
             context.pop();
           } else {
-            context.goNamed(AppRoutes.dashboard);
+            context.pushNamed(AppRoutes.dashboard);
           }
         },
       ),
@@ -75,7 +75,7 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
             );
           }
           if (state is TransactionEmpty) {
-            return const EmptyTransactions();
+            return EmptyTransactions(onRetry: () {});
           }
           if (state is TransactionError) {
             return TransactionRetry(

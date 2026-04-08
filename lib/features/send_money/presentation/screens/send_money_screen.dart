@@ -11,6 +11,7 @@ import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
 import 'package:digital_wallet/features/send_money/presentation/widget/balance_summary.dart';
+import 'package:digital_wallet/features/send_money/presentation/widget/security_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +30,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
   final _accountController = TextEditingController();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
-  double _enteredAmount = 0;
+  final ValueNotifier<double> _enteredAmount = ValueNotifier(0.0);
 
   @override
   void dispose() {
@@ -40,12 +41,12 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
   }
 
   void _onSend() {
-    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+    if (_formKey.currentState?.validate() ?? false) {
       context.read<SendMoneyBloc>().add(
-            SendMoneyRequested(
-              receiverAccount: _accountController.text.trim(),
-              amount: double.parse(_amountController.text),
-              currentBalance: widget.currentUser.balance ?? 0,
+            SendMoneyRequestEvent(
+              receiverAcc: _accountController.text.trim(),
+              amount: double.parse(_amountController.value.text),
+              currBalance: widget.currentUser.balance ?? 0,
               note: _noteController.text.trim(),
             ),
           );
@@ -63,15 +64,15 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           if (context.canPop()) {
             context.pop();
           } else {
-            context.goNamed(AppRoutes.dashboard);
+            context.pushNamed(AppRoutes.dashboard);
           }
         },
       ),
       body: BlocConsumer<SendMoneyBloc, SendMoneyState>(
         listener: (context, state) {
-          if (state is SendMoneySuccess) {
-            context.goNamed(AppRoutes.otpVerification, extra: state.entity);
-          } else if (state is SendMoneyError) {
+          if (state is SendMoneySuccessState) {
+            context.pushNamed(AppRoutes.otpVerification, extra: state.entity);
+          } else if (state is SendMoneyErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -89,74 +90,22 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           }
         },
         builder: (context, state) {
-          final isLoading = state is SendMoneyLoading;
+          final bloc = context.read<SendMoneyBloc>();
+          final isLoading = state is SendMoneyLoadingState;
+          if (state is SendMoneyValidationFailedState) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: _buildForm(bloc, state, isLoading),
+              ),
+            );
+          }
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BalanceSummary(balance: widget.currentUser.balance ?? 0),
-                  const SizedBox(height: 24),
-                  _buildSectionTitle('Recipient Details'),
-                  CommonTextField(
-                    controller: _accountController,
-                    hintText: 'Enter account number',
-                    inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
-                    keyboardType: TextInputType.number,
-                    prefixIcon: const Icon(Icons.person_outline),
-                    autofillHints: const [AutofillHints.name],
-                    validator: InputValidator.validateAccountNumber,
-                  ),
-                  const SizedBox(height: 4),
-                  _buildSectionTitle('Transfer Amount'),
-                  CommonTextField(
-                    controller: _amountController,
-                    hintText: '৳ 0.00',
-                    inputTextStyle: AppTextStyles.title(fontSize: 22, color: AppColors.textPrimary),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                    ],
-                    prefixIcon: Padding(padding: const EdgeInsets.all(16.0), child: Image.asset(tkSign, width: 10, height: 10)),
-                    suffixIcon: Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Text(
-                        'Max ৳50,000',
-                        style: TextStyle(fontSize: 11, color: AppColors.textSecondary.withValues(alpha: 0.7)),
-                      ),
-                    ),
-                    autofillHints: const [AutofillHints.name],
-                    onChanged: (value) => _enteredAmount = double.tryParse(value) ?? 0,
-                  ),
-                  _buildAmountHint(),
-                  const SizedBox(height: 12),
-                  _buildSectionTitle('Note (Optional)'),
-                  CommonTextField(
-                    controller: _noteController,
-                    hintText: 'e.g. Rent payment, Birthday gift...',
-                    inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
-                    keyboardType: TextInputType.text,
-                    prefixIcon: const Icon(Icons.notes),
-                    autofillHints: const [AutofillHints.name],
-                    maxLength: 100,
-                  ),
-                  _buildQuickAmounts(),
-                  const SizedBox(height: 34),
-                  AppButton(
-                    title: 'Send Money',
-                    onPressed: _onSend,
-                    textStyle: AppTextStyles.buttonStyle(fontSize: 18),
-                    isLoading: isLoading,
-                    height: 52,
-                    borderRadius: 14,
-                    prefixIcon: Icons.send_rounded,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildSecurityNote(),
-                ],
-              ),
+              child: _buildForm(bloc, state, isLoading),
             ),
           );
         },
@@ -171,17 +120,100 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
     );
   }
 
-  Widget _buildAmountHint() {
-    if (_enteredAmount <= 0) return const SizedBox.shrink();
-    final remaining = widget.currentUser.balance ?? 0 - _enteredAmount;
-    final isInsufficient = remaining < 0;
-    return Text(
-      isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
-      style: AppTextStyles.regular(
-        fontSize: 12,
-        color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,
-        fontWeight: FontWeight.w500,
-      ),
+  Widget _buildForm(SendMoneyBloc bloc, SendMoneyState state, bool isLoading) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BalanceSummary(balance: widget.currentUser.balance ?? 0),
+        const SizedBox(height: 24),
+        _buildSectionTitle('Recipient Details'),
+        CommonTextField(
+          controller: _accountController,
+          hintText: 'Enter account number',
+          inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
+          keyboardType: TextInputType.number,
+          prefixIcon: const Icon(Icons.person_outline),
+          autofillHints: const [AutofillHints.name],
+          onChanged: (value) => bloc.add(AccountNoChangedEvent(value)),
+          errorText: state is SendMoneyValidationFailedState
+              ? state.validAccount
+                  ? null
+                  : state.accountNoError
+              : null,
+          validator: InputValidator.validateAccountNumber,
+        ),
+        const SizedBox(height: 4),
+        _buildSectionTitle('Transfer Amount'),
+        CommonTextField(
+          controller: _amountController,
+          hintText: '৳ 0.00',
+          inputTextStyle: AppTextStyles.title(fontSize: 22, color: AppColors.textPrimary),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
+          prefixIcon: Padding(padding: const EdgeInsets.all(16.0), child: Image.asset(tkSign, width: 10, height: 10)),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Text(
+              'Max ৳50,000',
+              style: TextStyle(fontSize: 11, color: AppColors.textSecondary.withValues(alpha: 0.7)),
+            ),
+          ),
+          autofillHints: const [AutofillHints.name],
+          onChanged: (value) {
+            _enteredAmount.value = double.tryParse(value) ?? 0;
+            bloc.add(AmountChangedEvent(value));
+          },
+          errorText: state is SendMoneyValidationFailedState
+              ? state.validAmount
+                  ? null
+                  : state.amountError
+              : null,
+          validator: InputValidator.validateAmount,
+        ),
+        ValueListenableBuilder(
+          valueListenable: _enteredAmount,
+          builder: (context, visible, _) {
+            final remaining = widget.currentUser.balance! - _enteredAmount.value;
+            final isInsufficient = remaining <= 0;
+            debugPrint("check_balance: ${widget.currentUser.balance} - ${_enteredAmount.value} == $remaining");
+            return _enteredAmount.value <= 0
+                ? const SizedBox.shrink()
+                : Text(
+                    isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
+                    style: AppTextStyles.regular(
+                      fontSize: 12,
+                      color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  );
+          },
+        ),
+        const SizedBox(height: 12),
+        _buildSectionTitle('Note (Optional)'),
+        CommonTextField(
+          controller: _noteController,
+          hintText: 'e.g. Rent payment, Birthday gift...',
+          inputTextStyle: AppTextStyles.regular(color: AppColors.textPrimary),
+          keyboardType: TextInputType.text,
+          prefixIcon: const Icon(Icons.notes),
+          autofillHints: const [AutofillHints.name],
+          maxLength: 100,
+          needToValidator: false,
+        ),
+        _buildQuickAmounts(),
+        const SizedBox(height: 34),
+        AppButton(
+          title: 'Send Money',
+          onPressed: _onSend,
+          textStyle: AppTextStyles.buttonStyle(fontSize: 18),
+          isLoading: isLoading,
+          height: 52,
+          borderRadius: 14,
+          prefixIcon: Icons.send_rounded,
+        ),
+        const SizedBox(height: 16),
+        const SecurityText(),
+      ],
     );
   }
 
@@ -194,16 +226,14 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
         const SizedBox(height: 12),
         Row(
           children: amounts.map((amount) {
-            final selected = _enteredAmount == amount;
+            final selected = _enteredAmount.value == amount;
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: GestureDetector(
                   onTap: () {
-                    setState(() {
-                      _enteredAmount = amount;
-                      _amountController.text = amount.toStringAsFixed(0);
-                    });
+                    _enteredAmount.value = amount;
+                    _amountController.text = amount.toStringAsFixed(0);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 500),
@@ -228,22 +258,6 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           }).toList(),
         ),
       ],
-    );
-  }
-
-  Widget _buildSecurityNote() {
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.shield_outlined, size: 14, color: AppColors.greyShade500),
-          const SizedBox(width: 6),
-          Text(
-            'End-to-end encrypted transfer',
-            style: AppTextStyles.regular(fontSize: 12, color: AppColors.greyShade500),
-          ),
-        ],
-      ),
     );
   }
 }

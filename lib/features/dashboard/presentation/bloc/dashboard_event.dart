@@ -7,8 +7,7 @@ abstract class DashboardEvent extends Equatable {
 }
 
 class DashboardLoadRequested extends DashboardEvent {
-  final bool forceRefresh;
-  const DashboardLoadRequested({this.forceRefresh = false});
+  const DashboardLoadRequested();
 }
 
 class DashboardBalanceUpdated extends DashboardEvent {

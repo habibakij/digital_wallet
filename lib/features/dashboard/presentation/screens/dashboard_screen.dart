@@ -1,16 +1,15 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/utils/widget/error_retry_widget.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_state.dart';
 import 'package:digital_wallet/features/dashboard/presentation/widget/dashboard_header.dart';
-import 'package:digital_wallet/features/dashboard/presentation/widget/error_retry_widget.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/empty_transaction.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_header.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_list_skeleton.dart';
-import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_retry.dart';
 import 'package:digital_wallet/features/transactions/presentation/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,15 +23,21 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  void _loadData({bool forceRefresh = false}) {
-    context.read<DashboardBloc>().add(DashboardLoadRequested(forceRefresh: forceRefresh));
-    context.read<TransactionBloc>().add(FetchTransactions(forceRefresh: forceRefresh));
+  void _loadData({onlyDashboardRefresh = false, onlyFetchTransactionList = false}) {
+    if (onlyDashboardRefresh && onlyFetchTransactionList) {
+      context.read<DashboardBloc>().add(const DashboardLoadRequested());
+      context.read<TransactionBloc>().add(const FetchTransactions());
+    } else if (onlyDashboardRefresh && !onlyFetchTransactionList) {
+      context.read<DashboardBloc>().add(const DashboardLoadRequested());
+    } else if (!onlyDashboardRefresh && onlyFetchTransactionList) {
+      context.read<TransactionBloc>().add(const FetchTransactions());
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadData(onlyDashboardRefresh: true, onlyFetchTransactionList: true);
   }
 
   @override
@@ -49,11 +54,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(
             child: BlocBuilder<DashboardBloc, DashboardState>(
               builder: (context, dashState) {
-                final bloc = context.read<DashboardBloc>();
                 if (dashState is DashboardLoading) {
                   return const Center(child: CircularProgressIndicator(color: AppColors.white));
                 } else if (dashState is DashboardError) {
-                  return ErrorRetryWidget(message: dashState.message, onRetry: () => bloc.add(const DashboardLoadRequested()));
+                  return ErrorRetryWidget(
+                    message: dashState.message,
+                    onRetry: () => _loadData(onlyDashboardRefresh: true),
+                  );
                 } else if (dashState is DashboardLoaded) {
                   return DashboardHeader(currentUser: dashState.user);
                 }
@@ -71,7 +78,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     itemBuilder: (context, index) => const TransactionSkeleton(),
                   );
                 } else if (trState is TransactionEmpty) {
-                  return const EmptyTransactions();
+                  return EmptyTransactions(
+                    onRetry: () => _loadData(onlyFetchTransactionList: true),
+                  );
                 } else if (trState is TransactionLoaded) {
                   final recent = trState.transactionList.take(10).toList();
                   return Column(
@@ -91,11 +100,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   );
                 } else if (trState is TransactionError) {
-                  return TransactionRetry(
+                  return ErrorRetryWidget(
                     message: trState.message,
-                    onTab: () {
-                      context.read<TransactionBloc>().add(const FetchTransactions());
-                    },
+                    onRetry: () => _loadData(onlyFetchTransactionList: true),
                   );
                 }
                 return const SizedBox.shrink();

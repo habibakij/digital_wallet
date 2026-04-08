@@ -29,7 +29,7 @@ class RouteException extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
-                onPressed: () => context.goNamed(AppRoutes.splash),
+                onPressed: () => context.goNamed(AppRoutes.dashboard),
                 icon: const Icon(Icons.home_outlined),
                 label: const Text('Go Home'),
               ),

@@ -7,23 +7,24 @@ class CommonTextField extends StatelessWidget {
   final String? labelText;
   final String? hintText;
   final String? errorText;
+  final String? prefixText;
+  final Iterable<String>? autofillHints;
+  final String? Function(String?)? validator;
+  final int? maxLength;
+  final int maxLines;
+  final bool readOnly;
+  final bool obscureText;
+  final bool needToValidator;
+  final dynamic inputFormatters;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final TextStyle? labelStyle;
   final TextStyle? inputTextStyle;
   final TextStyle? hintStyle;
-  final Widget? prefixIcon;
-  final String? prefixText;
   final TextStyle? prefixTextStyle;
-  final Widget? suffixIcon;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
-  final dynamic inputFormatters;
-  final Iterable<String>? autofillHints;
   final FocusNode? focusNode;
-  final bool readOnly;
-  final bool obscureText;
-  final int? maxLength;
-  final int maxLines;
-  final String? Function(String?)? validator;
   final Function(String)? onFieldSubmitted;
   final Function(String)? onChanged;
   final Function()? onTap;
@@ -35,28 +36,36 @@ class CommonTextField extends StatelessWidget {
     this.labelText,
     this.hintText,
     this.errorText,
+    this.prefixText,
+    this.autofillHints,
+    this.validator,
+    this.maxLength,
+    this.maxLines = 1,
+    this.readOnly = false,
+    this.obscureText = false,
+    this.needToValidator = true,
+    this.inputFormatters,
+    this.prefixIcon,
+    this.suffixIcon,
     this.labelStyle,
     this.inputTextStyle,
     this.hintStyle,
-    this.prefixIcon,
-    this.prefixText,
     this.prefixTextStyle,
-    this.suffixIcon,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
-    this.inputFormatters,
-    this.autofillHints,
     this.focusNode,
-    this.readOnly = false,
-    this.obscureText = false,
-    this.maxLength,
-    this.maxLines = 1,
-    this.validator,
     this.onFieldSubmitted,
     this.onChanged,
     this.onTap,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
+
+  String? _defaultValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return errorText ?? 'This field is required';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +87,7 @@ class CommonTextField extends StatelessWidget {
           inputFormatters: inputFormatters ?? [],
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
+          //validator: needToValidator ? validator ?? _defaultValidator : null,
           validator: validator,
           autofillHints: autofillHints,
           style: inputTextStyle ?? AppTextStyles.regular(),
@@ -96,7 +106,7 @@ class CommonTextField extends StatelessWidget {
             prefixStyle: prefixTextStyle ?? AppTextStyles.regular(),
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: Colors.grey.shade100,
+            fillColor: AppColors.greyShade100,
             suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
             contentPadding: EdgeInsets.zero,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),

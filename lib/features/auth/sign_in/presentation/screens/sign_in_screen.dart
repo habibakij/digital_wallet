@@ -43,9 +43,7 @@ class _LoginPageState extends State<SignInScreen> {
       if (_rememberMe) {
         context.read<SignInBloc>().localStorageService.saveEmail(_emailController.text);
       }
-      context.read<SignInBloc>().add(
-            LoginRequested(email: _emailController.text.trim(), password: _passwordController.text),
-          );
+      context.read<SignInBloc>().add(LoginRequested(email: _emailController.text.trim(), password: _passwordController.text));
     }
   }
 

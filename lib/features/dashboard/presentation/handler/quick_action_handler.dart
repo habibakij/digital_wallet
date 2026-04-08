@@ -32,6 +32,6 @@ class QuickActionHandler {
   static void _navigateToSendMoney(BuildContext context) {
     final state = context.read<DashboardBloc>().state;
     final user = state is DashboardLoaded ? state.user : null;
-    context.goNamed(AppRoutes.sendMoney, extra: user);
+    context.pushNamed(AppRoutes.sendMoney, extra: user);
   }
 }

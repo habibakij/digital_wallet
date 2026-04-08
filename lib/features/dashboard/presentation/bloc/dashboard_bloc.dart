@@ -1,4 +1,5 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
+import 'package:digital_wallet/core/use_case/use_case.dart';
 import 'package:digital_wallet/features/dashboard/data/model/quick_action_model.dart';
 import 'package:digital_wallet/features/dashboard/domain/use_cases/dashboard_use_case.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   Future<void> _onLoadRequested(DashboardLoadRequested event, Emitter<DashboardState> emit) async {
-    if (state is DashboardLoaded && !event.forceRefresh) {
-      return;
-    }
     emit(const DashboardLoading());
-    final result = await _dashboardUseCase.getCurrentUser();
-    emit(DashboardLoaded(user: result));
+    var noParam = const NoParams();
+    final result = await _dashboardUseCase.call(noParam);
+    result.fold(
+      (failed) => emit(DashboardError(message: failed.message)),
+      (entity) => emit(DashboardLoaded(user: entity)),
+    );
   }
 
   void _onBalanceUpdated(DashboardBalanceUpdated event, Emitter<DashboardState> emit) {

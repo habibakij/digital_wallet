@@ -31,12 +31,7 @@ class ValidationFailedState extends SignInState {
   final bool validEmail;
   final bool validPassword;
 
-  const ValidationFailedState({
-    this.emailError,
-    this.passwordError,
-    this.validEmail = false,
-    this.validPassword = false,
-  });
+  const ValidationFailedState({this.emailError, this.passwordError, this.validEmail = false, this.validPassword = false});
 
   @override
   List<Object> get props => [emailError ?? '', passwordError ?? '', validEmail, validPassword];

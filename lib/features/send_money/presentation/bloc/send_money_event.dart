@@ -6,18 +6,30 @@ abstract class SendMoneyEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SendMoneyRequested extends SendMoneyEvent {
-  final String receiverAccount;
+class SendMoneyRequestEvent extends SendMoneyEvent {
+  final String receiverAcc;
   final double amount;
-  final double currentBalance;
+  final double currBalance;
   final String? note;
 
-  const SendMoneyRequested({required this.receiverAccount, required this.amount, required this.currentBalance, this.note});
+  const SendMoneyRequestEvent({required this.receiverAcc, required this.amount, required this.currBalance, this.note});
 
   @override
-  List<Object?> get props => [receiverAccount, amount, currentBalance, note];
+  List<Object?> get props => [receiverAcc, amount, currBalance, note];
 }
 
-class SendMoneyReset extends SendMoneyEvent {
-  const SendMoneyReset();
+class AccountNoChangedEvent extends SendMoneyEvent {
+  final String accountNo;
+  const AccountNoChangedEvent(this.accountNo);
+
+  @override
+  List<Object> get props => [];
+}
+
+class AmountChangedEvent extends SendMoneyEvent {
+  final String amount;
+  const AmountChangedEvent(this.amount);
+
+  @override
+  List<Object> get props => [];
 }

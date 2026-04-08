@@ -25,16 +25,16 @@ class CurrentUserModel extends CurrentUserEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'phone_number': phoneNumber,
-      'account_number': accountNumber,
-      'balance': balance,
-      'avatar': avatar,
-      'is_kyc_verified': isKycVerified,
-    };
+  CurrentUserEntity toEntity() {
+    return CurrentUserEntity(
+      id: id,
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      accountNumber: accountNumber,
+      balance: balance,
+      avatar: avatar,
+      isKycVerified: isKycVerified,
+    );
   }
 }

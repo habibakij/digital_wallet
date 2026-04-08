@@ -1,6 +1,8 @@
+import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
 import 'package:digital_wallet/core/utils/widget/app_button.dart';
+import 'package:digital_wallet/core/utils/widget/common_app_bar.dart';
 import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_bloc.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_event.dart';
@@ -8,6 +10,7 @@ import 'package:digital_wallet/features/send_money_otp_verification/presentation
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/widget/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final SendMoneyEntity sendMoneyEntity;
@@ -42,11 +45,17 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text("OTP Verification"),
-        centerTitle: true,
+      backgroundColor: AppColors.backgroundColor,
+      appBar: CommonAppBar(
+        title: "OTP Verification",
+        titleStyle: AppTextStyles.title(color: AppColors.white),
+        onLeadingTab: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.goNamed(AppRoutes.dashboard);
+          }
+        },
       ),
       body: BlocListener<OtpVerificationBloc, OtpVerificationState>(
         listener: (context, state) {

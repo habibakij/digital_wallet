@@ -24,7 +24,7 @@ class TransactionHeader extends StatelessWidget {
             isTransactionPage
                 ? const SizedBox.shrink()
                 : TextButton(
-                    onPressed: () => context.goNamed(AppRoutes.transactions),
+                    onPressed: () => context.pushNamed(AppRoutes.transactions),
                     child: Text(
                       'See all',
                       style: AppTextStyles.regular(fontWeight: FontWeight.w600),

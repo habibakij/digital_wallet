@@ -7,8 +7,7 @@ abstract class TransactionEvent extends Equatable {
 }
 
 class FetchTransactions extends TransactionEvent {
-  final bool forceRefresh;
-  const FetchTransactions({this.forceRefresh = false});
+  const FetchTransactions();
 }
 
 class RefreshTransactions extends TransactionEvent {
