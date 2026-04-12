@@ -15,6 +15,7 @@ class CommonTextField extends StatelessWidget {
   final bool readOnly;
   final bool obscureText;
   final bool needToValidator;
+  final bool enable;
   final dynamic inputFormatters;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -44,6 +45,7 @@ class CommonTextField extends StatelessWidget {
     this.readOnly = false,
     this.obscureText = false,
     this.needToValidator = true,
+    this.enable = true,
     this.inputFormatters,
     this.prefixIcon,
     this.suffixIcon,
@@ -98,6 +100,7 @@ class CommonTextField extends StatelessWidget {
           maxLines: obscureText ? 1 : maxLines,
           onChanged: onChanged,
           onTap: onTap,
+          enabled: enable,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: hintStyle ?? AppTextStyles.hintStyle(),

@@ -23,6 +23,10 @@ class PasswordChanged extends SignInEvent {
   List<Object> get props => [];
 }
 
+class SignInSubmitted extends SignInEvent {
+  const SignInSubmitted();
+}
+
 class LoginRequested extends SignInEvent {
   final String email;
   final String password;

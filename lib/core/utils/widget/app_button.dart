@@ -45,7 +45,11 @@ class AppButton extends StatelessWidget {
             ? const SizedBox(
                 height: 22,
                 width: 22,
-                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.white),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  //color: AppColors.white,
+                  valueColor: AlwaysStoppedAnimation(AppColors.white),
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,

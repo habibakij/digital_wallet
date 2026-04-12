@@ -1,46 +1,69 @@
 import 'package:equatable/equatable.dart';
 
-abstract class SignInState extends Equatable {
-  const SignInState();
-  @override
-  List<Object?> get props => [];
-}
+enum FormStatus { pure, submitting, success, failure }
 
-class InitialState extends SignInState {
-  const InitialState();
-}
-
-class LoadingState extends SignInState {
-  const LoadingState();
-}
-
-class AuthenticatedState extends SignInState {
-  const AuthenticatedState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class UnauthenticatedState extends SignInState {
-  const UnauthenticatedState();
-}
-
-class ValidationFailedState extends SignInState {
+class SignInState extends Equatable {
+  final String email;
+  final String password;
   final String? emailError;
   final String? passwordError;
-  final bool validEmail;
-  final bool validPassword;
+  final bool isPasswordVisible;
+  final FormStatus status;
+  final String? errorMessage;
+  final bool emailTouched;
+  final bool passwordTouched;
 
-  const ValidationFailedState({this.emailError, this.passwordError, this.validEmail = false, this.validPassword = false});
+  const SignInState({
+    this.email = '',
+    this.password = '',
+    this.emailError,
+    this.passwordError,
+    this.isPasswordVisible = false,
+    this.status = FormStatus.pure,
+    this.errorMessage,
+    this.emailTouched = false,
+    this.passwordTouched = false,
+  });
+
+  bool get isFormValid => emailError == null && passwordError == null && email.isNotEmpty && password.isNotEmpty;
+
+  SignInState copyWith({
+    String? email,
+    String? password,
+    String? emailError,
+    bool clearEmailError = false,
+    String? passwordError,
+    bool clearPasswordError = false,
+    bool? isPasswordVisible,
+    FormStatus? status,
+    String? errorMessage,
+    bool clearErrorMessage = false,
+    bool? emailTouched,
+    bool? passwordTouched,
+  }) {
+    return SignInState(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      emailError: clearEmailError ? null : (emailError ?? this.emailError),
+      passwordError: clearPasswordError ? null : (passwordError ?? this.passwordError),
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      status: status ?? this.status,
+      errorMessage: clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
+      emailTouched: emailTouched ?? this.emailTouched,
+      passwordTouched: passwordTouched ?? this.passwordTouched,
+    );
+  }
 
   @override
-  List<Object> get props => [emailError ?? '', passwordError ?? '', validEmail, validPassword];
-}
-
-class SignInErrorState extends SignInState {
-  final String errorMessage;
-  const SignInErrorState({this.errorMessage = ''});
-
-  @override
-  List<Object> get props => [errorMessage];
+  List<Object?> get props => [
+        email,
+        password,
+        emailError,
+        passwordError,
+        isPasswordVisible,
+        status,
+        errorMessage,
+        emailTouched,
+        passwordTouched,
+      ];
 }

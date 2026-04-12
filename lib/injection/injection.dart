@@ -33,34 +33,28 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  // ─── Core ──────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
   sl.registerLazySingleton<SecureStorageService>(() => SecureStorageService(sl<FlutterSecureStorage>()));
   sl.registerLazySingleton<ApiClient>(() => ApiClient());
 
-  // ─── Splash ──────────────────────────────────────────────────────────────────
   sl.registerFactory<SplashCubit>(() => SplashCubit());
 
-  // ─── Auth ──────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<SignInRemoteDatasource>(() => SignInRemoteDatasourceImpl(sl<ApiClient>(), sl<SecureStorageService>()));
   sl.registerLazySingleton<SignInRepository>(() => SignInRepositoryImpl(sl<SignInRemoteDatasource>(), sl<SecureStorageService>()));
   sl.registerLazySingleton(() => SignInUseCase(sl<SignInRepository>()));
   sl.registerLazySingleton(() => SignOutUseCase(sl<SignInRepository>()));
-  sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<SignInUseCase>(), logoutUseCase: sl<SignOutUseCase>()));
+  sl.registerFactory<SignInBloc>(() => SignInBloc(loginUseCase: sl<SignInUseCase>()));
 
-  // ─── Dashboard ─────────────────────────────────────────────────────────────
   sl.registerLazySingleton<DashboardRemoteDataSource>(() => DashboardRemoteDataSourceImpl(sl<ApiClient>()));
   sl.registerLazySingleton<DashboardRepository>(() => DashboardRepositoryImpl(sl<DashboardRemoteDataSource>()));
   sl.registerLazySingleton(() => DashboardUseCase(sl<DashboardRepository>()));
   sl.registerFactory<DashboardBloc>(() => DashboardBloc(sl<DashboardUseCase>()));
 
-  // ─── Transactions ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(sl<ApiClient>()));
   sl.registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(sl<TransactionRemoteDataSource>()));
   sl.registerFactory(() => TransactionUseCase(sl<TransactionRepository>()));
   sl.registerFactory<TransactionBloc>(() => TransactionBloc(sl<TransactionUseCase>()));
 
-  // ─── Send Money ────────────────────────────────────────────────────────────
   sl.registerLazySingleton<SendMoneyRemoteDataSource>(() => SendMoneyRemoteDataSourceImpl(sl<ApiClient>()));
   sl.registerLazySingleton<SendMoneyRepository>(() => SendMoneyRepositoryImpl(sl<SendMoneyRemoteDataSource>()));
   sl.registerLazySingleton(() => SendMoneyUseCase(sl<SendMoneyRepository>()));
