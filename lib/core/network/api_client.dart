@@ -45,13 +45,13 @@ class ApiClient {
     );
 
     _dio.interceptors.addAll([
-      loggerInterceptor, // 1. Log everything (debug only)
-      connectivityInterceptor, // 2. Reject immediately if offline
-      authInterceptor, // 3. Inject Bearer token
-      responseInterceptor, // 4. Convert 4xx → DioException
-      tokenRefreshInterceptor, // 5. Handle 401 + queue + refresh
-      retryInterceptor, // 6. Exponential backoff for timeouts/5xx
-      customBaseUrlInterceptor, // 7. Per-request baseUrl override
+      loggerInterceptor, // Log everything (debug only)
+      connectivityInterceptor, // Reject immediately if offline
+      authInterceptor, // Inject Bearer token
+      responseInterceptor, // Convert 4xx → DioException
+      tokenRefreshInterceptor, // Handle 401 + queue + refresh
+      retryInterceptor, // Exponential backoff for timeouts/5xx
+      customBaseUrlInterceptor, // Per-request baseUrl override
     ]);
   }
 
