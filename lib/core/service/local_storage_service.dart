@@ -1,5 +1,7 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+@lazySingleton
 class LocalStorageService {
   Future<void> saveEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();

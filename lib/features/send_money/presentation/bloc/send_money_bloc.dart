@@ -5,7 +5,9 @@ import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/features/send_money/domain/use_case/send_money_use_case.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_event.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_state.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
   final SendMoneyUseCase _sendMoneyUseCase;
 

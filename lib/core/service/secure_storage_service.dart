@@ -1,6 +1,8 @@
 import 'package:digital_wallet/core/constants/app_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class SecureStorageService {
   final FlutterSecureStorage _secureStorage;
   SecureStorageService(this._secureStorage);

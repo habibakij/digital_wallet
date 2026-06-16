@@ -4,7 +4,9 @@ import 'package:digital_wallet/core/exception_handler/failures.dart';
 import 'package:digital_wallet/features/dashboard/data/sources/dashboard_remote_data_source.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/domain/repository/dashboard_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: DashboardRepository)
 class DashboardRepositoryImpl extends DashboardRepository {
   final DashboardRemoteDataSource _dashboardRemoteDataSource;
   DashboardRepositoryImpl(this._dashboardRemoteDataSource);

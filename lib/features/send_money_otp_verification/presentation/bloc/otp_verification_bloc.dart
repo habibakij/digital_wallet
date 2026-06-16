@@ -6,7 +6,9 @@ import 'package:digital_wallet/features/send_money_otp_verification/domain/use_c
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_event.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_state.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class OtpVerificationBloc extends Bloc<OtpVerificationEvent, OtpVerificationState> {
   final OtpVerificationUseCase _otpVerificationUseCase;
 

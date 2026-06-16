@@ -6,7 +6,9 @@ import 'package:digital_wallet/features/auth/sign_in/domain/use_cases/sign_in_us
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:digital_wallet/features/auth/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final SignInUseCase _loginUseCase;
   late LocalStorageService localStorageService;

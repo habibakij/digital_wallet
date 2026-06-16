@@ -4,7 +4,9 @@ import 'package:digital_wallet/core/exception_handler/failures.dart';
 import 'package:digital_wallet/features/send_money/data/sources/send_money_remote_datasource.dart';
 import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:digital_wallet/features/send_money/domain/repository/send_money_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: SendMoneyRepository)
 class SendMoneyRepositoryImpl implements SendMoneyRepository {
   final SendMoneyRemoteDataSource _remoteDataSource;
   SendMoneyRepositoryImpl(this._remoteDataSource);

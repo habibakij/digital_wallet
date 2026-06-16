@@ -1,9 +1,11 @@
 import 'package:digital_wallet/features/transaction_details/data/model/tr_details_model.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class TrDetailsRemoteDataSource {
   Future<TrDetailsModel> getTransactionDetailsData();
 }
 
+@LazySingleton(as: TrDetailsRemoteDataSource)
 class TrDetailsRemoteDataSourceImpl implements TrDetailsRemoteDataSource {
   @override
   Future<TrDetailsModel> getTransactionDetailsData() async {

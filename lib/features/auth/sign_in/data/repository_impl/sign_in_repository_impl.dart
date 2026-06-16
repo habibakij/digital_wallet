@@ -4,7 +4,9 @@ import 'package:digital_wallet/core/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/sign_in/data/sources/sign_in_remote_datasource.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/entities/sign_in_entity.dart';
 import 'package:digital_wallet/features/auth/sign_in/domain/repositories/sign_in_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: SignInRepository)
 class SignInRepositoryImpl implements SignInRepository {
   final SignInRemoteDatasource _remoteDataSource;
   final SecureStorageService _secureStorageService;

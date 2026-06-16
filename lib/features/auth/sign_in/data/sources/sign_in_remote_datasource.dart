@@ -2,12 +2,14 @@ import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/core/service/secure_storage_service.dart';
 import 'package:digital_wallet/features/auth/sign_in/data/models/sign_in_model.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class SignInRemoteDatasource {
   Future<SignInModel> signIn({required String email, required String password});
   Future<void> signOut();
 }
 
+@LazySingleton(as: SignInRemoteDatasource)
 class SignInRemoteDatasourceImpl implements SignInRemoteDatasource {
   final ApiClient _apiClient;
   final SecureStorageService _secureStorageService;

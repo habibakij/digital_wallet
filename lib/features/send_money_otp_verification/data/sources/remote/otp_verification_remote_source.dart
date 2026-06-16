@@ -1,11 +1,13 @@
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/data/model/otp_verification_model.dart';
 import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class OtpVerificationRemoteDataSource {
   Future<OtpVerificationModel> otpVerification(OtpParams params);
 }
 
+@LazySingleton(as: OtpVerificationRemoteDataSource)
 class OtpVerificationRemoteDataSourceImpl implements OtpVerificationRemoteDataSource {
   final ApiClient _apiClient;
   OtpVerificationRemoteDataSourceImpl(this._apiClient);

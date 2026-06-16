@@ -4,10 +4,12 @@ import 'package:digital_wallet/features/dashboard/data/model/quick_action_model.
 import 'package:digital_wallet/features/dashboard/domain/use_cases/dashboard_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
+@injectable
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final DashboardUseCase _dashboardUseCase;
 

@@ -1,10 +1,12 @@
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/features/send_money/data/model/send_money_model.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class SendMoneyRemoteDataSource {
   Future<SendMoneyModel> sendMoney({required String receiverAccount, required double amount, String? note});
 }
 
+@LazySingleton(as: SendMoneyRemoteDataSource)
 class SendMoneyRemoteDataSourceImpl implements SendMoneyRemoteDataSource {
   final ApiClient _apiClient;
   SendMoneyRemoteDataSourceImpl(this._apiClient);
