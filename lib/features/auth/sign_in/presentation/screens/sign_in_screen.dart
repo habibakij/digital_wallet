@@ -43,7 +43,6 @@ class _LoginPageState extends State<SignInScreen> {
       context.read<SignInBloc>().localStorageService.saveEmail(_emailController.text);
     }
     context.read<SignInBloc>().add(const SignInSubmitted());
-    //context.read<SignInBloc>().add(LoginRequested(email: _emailController.text.trim(), password: _passwordController.text));
   }
 
   @override
@@ -168,7 +167,9 @@ class _LoginPageState extends State<SignInScreen> {
                     prefixIcon: const Icon(Icons.lock_outline_rounded),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword.value ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        _obscurePassword.value
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: AppColors.textSecondary,
                       ),
                       onPressed: () => _obscurePassword.value = !_obscurePassword.value,
@@ -216,7 +217,8 @@ class _LoginPageState extends State<SignInScreen> {
             onPressed: () {},
             child: Text(
               'Forgot Password?',
-              style: AppTextStyles.regular(color: AppColors.primaryColor, fontSize: 13, fontWeight: FontWeight.w600),
+              style: AppTextStyles.regular(
+                  color: AppColors.primaryColor, fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -235,7 +237,9 @@ class _LoginPageState extends State<SignInScreen> {
             child: AppButton(
               title: 'Sign In',
               onPressed: _onLogin,
-              backgroundColor: isSubmitting ? AppColors.primaryColor.withValues(alpha: 0.6) : AppColors.primaryColor,
+              backgroundColor: isSubmitting
+                  ? AppColors.primaryColor.withValues(alpha: 0.6)
+                  : AppColors.primaryColor,
               textStyle: AppTextStyles.buttonStyle(fontSize: 18),
               isLoading: isSubmitting,
               height: 52,
@@ -281,8 +285,10 @@ class _LoginPageState extends State<SignInScreen> {
                 children: <TextSpan>[
                   TextSpan(
                     text: "Sign Up",
-                    style: AppTextStyles.regular(color: AppColors.primaryColor, fontWeight: FontWeight.w600),
-                    recognizer: TapGestureRecognizer()..onTap = () => context.pushReplacementNamed(AppRoutes.signUp),
+                    style: AppTextStyles.regular(
+                        color: AppColors.primaryColor, fontWeight: FontWeight.w600),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => context.pushReplacementNamed(AppRoutes.signUp),
                   ),
                 ],
               ),

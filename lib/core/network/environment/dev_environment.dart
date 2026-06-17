@@ -1,3 +1,4 @@
+import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:injectable/injectable.dart';
 
 import 'api_environment.dart';
@@ -6,7 +7,7 @@ import 'api_environment.dart';
 @LazySingleton(as: ApiEnvironment)
 class DevEnvironment implements ApiEnvironment {
   @override
-  String get baseUrl => "https://api.escuelajs.co/api/v1";
+  String get baseUrl => ApiEndpoints.baseUrl;
 
   @override
   bool get enableLogging => true;

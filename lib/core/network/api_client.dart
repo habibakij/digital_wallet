@@ -37,7 +37,12 @@ class ApiClient {
         connectTimeout: environment.connectTimeout,
         receiveTimeout: environment.receiveTimeout,
         sendTimeout: environment.sendTimeout,
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'X-Platform': Platform.isAndroid ? 'android' : 'ios',
+          'X-App-Version': const String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0'),
+        },
         // We handle status codes manually in ResponseInterceptor.
         validateStatus: (_) => true,
       ),
@@ -71,8 +76,13 @@ class ApiClient {
   /// GET with optional request deduplication. Deduplication prevents sending the same request multiple times
   /// Pass [deduplicate: false] to bypass (e.g. polling endpoints).
 
-  Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters, CancelToken? cancelToken, bool deduplicate = true, String? customBaseUrl}) async {
-    final extraOptions = Options(extra: customBaseUrl != null ? {'customBaseUrl': customBaseUrl} : null);
+  Future<Response> get(String endpoint,
+      {Map<String, dynamic>? queryParameters,
+      CancelToken? cancelToken,
+      bool deduplicate = true,
+      String? customBaseUrl}) async {
+    final extraOptions =
+        Options(extra: customBaseUrl != null ? {'customBaseUrl': customBaseUrl} : null);
     final key = _requestKey('GET', endpoint, queryParameters);
 
     if (deduplicate && _inDuplicateRequests.containsKey(key)) {
@@ -95,7 +105,11 @@ class ApiClient {
   }
 
   /// POST request.
-  Future<Response> post(String endpoint, {dynamic data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
+  Future<Response> post(String endpoint,
+      {dynamic data,
+      Map<String, dynamic>? queryParameters,
+      CancelToken? cancelToken,
+      Options? options}) async {
     try {
       return await _dio.post(
         endpoint,
@@ -110,7 +124,11 @@ class ApiClient {
   }
 
   /// PUT request.
-  Future<Response> put(String endpoint, {dynamic data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
+  Future<Response> put(String endpoint,
+      {dynamic data,
+      Map<String, dynamic>? queryParameters,
+      CancelToken? cancelToken,
+      Options? options}) async {
     try {
       return await _dio.put(
         endpoint,
@@ -125,7 +143,11 @@ class ApiClient {
   }
 
   /// PATCH request.
-  Future<Response> patch(String endpoint, {dynamic data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
+  Future<Response> patch(String endpoint,
+      {dynamic data,
+      Map<String, dynamic>? queryParameters,
+      CancelToken? cancelToken,
+      Options? options}) async {
     try {
       return await _dio.patch(
         endpoint,
@@ -140,7 +162,11 @@ class ApiClient {
   }
 
   /// DELETE request.
-  Future<Response> delete(String endpoint, {dynamic data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
+  Future<Response> delete(String endpoint,
+      {dynamic data,
+      Map<String, dynamic>? queryParameters,
+      CancelToken? cancelToken,
+      Options? options}) async {
     try {
       return await _dio.delete(
         endpoint,
@@ -155,18 +181,25 @@ class ApiClient {
   }
 
   // Connectivity stream
-  Stream<bool> get internetStatusStream => Connectivity().onConnectivityChanged.map((result) => !result.contains(ConnectivityResult.none));
+  Stream<bool> get internetStatusStream => Connectivity()
+      .onConnectivityChanged
+      .map((result) => !result.contains(ConnectivityResult.none));
 
   // Internal helpers
   Dio getDio() => _dio;
 
   String _requestKey(String method, String endpoint, Map<String, dynamic>? params) {
-    final sortedParams = params != null ? (params.entries.toList()..sort((a, b) => a.key.compareTo(b.key))).map((e) => '${e.key}=${e.value}').join('&') : '';
+    final sortedParams = params != null
+        ? (params.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+            .map((e) => '${e.key}=${e.value}')
+            .join('&')
+        : '';
     return '$method:$endpoint?$sortedParams';
   }
 
   // Exception
   static AppException _mapException(dynamic error) {
+    print("exception: ${error.toString()}");
     if (error is AppException) return error;
     if (error is DioException) return _mapDioException(error);
     if (error is SocketException) {

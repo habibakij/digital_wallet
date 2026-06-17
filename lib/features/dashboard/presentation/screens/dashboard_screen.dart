@@ -74,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 if (trState is TransactionLoading) {
                   return ListView.builder(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    itemCount: 10,
+                    itemCount: 6,
                     itemBuilder: (context, index) => const TransactionSkeleton(),
                   );
                 } else if (trState is TransactionEmpty) {
@@ -91,9 +91,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: DecoratedBox(
                           decoration: const BoxDecoration(color: AppColors.backgroundColor),
                           child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 0.0).copyWith(bottom: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 0.0).copyWith(bottom: 16.0),
                             itemCount: recent.length,
-                            itemBuilder: (context, index) => TransactionItem(isCredit: index % 2 == 0),
+                            itemBuilder: (context, index) =>
+                                TransactionItem(isCredit: index % 2 == 0),
                           ),
                         ),
                       ),

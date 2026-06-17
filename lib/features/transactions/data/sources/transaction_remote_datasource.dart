@@ -14,7 +14,8 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
 
   @override
   Future<List<TransactionModel>> getTransactionListData() async {
-    final response = await _apiClient.get(ApiEndpoints.transactionList, customBaseUrl: ApiEndpoints.baseUrlV2);
+    final response =
+        await _apiClient.get(ApiEndpoints.transactionList, customBaseUrl: ApiEndpoints.baseUrlV2);
     final List data = response.data;
     final result = data.map((json) => TransactionModel.fromJson(json)).toList();
     return result;

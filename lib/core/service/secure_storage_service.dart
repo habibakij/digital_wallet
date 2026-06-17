@@ -8,7 +8,8 @@ class SecureStorageService {
   SecureStorageService(this._secureStorage);
 
   // Android options for encrypted storage
-  static const _androidOptions = AndroidOptions(encryptedSharedPreferences: true, resetOnError: true);
+  static const _androidOptions =
+      AndroidOptions(encryptedSharedPreferences: true, resetOnError: true);
 
   static const _iOSOptions = IOSOptions(
     accessibility: KeychainAccessibility.first_unlock_this_device,
@@ -71,9 +72,6 @@ class SecureStorageService {
   }
 
   Future<void> clearAll() async {
-    await _secureStorage.deleteAll(
-      aOptions: _androidOptions,
-      iOptions: _iOSOptions,
-    );
+    await _secureStorage.deleteAll(aOptions: _androidOptions, iOptions: _iOSOptions);
   }
 }

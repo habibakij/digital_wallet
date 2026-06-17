@@ -13,15 +13,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<FetchTransactions>(_onFetchTransactions);
   }
 
-  FutureOr<void> _onFetchTransactions(FetchTransactions event, Emitter<TransactionState> emit) async {
+  FutureOr<void> _onFetchTransactions(
+      FetchTransactions event, Emitter<TransactionState> emit) async {
     emit(const TransactionLoading());
-    final result = await _transactionUseCase.getTransactionList();
-    if (result.isNotEmpty) {
-      emit(TransactionLoaded(result));
-    } else {
-      emit(const TransactionError(message: "Transaction loading failed. Tap 'Retry' to try again."));
+    try {
+      final result = await _transactionUseCase.getTransactionList();
+      if (result.isNotEmpty) {
+        emit(TransactionLoaded(result));
+      } else {
+        emit(const TransactionError(
+            message: "Transaction loading failed. Tap 'Retry' to try again."));
+      }
+    } catch (e) {
+      emit(
+          const TransactionError(message: "Transaction loading failed. Tap 'Retry' to try again."));
     }
   }
 
-  FutureOr<void> _onRefreshTransactions(RefreshTransactions event, Emitter<TransactionState> emit) {}
+  FutureOr<void> _onRefreshTransactions(
+      RefreshTransactions event, Emitter<TransactionState> emit) {}
 }
