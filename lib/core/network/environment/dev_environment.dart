@@ -6,7 +6,7 @@ import 'api_environment.dart';
 @LazySingleton(as: ApiEnvironment)
 class DevEnvironment implements ApiEnvironment {
   @override
-  String get baseUrl => 'https://dev-api.yourapp.com/v1';
+  String get baseUrl => "https://api.escuelajs.co/api/v1";
 
   @override
   bool get enableLogging => true;

@@ -10,10 +10,10 @@ import 'package:digital_wallet/core/network/interceptor/custom_baseurl_intercept
 import 'package:digital_wallet/core/network/interceptor/retry_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'environment/api_environment.dart';
 import 'interceptor/auth_interceptor.dart';
-import 'interceptor/logger_interceptor.dart';
 import 'interceptor/response_interceptor.dart';
 import 'interceptor/token_refresh_interceptor.dart';
 
@@ -24,7 +24,6 @@ class ApiClient {
 
   ApiClient(
     ApiEnvironment environment,
-    LoggerInterceptor loggerInterceptor,
     ConnectivityInterceptor connectivityInterceptor,
     AuthInterceptor authInterceptor,
     ResponseInterceptor responseInterceptor,
@@ -44,8 +43,22 @@ class ApiClient {
       ),
     );
 
+    assert(() {
+      _dio.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: false,
+          responseBody: true,
+          error: true,
+          compact: false,
+          maxWidth: 120,
+        ),
+      );
+      return true;
+    }());
+
     _dio.interceptors.addAll([
-      loggerInterceptor, // Log everything (debug only)
       connectivityInterceptor, // Reject immediately if offline
       authInterceptor, // Inject Bearer token
       responseInterceptor, // Convert 4xx → DioException

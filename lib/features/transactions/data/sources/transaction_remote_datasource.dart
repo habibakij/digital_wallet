@@ -1,11 +1,13 @@
 import 'package:digital_wallet/core/network/api_client.dart';
 import 'package:digital_wallet/core/network/api_endpoints.dart';
 import 'package:digital_wallet/features/transactions/data/model/transaction_model.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class TransactionRemoteDataSource {
   Future<List<TransactionModel>> getTransactionListData();
 }
 
+@LazySingleton(as: TransactionRemoteDataSource)
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   final ApiClient _apiClient;
   TransactionRemoteDataSourceImpl(this._apiClient);

@@ -4,7 +4,9 @@ import 'package:digital_wallet/features/transactions/domain/use_cases/transactio
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_event.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionUseCase _transactionUseCase;
   TransactionBloc(this._transactionUseCase) : super(const TransactionInitial()) {

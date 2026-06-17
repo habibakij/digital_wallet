@@ -1,6 +1,8 @@
 import 'package:digital_wallet/features/transactions/domain/entity/transaction_entity.dart';
 import 'package:digital_wallet/features/transactions/domain/repository/transaction_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class TransactionUseCase {
   final TransactionRepository _repository;
   TransactionUseCase(this._repository);

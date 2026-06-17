@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digital_wallet/core/network/environment/api_environment.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,8 +15,8 @@ const int _maxRetries = 3;
 
 @lazySingleton
 class RetryInterceptor extends QueuedInterceptorsWrapper {
-  final Dio _dio;
-  RetryInterceptor(this._dio);
+  final ApiEnvironment _environment;
+  RetryInterceptor(this._environment);
 
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -44,7 +45,8 @@ class RetryInterceptor extends QueuedInterceptorsWrapper {
   }
 
   Future<Response> _retry(RequestOptions requestOptions) {
-    return _dio.request<dynamic>(
+    final retryDio = Dio(BaseOptions(baseUrl: _environment.baseUrl));
+    return retryDio.request<dynamic>(
       requestOptions.path,
       data: requestOptions.data,
       queryParameters: requestOptions.queryParameters,
