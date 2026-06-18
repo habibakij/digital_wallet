@@ -3,9 +3,9 @@ import 'package:digital_wallet/features/auth/sign_in/presentation/screens/sign_i
 import 'package:digital_wallet/features/auth/sign_up/presentation/screens/signup_screen.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:digital_wallet/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:digital_wallet/features/otp_verification/presentation/screens/otp_verification_screen.dart';
 import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:digital_wallet/features/send_money/presentation/screens/send_money_screen.dart';
-import 'package:digital_wallet/features/send_money_otp_verification/presentation/screens/otp_verification_screen.dart';
 import 'package:digital_wallet/features/splash/presentation/screen/splash_screen.dart';
 import 'package:digital_wallet/features/transactions/presentation/screens/transaction_list_screen.dart';
 import 'package:flutter/material.dart';

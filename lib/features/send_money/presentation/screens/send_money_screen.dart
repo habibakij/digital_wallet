@@ -178,12 +178,15 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
             debugPrint("check_balance: ${widget.currentUser.balance} - ${_enteredAmount.value} == $remaining");
             return _enteredAmount.value <= 0
                 ? const SizedBox.shrink()
-                : Text(
-                    isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
-                    style: AppTextStyles.regular(
-                      fontSize: 12,
-                      color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,
-                      fontWeight: FontWeight.w500,
+                : Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(
+                      isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
+                      style: AppTextStyles.regular(
+                        fontSize: 12,
+                        color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   );
           },

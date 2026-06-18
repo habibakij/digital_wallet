@@ -50,6 +50,7 @@ class QuickActions extends StatelessWidget {
 
   void _showMoreOptions(BuildContext context) {
     showModalBottomSheet(
+      backgroundColor: AppColors.backgroundColor,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),

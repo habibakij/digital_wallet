@@ -55,6 +55,18 @@ import 'package:digital_wallet/features/dashboard/domain/use_cases/dashboard_use
     as _i981;
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart'
     as _i252;
+import 'package:digital_wallet/features/otp_verification/data/repository_impl/otp_verification_repository_impl.dart'
+    as _i662;
+import 'package:digital_wallet/features/otp_verification/data/sources/local/otp_verification_local_data_source.dart'
+    as _i877;
+import 'package:digital_wallet/features/otp_verification/data/sources/remote/otp_verification_remote_source.dart'
+    as _i399;
+import 'package:digital_wallet/features/otp_verification/domain/repository/otp_verification_repository.dart'
+    as _i383;
+import 'package:digital_wallet/features/otp_verification/domain/use_case/otp_verification_use_case.dart'
+    as _i176;
+import 'package:digital_wallet/features/otp_verification/presentation/bloc/otp_verification_bloc.dart'
+    as _i889;
 import 'package:digital_wallet/features/send_money/data/repository_impl/send_money_repository_impl.dart'
     as _i394;
 import 'package:digital_wallet/features/send_money/data/sources/send_money_remote_datasource.dart'
@@ -65,18 +77,6 @@ import 'package:digital_wallet/features/send_money/domain/use_case/send_money_us
     as _i381;
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart'
     as _i303;
-import 'package:digital_wallet/features/send_money_otp_verification/data/repository_impl/otp_verification_repository_impl.dart'
-    as _i1009;
-import 'package:digital_wallet/features/send_money_otp_verification/data/sources/local/otp_verification_local_data_source.dart'
-    as _i316;
-import 'package:digital_wallet/features/send_money_otp_verification/data/sources/remote/otp_verification_remote_source.dart'
-    as _i738;
-import 'package:digital_wallet/features/send_money_otp_verification/domain/repository/otp_verification_repository.dart'
-    as _i752;
-import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart'
-    as _i714;
-import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_bloc.dart'
-    as _i571;
 import 'package:digital_wallet/features/splash/presentation/bloc/splash_cubit.dart'
     as _i499;
 import 'package:digital_wallet/features/transaction_details/data/repository_impl/tr_details_repo_impl.dart'
@@ -130,8 +130,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => registerModule.flutterSecureStorage);
     gh.lazySingleton<_i895.Connectivity>(() => registerModule.connectivity);
-    gh.lazySingleton<_i316.OtpVerificationLocalDataSource>(
-        () => _i316.OtpVerificationLocalDataSourceImpl());
+    gh.lazySingleton<_i877.OtpVerificationLocalDataSource>(
+        () => _i877.OtpVerificationLocalDataSourceImpl());
     gh.lazySingleton<_i699.TrDetailsRemoteDataSource>(
         () => _i699.TrDetailsRemoteDataSourceImpl());
     gh.lazySingleton<_i144.ApiEnvironment>(
@@ -175,10 +175,10 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i273.ApiClient>(),
               gh<_i854.SecureStorageService>(),
             ));
+    gh.lazySingleton<_i399.OtpVerificationRemoteDataSource>(
+        () => _i399.OtpVerificationRemoteDataSourceImpl(gh<_i273.ApiClient>()));
     gh.lazySingleton<_i1050.DashboardRemoteDataSource>(
         () => _i1050.DashboardRemoteDataSourceImpl(gh<_i273.ApiClient>()));
-    gh.lazySingleton<_i738.OtpVerificationRemoteDataSource>(
-        () => _i738.OtpVerificationRemoteDataSourceImpl(gh<_i273.ApiClient>()));
     gh.lazySingleton<_i357.TransactionRemoteDataSource>(
         () => _i357.TransactionRemoteDataSourceImpl(gh<_i273.ApiClient>()));
     gh.lazySingleton<_i439.SignInRepository>(() => _i894.SignInRepositoryImpl(
@@ -187,17 +187,13 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i32.SendMoneyRepository>(() =>
         _i394.SendMoneyRepositoryImpl(gh<_i297.SendMoneyRemoteDataSource>()));
-    gh.lazySingleton<_i752.OtpVerificationRepository>(() =>
-        _i1009.OtpVerificationRepositoryImpl(
-            gh<_i738.OtpVerificationRemoteDataSource>()));
-    gh.lazySingleton<_i714.OtpVerificationUseCase>(() =>
-        _i714.OtpVerificationUseCase(gh<_i752.OtpVerificationRepository>()));
+    gh.lazySingleton<_i383.OtpVerificationRepository>(() =>
+        _i662.OtpVerificationRepositoryImpl(
+            gh<_i399.OtpVerificationRemoteDataSource>()));
     gh.lazySingleton<_i384.DashboardRepository>(() =>
         _i69.DashboardRepositoryImpl(gh<_i1050.DashboardRemoteDataSource>()));
     gh.lazySingleton<_i8.SignInUseCase>(
         () => _i8.SignInUseCase(gh<_i439.SignInRepository>()));
-    gh.factory<_i571.OtpVerificationBloc>(
-        () => _i571.OtpVerificationBloc(gh<_i714.OtpVerificationUseCase>()));
     gh.lazySingleton<_i381.SendMoneyUseCase>(
         () => _i381.SendMoneyUseCase(gh<_i32.SendMoneyRepository>()));
     gh.lazySingleton<_i504.TransactionRepository>(() =>
@@ -205,6 +201,8 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i357.TransactionRemoteDataSource>()));
     gh.factory<_i303.SendMoneyBloc>(
         () => _i303.SendMoneyBloc(gh<_i381.SendMoneyUseCase>()));
+    gh.lazySingleton<_i176.OtpVerificationUseCase>(() =>
+        _i176.OtpVerificationUseCase(gh<_i383.OtpVerificationRepository>()));
     gh.lazySingleton<_i874.SignOutUseCase>(
         () => _i874.SignOutUseCase(gh<_i439.SignInRepository>()));
     gh.factory<_i230.SignInBloc>(
@@ -215,6 +213,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i252.DashboardBloc(gh<_i981.DashboardUseCase>()));
     gh.lazySingleton<_i440.TransactionUseCase>(
         () => _i440.TransactionUseCase(gh<_i504.TransactionRepository>()));
+    gh.factory<_i889.OtpVerificationBloc>(
+        () => _i889.OtpVerificationBloc(gh<_i176.OtpVerificationUseCase>()));
     gh.factory<_i118.TransactionBloc>(
         () => _i118.TransactionBloc(gh<_i440.TransactionUseCase>()));
     return this;

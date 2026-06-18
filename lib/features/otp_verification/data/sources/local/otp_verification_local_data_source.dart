@@ -1,5 +1,5 @@
-import 'package:digital_wallet/features/send_money_otp_verification/data/model/otp_verification_model.dart';
-import 'package:digital_wallet/features/send_money_otp_verification/domain/use_case/otp_verification_use_case.dart';
+import 'package:digital_wallet/features/otp_verification/data/model/otp_verification_model.dart';
+import 'package:digital_wallet/features/otp_verification/domain/use_case/otp_verification_use_case.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class OtpVerificationLocalDataSource {

@@ -1,11 +1,7 @@
-import 'package:digital_wallet/features/send_money_otp_verification/domain/entities/otp_verification_entity.dart';
+import 'package:digital_wallet/features/otp_verification/domain/entities/otp_verification_entity.dart';
 
 class OtpVerificationModel extends OtpVerificationEntity {
-  const OtpVerificationModel({
-    super.otp,
-    super.transactionId,
-    super.message,
-  });
+  const OtpVerificationModel({super.otp, super.transactionId, super.message});
 
   factory OtpVerificationModel.fromJson(Map<String, dynamic> json) {
     return OtpVerificationModel(
@@ -16,10 +12,6 @@ class OtpVerificationModel extends OtpVerificationEntity {
   }
 
   OtpVerificationEntity toEntity() {
-    return OtpVerificationEntity(
-      otp: otp,
-      transactionId: transactionId,
-      message: message,
-    );
+    return OtpVerificationEntity(otp: otp, transactionId: transactionId, message: message);
   }
 }

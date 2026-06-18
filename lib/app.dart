@@ -1,7 +1,6 @@
 import 'package:digital_wallet/core/constants/app_constants.dart';
 import 'package:digital_wallet/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:digital_wallet/features/send_money/presentation/bloc/send_money_bloc.dart';
-import 'package:digital_wallet/features/send_money_otp_verification/presentation/bloc/otp_verification_bloc.dart';
 import 'package:digital_wallet/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
+import 'features/otp_verification/presentation/bloc/otp_verification_bloc.dart';
 import 'features/splash/presentation/bloc/splash_cubit.dart';
 import 'injection/injection.dart';
 
