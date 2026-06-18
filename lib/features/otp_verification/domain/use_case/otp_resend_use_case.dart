@@ -7,9 +7,9 @@ import 'package:digital_wallet/features/otp_verification/domain/repository/otp_v
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
-class OtpVerificationUseCase extends UseCase<OtpVerificationEntity, OtpParams> {
+class OtpResendUseCase extends UseCase<OtpVerificationEntity, OtpParams> {
   final OtpVerificationRepository _repository;
-  OtpVerificationUseCase(this._repository);
+  OtpResendUseCase(this._repository);
 
   @override
   Future<Either<Failure, OtpVerificationEntity>> call(OtpParams params) {

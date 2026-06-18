@@ -9,6 +9,7 @@ import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/sign_in/presentation/bloc/sign_in_bloc.dart';
 import 'features/otp_verification/presentation/bloc/otp_verification_bloc.dart';
+import 'features/otp_verification/presentation/cubit/otp_timer_cubit.dart';
 import 'features/splash/presentation/bloc/splash_cubit.dart';
 import 'injection/injection.dart';
 
@@ -25,6 +26,7 @@ class App extends StatelessWidget {
         BlocProvider<TransactionBloc>(create: (_) => sl<TransactionBloc>()),
         BlocProvider<SendMoneyBloc>(create: (_) => sl<SendMoneyBloc>()),
         BlocProvider<OtpVerificationBloc>(create: (_) => sl<OtpVerificationBloc>()),
+        BlocProvider<OtpTimerCubit>(create: (_) => sl<OtpTimerCubit>()),
       ],
       child: MaterialApp.router(
         scaffoldMessengerKey: AppConstants.scaffoldMessengerKey,

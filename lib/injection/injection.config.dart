@@ -63,10 +63,14 @@ import 'package:digital_wallet/features/otp_verification/data/sources/remote/otp
     as _i399;
 import 'package:digital_wallet/features/otp_verification/domain/repository/otp_verification_repository.dart'
     as _i383;
+import 'package:digital_wallet/features/otp_verification/domain/use_case/otp_resend_use_case.dart'
+    as _i135;
 import 'package:digital_wallet/features/otp_verification/domain/use_case/otp_verification_use_case.dart'
     as _i176;
 import 'package:digital_wallet/features/otp_verification/presentation/bloc/otp_verification_bloc.dart'
     as _i889;
+import 'package:digital_wallet/features/otp_verification/presentation/cubit/otp_timer_cubit.dart'
+    as _i35;
 import 'package:digital_wallet/features/send_money/data/repository_impl/send_money_repository_impl.dart'
     as _i394;
 import 'package:digital_wallet/features/send_money/data/sources/send_money_remote_datasource.dart'
@@ -116,6 +120,7 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final registerModule = _$RegisterModule();
+    gh.factory<_i35.OtpTimerCubit>(() => _i35.OtpTimerCubit());
     gh.factory<_i499.SplashCubit>(() => _i499.SplashCubit());
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => registerModule.prefs,
@@ -201,6 +206,8 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i357.TransactionRemoteDataSource>()));
     gh.factory<_i303.SendMoneyBloc>(
         () => _i303.SendMoneyBloc(gh<_i381.SendMoneyUseCase>()));
+    gh.lazySingleton<_i135.OtpResendUseCase>(
+        () => _i135.OtpResendUseCase(gh<_i383.OtpVerificationRepository>()));
     gh.lazySingleton<_i176.OtpVerificationUseCase>(() =>
         _i176.OtpVerificationUseCase(gh<_i383.OtpVerificationRepository>()));
     gh.lazySingleton<_i874.SignOutUseCase>(
@@ -213,8 +220,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i252.DashboardBloc(gh<_i981.DashboardUseCase>()));
     gh.lazySingleton<_i440.TransactionUseCase>(
         () => _i440.TransactionUseCase(gh<_i504.TransactionRepository>()));
-    gh.factory<_i889.OtpVerificationBloc>(
-        () => _i889.OtpVerificationBloc(gh<_i176.OtpVerificationUseCase>()));
+    gh.factory<_i889.OtpVerificationBloc>(() => _i889.OtpVerificationBloc(
+          gh<_i176.OtpVerificationUseCase>(),
+          gh<_i135.OtpResendUseCase>(),
+        ));
     gh.factory<_i118.TransactionBloc>(
         () => _i118.TransactionBloc(gh<_i440.TransactionUseCase>()));
     return this;

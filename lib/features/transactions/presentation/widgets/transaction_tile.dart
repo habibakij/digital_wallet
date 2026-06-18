@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
-import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/helper/app_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -66,8 +66,7 @@ class TransactionItem extends StatelessWidget {
                             style: AppTextStyles.regular(fontSize: 12),
                           ),
                           Text(
-                            //DateFormat("dd MMM yyyy").format(DateTime.now()),
-                            DateFormatter.formatTransaction(DateTime.now().subtract(Duration(days: isCredit ? 1 : 2))),
+                            AppHelper.formatTransaction(DateTime.now().subtract(Duration(days: isCredit ? 1 : 2))),
                             style: AppTextStyles.regular(fontSize: 12, color: AppColors.grey),
                           ),
                         ],

@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
-import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/helper/app_helper.dart';
 import 'package:flutter/material.dart';
 
 class BalanceSummary extends StatelessWidget {
@@ -21,7 +21,7 @@ class BalanceSummary extends StatelessWidget {
               Text('Available Balance', style: AppTextStyles.regular(color: AppColors.white70, fontSize: 12)),
               const SizedBox(height: 6),
               Text(
-                CurrencyFormatter.format(balance),
+                AppHelper.format(balance),
                 style: AppTextStyles.title(color: AppColors.white, fontSize: 24, fontWeight: FontWeight.w700),
               ),
             ],

@@ -6,6 +6,7 @@ class AppButton extends StatelessWidget {
   final String title;
   final VoidCallback? onPressed;
   final double height;
+  final double? width;
   final double borderRadius;
   final double elevation;
   final Color? backgroundColor;
@@ -19,6 +20,7 @@ class AppButton extends StatelessWidget {
     required this.title,
     required this.onPressed,
     this.height = 48,
+    this.width,
     this.borderRadius = 8,
     this.elevation = 0.5,
     this.backgroundColor,
@@ -32,7 +34,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      width: double.infinity,
+      width: width ?? double.infinity,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(

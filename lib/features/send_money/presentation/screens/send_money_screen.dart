@@ -2,6 +2,7 @@ import 'package:digital_wallet/core/constants/asset_manager.dart';
 import 'package:digital_wallet/core/navigation/app_routes.dart';
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
+import 'package:digital_wallet/core/utils/helper/app_helper.dart';
 import 'package:digital_wallet/core/utils/helper/validator.dart';
 import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/core/utils/widget/app_text_field.dart';
@@ -181,7 +182,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 : Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: Text(
-                      isInsufficient ? 'Insufficient balance' : 'Remaining: ${CurrencyFormatter.formatSimple(remaining)}',
+                      isInsufficient ? 'Insufficient balance' : 'Remaining: ${AppHelper.formatSimple(remaining)}',
                       style: AppTextStyles.regular(
                         fontSize: 12,
                         color: isInsufficient ? AppColors.errorColor : AppColors.errorColor,

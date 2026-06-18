@@ -6,19 +6,18 @@ abstract class OtpVerificationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class OtpVerificationInitEvent extends OtpVerificationEvent {
+class VerifyOtpEvent extends OtpVerificationEvent {
   final String otp;
-  const OtpVerificationInitEvent({required this.otp});
+  const VerifyOtpEvent({required this.otp});
 
   @override
   List<Object?> get props => [otp];
 }
 
-class StartOtpTimerEvent extends OtpVerificationEvent {}
+class ResendOtpEvent extends OtpVerificationEvent {
+  final String otp;
+  const ResendOtpEvent({required this.otp});
 
-class OtpTimerTickEvent extends OtpVerificationEvent {
-  final int seconds;
-  const OtpTimerTickEvent(this.seconds);
+  @override
+  List<Object?> get props => [otp];
 }
-
-class ResendOtpEvent extends OtpVerificationEvent {}

@@ -7,8 +7,7 @@ abstract class OtpVerificationState extends Equatable {
 }
 
 class OtpVerificationInitState extends OtpVerificationState {
-  final int seconds;
-  const OtpVerificationInitState({this.seconds = 60});
+  const OtpVerificationInitState();
 }
 
 class OtpVerificationLoadingState extends OtpVerificationState {
@@ -29,7 +28,10 @@ class OtpVerificationFailState extends OtpVerificationState {
   List<Object> get props => [message];
 }
 
-class OtpCountdownState extends OtpVerificationState {
-  final int seconds;
-  const OtpCountdownState(this.seconds);
+class OtpResendSuccessState extends OtpVerificationState {
+  final String message;
+  const OtpResendSuccessState(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

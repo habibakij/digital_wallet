@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
-import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/helper/app_helper.dart';
 import 'package:digital_wallet/core/utils/widget/app_button.dart';
 import 'package:digital_wallet/features/send_money/domain/entities/send_money_entity.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class SuccessDialog extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              CurrencyFormatter.format(entity.amount),
+              AppHelper.format(entity.amount),
               style: AppTextStyles.title(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 4),
@@ -70,11 +70,11 @@ class SuccessDialog extends StatelessWidget {
                   ),
                   _DetailRow(
                     label: 'New Balance',
-                    value: CurrencyFormatter.formatSimple(entity.newBalance),
+                    value: AppHelper.formatSimple(entity.newBalance),
                   ),
                   _DetailRow(
                     label: 'Date & Time',
-                    value: DateFormatter.formatTransaction(entity.timestamp),
+                    value: AppHelper.formatTransaction(entity.timestamp),
                   ),
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:digital_wallet/core/theme/app_colors.dart';
 import 'package:digital_wallet/core/theme/app_style.dart';
-import 'package:digital_wallet/core/utils/helper/validator.dart';
+import 'package:digital_wallet/core/utils/helper/app_helper.dart';
 import 'package:digital_wallet/features/dashboard/domain/entity/current_user_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -91,7 +91,7 @@ class BalanceCard extends StatelessWidget {
                       builder: (context, visible, _) {
                         return _balanceVisible.value
                             ? Text(
-                                CurrencyFormatter.format(currentUser.balance ?? 0),
+                                AppHelper.format(currentUser.balance ?? 0),
                                 key: const ValueKey('visible'),
                                 style: AppTextStyles.title(
                                   color: AppColors.white,
